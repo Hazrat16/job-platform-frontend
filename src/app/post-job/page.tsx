@@ -1,5 +1,6 @@
 "use client";
 
+import { apiClient } from "@/utils/api";
 import {
   AlertCircle,
   Briefcase,
@@ -85,17 +86,22 @@ export default function PostJobPage() {
         benefits: data.benefits.map((ben) => ben.value).filter(Boolean),
       };
 
-      // TODO: Replace with actual API call
-      console.log("Job data:", transformedData);
+      // Call the actual API
+      const response = await apiClient.createJob(transformedData);
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      toast.success("Job posted successfully!");
-      reset();
-      router.push("/my-jobs");
-    } catch {
-      toast.error("Failed to post job. Please try again.");
+      if (response.success && response.data) {
+        toast.success("Job posted successfully!");
+        reset();
+        router.push("/my-jobs");
+      } else {
+        toast.error(response.message || "Failed to post job");
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to post job. Please try again.";
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
