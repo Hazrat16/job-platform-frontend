@@ -51,10 +51,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="flex min-h-[calc(100vh-4rem)] flex-col justify-center bg-slate-50 py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 shadow-md shadow-blue-600/25">
             <svg
               className="w-8 h-8 text-white"
               fill="none"
@@ -70,14 +70,14 @@ export default function LoginPage() {
             </svg>
           </div>
         </div>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-slate-900">
           Sign in to your account
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
+        <p className="mt-2 text-center text-sm text-slate-600">
           Or{" "}
           <Link
             href="/register"
-            className="font-medium text-blue-600 hover:text-blue-500"
+            className="font-medium text-blue-600 underline-offset-4 hover:text-blue-700 hover:underline"
           >
             create a new account
           </Link>
@@ -85,12 +85,12 @@ export default function LoginPage() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div className="rounded-2xl border border-slate-200/80 bg-white px-4 py-8 shadow-xl shadow-slate-200/50 sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-slate-700"
               >
                 Email address
               </label>
@@ -109,8 +109,8 @@ export default function LoginPage() {
                   id="email"
                   type="email"
                   autoComplete="email"
-                  className={`appearance-none block w-full pl-10 pr-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${
-                    errors.email ? "border-red-300" : "border-gray-300"
+                  className={`block w-full appearance-none rounded-xl border py-2.5 pl-10 pr-3 text-sm text-slate-900 shadow-sm transition-shadow placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 sm:text-sm ${
+                    errors.email ? "border-red-400" : "border-slate-200"
                   }`}
                   placeholder="Enter your email"
                 />
@@ -126,7 +126,7 @@ export default function LoginPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-slate-700"
               >
                 Password
               </label>
@@ -145,15 +145,16 @@ export default function LoginPage() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   autoComplete="current-password"
-                  className={`appearance-none block w-full pl-10 pr-10 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${
-                    errors.password ? "border-red-300" : "border-gray-300"
+                  className={`block w-full appearance-none rounded-xl border py-2.5 pl-10 pr-10 text-sm text-slate-900 shadow-sm transition-shadow placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 sm:text-sm ${
+                    errors.password ? "border-red-400" : "border-slate-200"
                   }`}
                   placeholder="Enter your password"
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  className="absolute inset-y-0 right-0 flex items-center rounded-r-xl pr-3 text-slate-400 hover:text-slate-600 focus:outline-none focus-visible:text-slate-800"
                   onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? (
                     <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-500" />
@@ -176,11 +177,11 @@ export default function LoginPage() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
                 />
                 <label
                   htmlFor="remember-me"
-                  className="ml-2 block text-sm text-gray-900"
+                  className="ml-2 block text-sm text-slate-800"
                 >
                   Remember me
                 </label>
@@ -189,7 +190,7 @@ export default function LoginPage() {
               <div className="text-sm">
                 <Link
                   href="/forgot-password"
-                  className="font-medium text-blue-600 hover:text-blue-500"
+                  className="font-medium text-blue-600 hover:text-blue-700 hover:underline underline-offset-4"
                 >
                   Forgot your password?
                 </Link>
@@ -200,7 +201,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex w-full justify-center rounded-xl border border-transparent bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isLoading ? (
                   <div className="flex items-center">
@@ -217,10 +218,10 @@ export default function LoginPage() {
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
+                <div className="w-full border-t border-slate-200" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">
+                <span className="bg-white px-2 text-slate-500">
                   New to JobPlatform?
                 </span>
               </div>
@@ -229,7 +230,7 @@ export default function LoginPage() {
             <div className="mt-6">
               <Link
                 href="/register"
-                className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="flex w-full justify-center rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition-colors hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
               >
                 Create an account
               </Link>

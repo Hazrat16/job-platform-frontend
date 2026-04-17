@@ -29,28 +29,32 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body
+        className={`${inter.className} min-h-screen antialiased bg-slate-50 text-slate-900`}
+      >
         <Navbar />
-        <main>{children}</main>
+        <main className="min-h-[calc(100vh-4rem)]">{children}</main>
         <Toaster
-          position="top-right"
+          position="top-center"
           toastOptions={{
             duration: 4000,
+            className: "!rounded-xl !shadow-lg !px-4 !py-3 !text-sm !font-medium",
             style: {
-              background: "#363636",
-              color: "#fff",
+              background: "#0f172a",
+              color: "#f8fafc",
+              maxWidth: "min(100vw - 2rem, 28rem)",
             },
             success: {
-              duration: 3000,
+              duration: 3200,
               iconTheme: {
-                primary: "#10B981",
+                primary: "#22c55e",
                 secondary: "#fff",
               },
             },
             error: {
-              duration: 5000,
+              duration: 4800,
               iconTheme: {
-                primary: "#EF4444",
+                primary: "#f87171",
                 secondary: "#fff",
               },
             },

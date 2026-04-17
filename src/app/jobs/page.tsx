@@ -148,39 +148,44 @@ function JobsPageContent() {
 
   const getJobTypeColor = (type: string) => {
     const colors = {
-      "full-time": "bg-green-100 text-green-800",
-      "part-time": "bg-blue-100 text-blue-800",
-      contract: "bg-purple-100 text-purple-800",
-      internship: "bg-yellow-100 text-yellow-800",
+      "full-time": "bg-emerald-50 text-emerald-800 ring-1 ring-emerald-100",
+      "part-time": "bg-sky-50 text-sky-800 ring-1 ring-sky-100",
+      contract: "bg-violet-50 text-violet-800 ring-1 ring-violet-100",
+      internship: "bg-amber-50 text-amber-900 ring-1 ring-amber-100",
     };
-    return colors[type as keyof typeof colors] || "bg-gray-100 text-gray-800";
+    return colors[type as keyof typeof colors] || "bg-slate-100 text-slate-700 ring-1 ring-slate-200";
   };
 
+  const fieldClass =
+    "w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 shadow-sm transition-shadow focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20";
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Find Your Next Opportunity
+    <div className="min-h-screen bg-slate-50">
+      <div className="border-b border-slate-200/80 bg-white">
+        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            Find your next role
           </h1>
-          <p className="text-gray-600">
-            Discover thousands of job opportunities with all the information you
-            need
+          <p className="mt-2 max-w-2xl text-slate-600">
+            Filter by keywords, location, and salary. Save jobs when you are signed in as a
+            job seeker.
           </p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Filters Sidebar */}
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow p-6 sticky top-8">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
+            <div className="sticky top-24 rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-base font-semibold text-slate-900">Filters</h2>
                 <button
+                  type="button"
                   onClick={() => setShowFilters(!showFilters)}
-                  className="lg:hidden p-2 text-gray-400 hover:text-gray-600"
+                  className="rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800 lg:hidden"
+                  aria-expanded={showFilters}
+                  aria-controls="job-filters"
+                  aria-label={showFilters ? "Hide filters" : "Show filters"}
                 >
                   {showFilters ? (
                     <X className="h-5 w-5" />
@@ -190,33 +195,34 @@ function JobsPageContent() {
                 </button>
               </div>
 
-              <div className={`lg:block ${showFilters ? "block" : "hidden"}`}>
-                {/* Search */}
+              <div
+                id="job-filters"
+                className={`lg:block ${showFilters ? "block" : "hidden"}`}
+              >
                 <div className="mb-6">
                   <label
                     htmlFor="search"
-                    className="block text-sm font-medium text-gray-700 mb-2"
+                    className="mb-2 block text-sm font-medium text-slate-700"
                   >
                     Search
                   </label>
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                     <input
                       type="text"
                       id="search"
-                      placeholder="Job title, company..."
+                      placeholder="Job title, company…"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                      className={`${fieldClass} pl-10`}
                     />
                   </div>
                 </div>
 
-                {/* Location */}
                 <div className="mb-6">
                   <label
                     htmlFor="location"
-                    className="block text-sm font-medium text-gray-700 mb-2"
+                    className="mb-2 block text-sm font-medium text-slate-700"
                   >
                     Location
                   </label>
@@ -226,23 +232,22 @@ function JobsPageContent() {
                     placeholder="City, state, or remote"
                     value={selectedLocation}
                     onChange={(e) => setSelectedLocation(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    className={fieldClass}
                   />
                 </div>
 
-                {/* Job Type */}
                 <div className="mb-6">
                   <label
                     htmlFor="type"
-                    className="block text-sm font-medium text-gray-700 mb-2"
+                    className="mb-2 block text-sm font-medium text-slate-700"
                   >
-                    Job Type
+                    Job type
                   </label>
                   <select
                     id="type"
                     value={selectedType}
                     onChange={(e) => setSelectedType(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    className={fieldClass}
                   >
                     <option value="">All Types</option>
                     <option value="full-time">Full Time</option>
@@ -252,19 +257,18 @@ function JobsPageContent() {
                   </select>
                 </div>
 
-                {/* Salary Range */}
                 <div className="mb-6">
                   <label
                     htmlFor="salary"
-                    className="block text-sm font-medium text-gray-700 mb-2"
+                    className="mb-2 block text-sm font-medium text-slate-700"
                   >
-                    Salary Range
+                    Salary range
                   </label>
                   <select
                     id="salary"
                     value={selectedSalary}
                     onChange={(e) => setSelectedSalary(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    className={fieldClass}
                   >
                     <option value="">All Salaries</option>
                     <option value="0-50000">$0 - $50,000</option>
@@ -281,10 +285,11 @@ function JobsPageContent() {
                   selectedType ||
                   selectedSalary) && (
                   <button
+                    type="button"
                     onClick={clearFilters}
-                    className="w-full px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100"
                   >
-                    Clear All Filters
+                    Clear all filters
                   </button>
                 )}
               </div>
@@ -293,44 +298,69 @@ function JobsPageContent() {
 
           {/* Job Listings */}
           <div className="lg:col-span-3">
-            <div className="mb-6">
-              <div className="flex items-center justify-between">
-                <p className="text-gray-600">
-                  Showing {filteredJobs.length} of {allJobsCount} jobs
-                </p>
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm text-gray-500">Sort by:</span>
-                  <select
-                    className="text-sm border border-gray-300 rounded-md px-2 py-1"
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                  >
+            <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm text-slate-600">
+                <span className="font-semibold text-slate-900">{filteredJobs.length}</span>{" "}
+                {filteredJobs.length === 1 ? "job" : "jobs"}
+                {allJobsCount > 0 && (
+                  <span className="text-slate-500"> in this list</span>
+                )}
+              </p>
+              <div className="flex items-center gap-2">
+                <label htmlFor="sort-jobs" className="text-sm text-slate-500">
+                  Sort
+                </label>
+                <select
+                  id="sort-jobs"
+                  className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                >
                     <option value="recent">Most Recent</option>
                     <option value="salary_desc">Salary: High to Low</option>
                     <option value="salary_asc">Salary: Low to High</option>
                   </select>
                 </div>
-              </div>
             </div>
 
             <div className="space-y-4">
               {loading ? (
-                <div className="text-center py-12 text-gray-500">Loading jobs...</div>
+                <div className="space-y-4" aria-busy="true" aria-label="Loading jobs">
+                  {[0, 1, 2, 3].map((i) => (
+                    <div
+                      key={i}
+                      className="animate-pulse rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm"
+                    >
+                      <div className="mb-3 h-5 w-2/3 max-w-md rounded-lg bg-slate-200" />
+                      <div className="mb-4 flex gap-2">
+                        <div className="h-4 w-24 rounded bg-slate-100" />
+                        <div className="h-4 w-28 rounded bg-slate-100" />
+                      </div>
+                      <div className="mb-2 h-3 w-full rounded bg-slate-100" />
+                      <div className="h-3 w-full max-w-lg rounded bg-slate-100 opacity-90" />
+                    </div>
+                  ))}
+                </div>
               ) : filteredJobs.length > 0 ? (
                 filteredJobs.map((job) => (
-                  <div
+                  <article
                     key={job._id}
-                    className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow"
+                    className="group rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm transition-all duration-200 hover:border-slate-300 hover:shadow-md"
                   >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-3 mb-2">
-                          <h3 className="text-xl font-semibold text-gray-900 hover:text-blue-600">
-                            <Link href={`/jobs/${job._id}`}>{job.title}</Link>
-                          </h3>
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="min-w-0 flex-1">
+                        <div className="mb-2 flex flex-wrap items-center gap-2 sm:gap-3">
+                          <h2 className="text-lg font-semibold text-slate-900 sm:text-xl">
+                            <Link
+                              href={`/jobs/${job._id}`}
+                              className="transition-colors hover:text-blue-600 focus:outline-none focus-visible:text-blue-600"
+                            >
+                              {job.title}
+                            </Link>
+                          </h2>
                           <span
-                            className={`px-2 py-1 text-xs font-medium rounded-full ${getJobTypeColor(
-                              job.type
+                            className={`inline-flex shrink-0 items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getJobTypeColor(
+                              job.type,
                             )}`}
                           >
                             {job.type
@@ -339,63 +369,56 @@ function JobsPageContent() {
                           </span>
                         </div>
 
-                        <div className="flex items-center space-x-4 text-gray-600 mb-3">
-                          <div className="flex items-center">
-                            <Briefcase className="h-4 w-4 mr-1" />
+                        <div className="mb-3 flex flex-wrap gap-x-4 gap-y-2 text-sm text-slate-600">
+                          <div className="flex items-center gap-1">
+                            <Briefcase className="h-4 w-4 shrink-0 text-slate-400" />
                             <span>{job.company}</span>
                           </div>
-                          <div className="flex items-center">
-                            <MapPin className="h-4 w-4 mr-1" />
+                          <div className="flex items-center gap-1">
+                            <MapPin className="h-4 w-4 shrink-0 text-slate-400" />
                             <span>{job.location}</span>
                           </div>
-                          <div className="flex items-center">
-                            <DollarSign className="h-4 w-4 mr-1" />
+                          <div className="flex items-center gap-1">
+                            <DollarSign className="h-4 w-4 shrink-0 text-slate-400" />
                             <span>{formatSalary(job.salary)}</span>
                           </div>
-                          <div className="flex items-center">
-                            <Calendar className="h-4 w-4 mr-1" />
+                          <div className="flex items-center gap-1">
+                            <Calendar className="h-4 w-4 shrink-0 text-slate-400" />
                             <span>
                               {new Date(job.createdAt).toLocaleDateString()}
                             </span>
                           </div>
                         </div>
 
-                        <p className="text-gray-600 mb-4 line-clamp-2">
-                          {job.description}
-                        </p>
+                        <p className="mb-4 line-clamp-2 text-slate-600">{job.description}</p>
 
-                        <div className="flex flex-wrap gap-2 mb-4">
+                        <div className="mb-4 flex flex-wrap gap-2">
                           {job.requirements.slice(0, 3).map((req, index) => (
                             <span
                               key={index}
-                              className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md"
+                              className="rounded-lg bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700"
                             >
                               {req}
                             </span>
                           ))}
                           {job.requirements.length > 3 && (
-                            <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md">
+                            <span className="rounded-lg bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600">
                               +{job.requirements.length - 3} more
                             </span>
                           )}
                         </div>
 
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-2">
-                            <span className="text-sm text-gray-500">
-                              Benefits:
-                            </span>
+                        <div className="flex flex-col gap-4 border-t border-slate-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
+                          <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+                            <span className="font-medium text-slate-500">Benefits</span>
                             {job.benefits.slice(0, 2).map((benefit, index) => (
-                              <span
-                                key={index}
-                                className="text-sm text-green-600"
-                              >
+                              <span key={index} className="text-emerald-700">
                                 {benefit}
                               </span>
                             ))}
                           </div>
 
-                          <div className="flex items-center space-x-3">
+                          <div className="flex shrink-0 items-center justify-end gap-2">
                             <button
                               type="button"
                               onClick={() => void toggleSavedJob(job._id)}
@@ -405,10 +428,10 @@ function JobsPageContent() {
                                   ? "Remove from saved jobs"
                                   : "Save job"
                               }
-                              className={`p-2 rounded-full transition-colors disabled:opacity-50 ${
+                              className={`rounded-full p-2.5 transition-colors disabled:opacity-50 ${
                                 savedJobIds.includes(job._id)
-                                  ? "text-blue-600 bg-blue-100"
-                                  : "text-gray-400 hover:text-blue-600 hover:bg-blue-50"
+                                  ? "bg-blue-50 text-blue-600"
+                                  : "text-slate-400 hover:bg-blue-50 hover:text-blue-600"
                               }`}
                             >
                               {savedJobIds.includes(job._id) ? (
@@ -420,46 +443,55 @@ function JobsPageContent() {
 
                             <Link
                               href={`/jobs/${job._id}`}
-                              className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
+                              className="inline-flex items-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                             >
-                              View Details
+                              View details
                             </Link>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </article>
                 ))
               ) : (
-                <div className="text-center py-12">
-                  <div className="text-gray-400 mb-4">
-                    <Search className="h-16 w-16 mx-auto" />
-                  </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    No jobs found
-                  </h3>
-                  <p className="text-gray-600 mb-4">
-                    Try adjusting your search criteria or filters to find more
-                    opportunities.
+                <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-14 text-center">
+                  <Search className="mx-auto mb-4 h-14 w-14 text-slate-300" />
+                  <h3 className="text-lg font-semibold text-slate-900">No jobs match</h3>
+                  <p className="mx-auto mt-2 max-w-md text-slate-600">
+                    Loosen filters or clear search to see more roles.
                   </p>
                   <button
+                    type="button"
                     onClick={clearFilters}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                    className="mt-6 inline-flex rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
                   >
-                    Clear Filters
+                    Clear filters
                   </button>
                 </div>
               )}
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-            {/* Load More */}
-            {filteredJobs.length > 0 && (
-              <div className="text-center mt-8">
-                <p className="text-sm text-gray-500">
-                  Pagination ready from backend (`page`/`limit`) for next iteration.
-                </p>
-              </div>
-            )}
+function JobsPageFallback() {
+  return (
+    <div className="min-h-screen bg-slate-50 px-4 py-10 sm:px-6">
+      <div className="mx-auto max-w-7xl space-y-4">
+        <div className="h-10 max-w-md animate-pulse rounded-xl bg-slate-200" />
+        <div className="h-24 animate-pulse rounded-2xl bg-white shadow-sm" />
+        <div className="grid gap-8 lg:grid-cols-4">
+          <div className="hidden h-64 animate-pulse rounded-2xl bg-white shadow-sm lg:block" />
+          <div className="space-y-4 lg:col-span-3">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className="h-40 animate-pulse rounded-2xl border border-slate-200/80 bg-white"
+              />
+            ))}
           </div>
         </div>
       </div>
@@ -469,7 +501,7 @@ function JobsPageContent() {
 
 export default function JobsPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<JobsPageFallback />}>
       <JobsPageContent />
     </Suspense>
   );
