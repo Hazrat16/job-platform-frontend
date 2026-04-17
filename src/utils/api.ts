@@ -8,24 +8,31 @@ import {
   ResetPasswordData,
   User,
 } from "@/types";
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
+
+function resolveApiBaseUrl(): string {
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+  if (typeof window !== "undefined") {
+    return `${window.location.origin}/api`;
+  }
+  return "http://127.0.0.1:5000/api";
+}
 
 class ApiClient {
   private client: AxiosInstance;
-  private baseURL: string;
 
   constructor() {
-    this.baseURL =
-      process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
     this.client = axios.create({
-      baseURL: this.baseURL,
       headers: {
         "Content-Type": "application/json",
       },
     });
 
     // Add auth token to requests
-    this.client.interceptors.request.use((config) => {
+    this.client.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+      config.baseURL = resolveApiBaseUrl();
       const token = localStorage.getItem("token");
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -150,7 +157,7 @@ class ApiClient {
 
   async uploadProfilePhoto(
     photo: File,
-  ): Promise<ApiResponse<{ photo: string }>> {
+  ): Promise<ApiResponse<{ photo: string; user: User }>> {
     const formData = new FormData();
     formData.append("photo", photo);
 
@@ -158,20 +165,53 @@ class ApiClient {
       const response = await this.client.post("/auth/upload-photo", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      return this.normalizeResponse<{ photo: string }>(response.data);
+      return this.normalizeResponse<{ photo: string; user: User }>(response.data);
     } catch (error) {
       return { success: false, message: this.extractErrorMessage(error) };
     }
   }
 
-  // User endpoints
-  async getCurrentUser(): Promise<ApiResponse<User>> {
+  async getProfile(): Promise<ApiResponse<User>> {
     try {
-      const response = await this.client.get("/auth/protected");
+      const response = await this.client.get("/profile");
       return this.normalizeResponse<User>(response.data);
     } catch (error) {
       return { success: false, message: this.extractErrorMessage(error) };
     }
+  }
+
+  async updateProfile(payload: {
+    name?: string;
+    profile?: Record<string, unknown>;
+  }): Promise<ApiResponse<User>> {
+    try {
+      const response = await this.client.patch("/profile", payload);
+      return this.normalizeResponse<User>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async uploadProfileResume(
+    file: File,
+  ): Promise<ApiResponse<{ resumeUrl: string; user: User }>> {
+    const formData = new FormData();
+    formData.append("resume", file);
+    try {
+      const response = await this.client.post("/profile/resume", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      return this.normalizeResponse<{ resumeUrl: string; user: User }>(
+        response.data,
+      );
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  // User endpoints (same as getProfile; kept for backward compatibility)
+  async getCurrentUser(): Promise<ApiResponse<User>> {
+    return this.getProfile();
   }
 
   // Job endpoints (to be implemented when backend adds them)

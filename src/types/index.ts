@@ -1,3 +1,15 @@
+export interface UserProfile {
+  headline?: string;
+  bio?: string;
+  phone?: string;
+  location?: string;
+  skills?: string[];
+  linkedIn?: string;
+  github?: string;
+  portfolio?: string;
+  resumeUrl?: string;
+}
+
 export interface User {
   _id: string;
   name: string;
@@ -5,8 +17,9 @@ export interface User {
   role: "jobseeker" | "employer" | "admin";
   isVerified: boolean;
   photo?: string;
-  createdAt: string;
-  updatedAt: string;
+  profile?: UserProfile;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Job {
