@@ -1,8 +1,21 @@
 "use client";
 
-import { UserProfile } from "@/types";
+import {
+  EducationItem,
+  ExperienceItem,
+  ProfileCompleteness,
+  UserProfile,
+} from "@/types";
 import { apiClient, getAuthToken, getUser, setUser } from "@/utils/api";
-import { AlertCircle, Loader2, Save, Upload } from "lucide-react";
+import {
+  AlertCircle,
+  BookOpen,
+  Briefcase,
+  GraduationCap,
+  Loader2,
+  Save,
+  User as UserIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
@@ -18,12 +31,156 @@ const emptyProfile: UserProfile = {
   github: "",
   portfolio: "",
   resumeUrl: "",
+  experience: [],
+  education: [],
 };
+
+function emptyExperience(): ExperienceItem {
+  return {
+    title: "",
+    company: "",
+    location: "",
+    startDate: "",
+    endDate: "",
+    current: false,
+    description: "",
+  };
+}
+
+function emptyEducation(): EducationItem {
+  return {
+    school: "",
+    degree: "",
+    field: "",
+    startYear: "",
+    endYear: "",
+    current: false,
+    description: "",
+  };
+}
+
+function mapExperience(raw: unknown): ExperienceItem[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((row) => {
+    if (!row || typeof row !== "object") return emptyExperience();
+    const o = row as Record<string, unknown>;
+    return {
+      _id: typeof o._id === "string" ? o._id : undefined,
+      title: String(o.title ?? ""),
+      company: String(o.company ?? ""),
+      location: String(o.location ?? ""),
+      startDate: String(o.startDate ?? ""),
+      endDate: String(o.endDate ?? ""),
+      current: o.current === true,
+      description: String(o.description ?? ""),
+    };
+  });
+}
+
+function mapEducation(raw: unknown): EducationItem[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((row) => {
+    if (!row || typeof row !== "object") return emptyEducation();
+    const o = row as Record<string, unknown>;
+    return {
+      _id: typeof o._id === "string" ? o._id : undefined,
+      school: String(o.school ?? ""),
+      degree: String(o.degree ?? ""),
+      field: String(o.field ?? ""),
+      startYear: String(o.startYear ?? ""),
+      endYear: String(o.endYear ?? ""),
+      current: o.current === true,
+      description: String(o.description ?? ""),
+    };
+  });
+}
+
+function experiencePayload(rows: ExperienceItem[]) {
+  return rows.map((row) => ({
+    title: row.title,
+    company: row.company,
+    location: row.location,
+    startDate: row.startDate,
+    endDate: row.endDate,
+    current: row.current ?? false,
+    description: row.description,
+  }));
+}
+
+function educationPayload(rows: EducationItem[]) {
+  return rows.map((row) => ({
+    school: row.school,
+    degree: row.degree,
+    field: row.field,
+    startYear: row.startYear,
+    endYear: row.endYear,
+    current: row.current ?? false,
+    description: row.description,
+  }));
+}
+
+function CompletenessCard({ data }: { data: ProfileCompleteness }) {
+  const labels: Record<keyof ProfileCompleteness["sections"], string> = {
+    basics: "Contact",
+    summary: "Summary",
+    skills: "Skills",
+    experience: "Experience",
+    education: "Education",
+    resume: "Résumé",
+    links: "Links",
+  };
+
+  return (
+    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-lg p-5 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900">Profile strength</h2>
+          <p className="text-sm text-gray-600">
+            Complete your profile to stand out to employers.
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <div
+            className="relative h-14 w-14 rounded-full border-4 border-white shadow flex items-center justify-center bg-white"
+            aria-label={`Profile ${data.percent} percent complete`}
+          >
+            <span className="text-sm font-bold text-blue-700">{data.percent}%</span>
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-wrap gap-2 mb-4">
+        {(Object.keys(data.sections) as (keyof ProfileCompleteness["sections"])[]).map(
+          (key) => (
+            <span
+              key={key}
+              className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
+                data.sections[key]
+                  ? "bg-green-100 text-green-800"
+                  : "bg-gray-200 text-gray-700"
+              }`}
+            >
+              {labels[key]}
+              {data.sections[key] ? " ✓" : ""}
+            </span>
+          ),
+        )}
+      </div>
+      {data.missingTips.length > 0 && (
+        <ul className="text-sm text-gray-700 space-y-1 list-disc list-inside">
+          {data.missingTips.slice(0, 5).map((tip, i) => (
+            <li key={i}>{tip}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
 
 export default function ProfilePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [completeness, setCompleteness] = useState<ProfileCompleteness | null>(null);
   const [name, setName] = useState("");
   const [headline, setHeadline] = useState("");
   const [bio, setBio] = useState("");
@@ -33,7 +190,8 @@ export default function ProfilePage() {
   const [linkedIn, setLinkedIn] = useState("");
   const [github, setGithub] = useState("");
   const [portfolio, setPortfolio] = useState("");
-  const [resumeUrl, setResumeUrl] = useState("");
+  const [experience, setExperience] = useState<ExperienceItem[]>([]);
+  const [education, setEducation] = useState<EducationItem[]>([]);
 
   useEffect(() => {
     if (!getAuthToken()) {
@@ -50,6 +208,7 @@ export default function ProfilePage() {
       }
       const u = res.data;
       setName(u.name);
+      setCompleteness(u.profileCompleteness ?? null);
       const p = { ...emptyProfile, ...u.profile };
       setHeadline(p.headline ?? "");
       setBio(p.bio ?? "");
@@ -59,7 +218,8 @@ export default function ProfilePage() {
       setLinkedIn(p.linkedIn ?? "");
       setGithub(p.github ?? "");
       setPortfolio(p.portfolio ?? "");
-      setResumeUrl(p.resumeUrl ?? "");
+      setExperience(mapExperience(p.experience));
+      setEducation(mapEducation(p.education));
       setUser(u);
       setLoading(false);
     };
@@ -75,40 +235,36 @@ export default function ProfilePage() {
         .split(",")
         .map((s) => s.trim())
         .filter(Boolean);
+      const role = getUser()?.role;
+      const profilePayload: Record<string, unknown> = {
+        headline,
+        bio,
+        phone,
+        location,
+        linkedIn,
+        github,
+        portfolio,
+      };
+      if (role === "jobseeker") {
+        profilePayload["skills"] = skills;
+        profilePayload["experience"] = experiencePayload(experience);
+        profilePayload["education"] = educationPayload(education);
+      }
+
       const res = await apiClient.updateProfile({
         name,
-        profile: {
-          headline,
-          bio,
-          phone,
-          location,
-          skills,
-          linkedIn,
-          github,
-          portfolio,
-        },
+        profile: profilePayload,
       });
       if (!res.success || !res.data) {
         toast.error(res.message || "Save failed");
         return;
       }
       setUser(res.data);
+      setCompleteness(res.data.profileCompleteness ?? null);
       toast.success("Profile saved");
     } finally {
       setSaving(false);
     }
-  };
-
-  const onResume = async (file: File | null) => {
-    if (!file) return;
-    const res = await apiClient.uploadProfileResume(file);
-    if (!res.success || !res.data) {
-      toast.error(res.message || "Upload failed");
-      return;
-    }
-    setResumeUrl(res.data.resumeUrl);
-    setUser(res.data.user);
-    toast.success("Resume updated");
   };
 
   if (loading) {
@@ -123,135 +279,452 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-10">
-      <div className="max-w-2xl mx-auto px-4">
-        <div className="mb-6 flex items-center justify-between">
+      <div className="max-w-3xl mx-auto px-4">
+        <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <h1 className="text-2xl font-bold text-gray-900">Your profile</h1>
-          <Link
-            href="/jobs"
-            className="text-sm text-blue-600 hover:text-blue-800"
-          >
-            Back to jobs
-          </Link>
+          <div className="flex flex-wrap gap-3 text-sm">
+            <Link href="/jobs" className="text-blue-600 hover:text-blue-800">
+              Browse jobs
+            </Link>
+            {role === "jobseeker" && (
+              <Link href="/profile/resume" className="text-blue-600 hover:text-blue-800">
+                Résumé →
+              </Link>
+            )}
+          </div>
         </div>
 
-        <form
-          onSubmit={onSave}
-          className="bg-white shadow rounded-lg p-6 space-y-5"
-        >
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Full name
-            </label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2"
-              required
-              minLength={2}
-            />
-          </div>
+        {role === "jobseeker" && completeness && (
+          <CompletenessCard data={completeness} />
+        )}
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Headline
-            </label>
-            <input
-              type="text"
-              value={headline}
-              onChange={(e) => setHeadline(e.target.value)}
-              placeholder="e.g. Senior Full-stack Engineer"
-              className="w-full border border-gray-300 rounded-md px-3 py-2"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Bio
-            </label>
-            <textarea
-              value={bio}
-              onChange={(e) => setBio(e.target.value)}
-              rows={4}
-              className="w-full border border-gray-300 rounded-md px-3 py-2"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Phone
-              </label>
-              <input
-                type="text"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2"
-              />
+        <form onSubmit={onSave} className="space-y-6">
+          <section className="bg-white shadow rounded-lg p-6 space-y-4">
+            <div className="flex items-center gap-2 text-gray-900 font-semibold border-b pb-2">
+              <UserIcon className="h-5 w-5 text-blue-600" />
+              Basics
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Location
+                Full name
               </label>
               <input
                 type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="w-full border border-gray-300 rounded-md px-3 py-2"
+                required
+                minLength={2}
               />
             </div>
-          </div>
-
-          {role === "jobseeker" && (
-            <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Skills (comma-separated)
+                  Phone
                 </label>
                 <input
                   type="text"
-                  value={skillsText}
-                  onChange={(e) => setSkillsText(e.target.value)}
-                  placeholder="React, Node.js, MongoDB"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
                 />
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Resume
+                  Location
                 </label>
-                {resumeUrl ? (
-                  <p className="text-sm text-gray-600 mb-2">
-                    Current file:{" "}
-                    <a
-                      href={resumeUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 underline"
-                    >
-                      View / download
-                    </a>
+                <input
+                  type="text"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2"
+                />
+              </div>
+            </div>
+          </section>
+
+          <section className="bg-white shadow rounded-lg p-6 space-y-4">
+            <div className="flex items-center gap-2 text-gray-900 font-semibold border-b pb-2">
+              <BookOpen className="h-5 w-5 text-blue-600" />
+              Professional summary
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Headline
+              </label>
+              <input
+                type="text"
+                value={headline}
+                onChange={(e) => setHeadline(e.target.value)}
+                placeholder="e.g. Senior Full-stack Engineer"
+                className="w-full border border-gray-300 rounded-md px-3 py-2"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Bio
+              </label>
+              <textarea
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                rows={4}
+                placeholder="Describe your background, strengths, and what you are looking for."
+                className="w-full border border-gray-300 rounded-md px-3 py-2"
+              />
+            </div>
+          </section>
+
+          {role === "jobseeker" && (
+            <>
+              <section className="bg-white shadow rounded-lg p-6 space-y-4">
+                <div className="flex items-center gap-2 text-gray-900 font-semibold border-b pb-2">
+                  <Briefcase className="h-5 w-5 text-blue-600" />
+                  Skills
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Skills (comma-separated)
+                  </label>
+                  <input
+                    type="text"
+                    value={skillsText}
+                    onChange={(e) => setSkillsText(e.target.value)}
+                    placeholder="React, Node.js, MongoDB"
+                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                  />
+                </div>
+              </section>
+
+              <section className="bg-white shadow rounded-lg p-6 space-y-4">
+                <div className="flex items-center justify-between border-b pb-2">
+                  <div className="flex items-center gap-2 text-gray-900 font-semibold">
+                    <Briefcase className="h-5 w-5 text-blue-600" />
+                    Experience
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setExperience((prev) => [...prev, emptyExperience()])}
+                    className="text-sm font-medium text-blue-600 hover:text-blue-800"
+                  >
+                    + Add role
+                  </button>
+                </div>
+                {experience.length === 0 ? (
+                  <p className="text-sm text-gray-500">
+                    No roles yet. Add your most recent positions.
                   </p>
                 ) : (
-                  <p className="text-sm text-gray-500 mb-2">No resume uploaded yet.</p>
+                  <div className="space-y-6">
+                    {experience.map((row, index) => (
+                      <div
+                        key={row._id ?? `exp-${index}`}
+                        className="border border-gray-200 rounded-md p-4 space-y-3"
+                      >
+                        <div className="flex justify-end">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setExperience((prev) => prev.filter((_, i) => i !== index))
+                            }
+                            className="text-sm text-red-600 hover:text-red-800"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                              Title
+                            </label>
+                            <input
+                              value={row.title}
+                              onChange={(e) =>
+                                setExperience((prev) =>
+                                  prev.map((r, i) =>
+                                    i === index ? { ...r, title: e.target.value } : r,
+                                  ),
+                                )
+                              }
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                              Company
+                            </label>
+                            <input
+                              value={row.company}
+                              onChange={(e) =>
+                                setExperience((prev) =>
+                                  prev.map((r, i) =>
+                                    i === index ? { ...r, company: e.target.value } : r,
+                                  ),
+                                )
+                              }
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-600 mb-1">
+                            Location
+                          </label>
+                          <input
+                            value={row.location}
+                            onChange={(e) =>
+                              setExperience((prev) =>
+                                prev.map((r, i) =>
+                                  i === index ? { ...r, location: e.target.value } : r,
+                                ),
+                              )
+                            }
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                          />
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                              Start
+                            </label>
+                            <input
+                              value={row.startDate}
+                              onChange={(e) =>
+                                setExperience((prev) =>
+                                  prev.map((r, i) =>
+                                    i === index ? { ...r, startDate: e.target.value } : r,
+                                  ),
+                                )
+                              }
+                              placeholder="e.g. Jan 2022"
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                              End
+                            </label>
+                            <input
+                              value={row.endDate}
+                              onChange={(e) =>
+                                setExperience((prev) =>
+                                  prev.map((r, i) =>
+                                    i === index ? { ...r, endDate: e.target.value } : r,
+                                  ),
+                                )
+                              }
+                              disabled={row.current}
+                              placeholder="e.g. Present"
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm disabled:bg-gray-100"
+                            />
+                          </div>
+                        </div>
+                        <label className="inline-flex items-center gap-2 text-sm text-gray-700">
+                          <input
+                            type="checkbox"
+                            checked={row.current ?? false}
+                            onChange={(e) =>
+                              setExperience((prev) =>
+                                prev.map((r, i) =>
+                                  i === index
+                                    ? { ...r, current: e.target.checked, endDate: "" }
+                                    : r,
+                                ),
+                              )
+                            }
+                          />
+                          I currently work here
+                        </label>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-600 mb-1">
+                            Description
+                          </label>
+                          <textarea
+                            value={row.description}
+                            onChange={(e) =>
+                              setExperience((prev) =>
+                                prev.map((r, i) =>
+                                  i === index
+                                    ? { ...r, description: e.target.value }
+                                    : r,
+                                ),
+                              )
+                            }
+                            rows={3}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 )}
-                <label className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50">
-                  <Upload className="h-4 w-4" />
-                  <span className="text-sm">Upload PDF / DOC</span>
-                  <input
-                    type="file"
-                    accept=".pdf,.doc,.docx"
-                    className="hidden"
-                    onChange={(e) => void onResume(e.target.files?.[0] ?? null)}
-                  />
-                </label>
-              </div>
+              </section>
+
+              <section className="bg-white shadow rounded-lg p-6 space-y-4">
+                <div className="flex items-center justify-between border-b pb-2">
+                  <div className="flex items-center gap-2 text-gray-900 font-semibold">
+                    <GraduationCap className="h-5 w-5 text-blue-600" />
+                    Education
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setEducation((prev) => [...prev, emptyEducation()])}
+                    className="text-sm font-medium text-blue-600 hover:text-blue-800"
+                  >
+                    + Add school
+                  </button>
+                </div>
+                {education.length === 0 ? (
+                  <p className="text-sm text-gray-500">
+                    Add degrees or certifications you want recruiters to see.
+                  </p>
+                ) : (
+                  <div className="space-y-6">
+                    {education.map((row, index) => (
+                      <div
+                        key={row._id ?? `edu-${index}`}
+                        className="border border-gray-200 rounded-md p-4 space-y-3"
+                      >
+                        <div className="flex justify-end">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setEducation((prev) => prev.filter((_, i) => i !== index))
+                            }
+                            className="text-sm text-red-600 hover:text-red-800"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                              School
+                            </label>
+                            <input
+                              value={row.school}
+                              onChange={(e) =>
+                                setEducation((prev) =>
+                                  prev.map((r, i) =>
+                                    i === index ? { ...r, school: e.target.value } : r,
+                                  ),
+                                )
+                              }
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                              Degree
+                            </label>
+                            <input
+                              value={row.degree}
+                              onChange={(e) =>
+                                setEducation((prev) =>
+                                  prev.map((r, i) =>
+                                    i === index ? { ...r, degree: e.target.value } : r,
+                                  ),
+                                )
+                              }
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-600 mb-1">
+                            Field of study
+                          </label>
+                          <input
+                            value={row.field}
+                            onChange={(e) =>
+                              setEducation((prev) =>
+                                prev.map((r, i) =>
+                                  i === index ? { ...r, field: e.target.value } : r,
+                                ),
+                              )
+                            }
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                          />
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                              Start year
+                            </label>
+                            <input
+                              value={row.startYear}
+                              onChange={(e) =>
+                                setEducation((prev) =>
+                                  prev.map((r, i) =>
+                                    i === index ? { ...r, startYear: e.target.value } : r,
+                                  ),
+                                )
+                              }
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                              End year
+                            </label>
+                            <input
+                              value={row.endYear}
+                              onChange={(e) =>
+                                setEducation((prev) =>
+                                  prev.map((r, i) =>
+                                    i === index ? { ...r, endYear: e.target.value } : r,
+                                  ),
+                                )
+                              }
+                              disabled={row.current}
+                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm disabled:bg-gray-100"
+                            />
+                          </div>
+                        </div>
+                        <label className="inline-flex items-center gap-2 text-sm text-gray-700">
+                          <input
+                            type="checkbox"
+                            checked={row.current ?? false}
+                            onChange={(e) =>
+                              setEducation((prev) =>
+                                prev.map((r, i) =>
+                                  i === index
+                                    ? { ...r, current: e.target.checked, endYear: "" }
+                                    : r,
+                                ),
+                              )
+                            }
+                          />
+                          Currently enrolled
+                        </label>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-600 mb-1">
+                            Notes
+                          </label>
+                          <textarea
+                            value={row.description}
+                            onChange={(e) =>
+                              setEducation((prev) =>
+                                prev.map((r, i) =>
+                                  i === index
+                                    ? { ...r, description: e.target.value }
+                                    : r,
+                                ),
+                              )
+                            }
+                            rows={2}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </section>
             </>
           )}
 
-          <div className="space-y-3">
-            <p className="text-sm font-medium text-gray-700">Links</p>
+          <section className="bg-white shadow rounded-lg p-6 space-y-3">
+            <p className="text-gray-900 font-semibold border-b pb-2">Links</p>
             <input
               type="url"
               value={linkedIn}
@@ -273,9 +746,9 @@ export default function ProfilePage() {
               placeholder="Portfolio URL"
               className="w-full border border-gray-300 rounded-md px-3 py-2"
             />
-          </div>
+          </section>
 
-          <div className="flex items-center gap-2 text-amber-700 text-sm">
+          <div className="flex items-center gap-2 text-amber-700 text-sm px-1">
             <AlertCircle className="h-4 w-4 shrink-0" />
             Email and role cannot be changed here.
           </div>

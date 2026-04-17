@@ -1,3 +1,39 @@
+export interface ExperienceItem {
+  _id?: string;
+  title: string;
+  company: string;
+  location?: string;
+  startDate?: string;
+  endDate?: string;
+  current?: boolean;
+  description?: string;
+}
+
+export interface EducationItem {
+  _id?: string;
+  school: string;
+  degree: string;
+  field?: string;
+  startYear?: string;
+  endYear?: string;
+  current?: boolean;
+  description?: string;
+}
+
+export interface ProfileCompleteness {
+  percent: number;
+  sections: {
+    basics: boolean;
+    summary: boolean;
+    skills: boolean;
+    experience: boolean;
+    education: boolean;
+    resume: boolean;
+    links: boolean;
+  };
+  missingTips: string[];
+}
+
 export interface UserProfile {
   headline?: string;
   bio?: string;
@@ -8,6 +44,8 @@ export interface UserProfile {
   github?: string;
   portfolio?: string;
   resumeUrl?: string;
+  experience?: ExperienceItem[];
+  education?: EducationItem[];
 }
 
 export interface User {
@@ -18,6 +56,8 @@ export interface User {
   isVerified: boolean;
   photo?: string;
   profile?: UserProfile;
+  /** Present when role is jobseeker; computed on the server from profile fields. */
+  profileCompleteness?: ProfileCompleteness | null;
   createdAt?: string;
   updatedAt?: string;
 }
