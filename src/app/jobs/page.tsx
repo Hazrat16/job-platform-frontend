@@ -1,7 +1,7 @@
 "use client";
 
 import { Job } from "@/types";
-import { apiClient } from "@/utils/api";
+import { apiClient, getUser } from "@/utils/api";
 import {
   Bookmark,
   BookmarkPlus,
@@ -14,12 +14,13 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 function JobsPageContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
   const [allJobsCount, setAllJobsCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState(
@@ -29,7 +30,8 @@ function JobsPageContent() {
   const [selectedType, setSelectedType] = useState("");
   const [selectedSalary, setSelectedSalary] = useState("");
   const [showFilters, setShowFilters] = useState(false);
-  const [savedJobs, setSavedJobs] = useState<string[]>([]);
+  const [savedJobIds, setSavedJobIds] = useState<string[]>([]);
+  const [bookmarkBusyId, setBookmarkBusyId] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState("recent");
   const [loading, setLoading] = useState(false);
 
@@ -74,12 +76,61 @@ function JobsPageContent() {
     filterJobs();
   }, [filterJobs]);
 
-  const toggleSavedJob = (jobId: string) => {
-    setSavedJobs((prev) =>
-      prev.includes(jobId)
-        ? prev.filter((id) => id !== jobId)
-        : [...prev, jobId]
-    );
+  useEffect(() => {
+    const user = getUser();
+    if (user?.role !== "jobseeker") {
+      setSavedJobIds([]);
+      return;
+    }
+    let cancelled = false;
+    void (async () => {
+      const response = await apiClient.getSavedJobs();
+      if (cancelled || !response.success || !response.data) return;
+      setSavedJobIds(response.data.map((j) => j._id));
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const toggleSavedJob = async (jobId: string) => {
+    const user = getUser();
+    if (!user) {
+      toast.error("Sign in to save jobs");
+      router.push("/login");
+      return;
+    }
+    if (user.role !== "jobseeker") {
+      toast.error("Only job seekers can save jobs");
+      return;
+    }
+    if (bookmarkBusyId) return;
+
+    const isSaved = savedJobIds.includes(jobId);
+    setBookmarkBusyId(jobId);
+    try {
+      if (isSaved) {
+        const response = await apiClient.unsaveJob(jobId);
+        if (!response.success) {
+          toast.error(response.message || "Could not unsave job");
+          return;
+        }
+        setSavedJobIds((prev) => prev.filter((id) => id !== jobId));
+        toast.success("Removed from saved jobs");
+      } else {
+        const response = await apiClient.saveJob(jobId);
+        if (!response.success) {
+          toast.error(response.message || "Could not save job");
+          return;
+        }
+        setSavedJobIds((prev) =>
+          prev.includes(jobId) ? prev : [...prev, jobId],
+        );
+        toast.success("Job saved");
+      }
+    } finally {
+      setBookmarkBusyId(null);
+    }
   };
 
   const clearFilters = () => {
@@ -346,14 +397,21 @@ function JobsPageContent() {
 
                           <div className="flex items-center space-x-3">
                             <button
-                              onClick={() => toggleSavedJob(job._id)}
-                              className={`p-2 rounded-full transition-colors ${
-                                savedJobs.includes(job._id)
+                              type="button"
+                              onClick={() => void toggleSavedJob(job._id)}
+                              disabled={bookmarkBusyId === job._id}
+                              aria-label={
+                                savedJobIds.includes(job._id)
+                                  ? "Remove from saved jobs"
+                                  : "Save job"
+                              }
+                              className={`p-2 rounded-full transition-colors disabled:opacity-50 ${
+                                savedJobIds.includes(job._id)
                                   ? "text-blue-600 bg-blue-100"
                                   : "text-gray-400 hover:text-blue-600 hover:bg-blue-50"
                               }`}
                             >
-                              {savedJobs.includes(job._id) ? (
+                              {savedJobIds.includes(job._id) ? (
                                 <Bookmark className="h-5 w-5 fill-current" />
                               ) : (
                                 <BookmarkPlus className="h-5 w-5" />

@@ -100,6 +100,14 @@ export default function Navbar() {
                     >
                       My Applications
                     </Link>
+                    {user.role === "jobseeker" && (
+                      <Link
+                        href="/saved-jobs"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Saved Jobs
+                      </Link>
+                    )}
                     {user.role === "employer" && (
                       <Link
                         href="/my-jobs"
@@ -203,6 +211,16 @@ export default function Navbar() {
                   >
                     My Applications
                   </Link>
+
+                  {user.role === "jobseeker" && (
+                    <Link
+                      href="/saved-jobs"
+                      className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Saved Jobs
+                    </Link>
+                  )}
 
                   {user.role === "employer" && (
                     <Link

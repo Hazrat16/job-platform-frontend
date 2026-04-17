@@ -334,6 +334,33 @@ class ApiClient {
       return { success: false, message: this.extractErrorMessage(error) };
     }
   }
+
+  async getSavedJobs(): Promise<ApiResponse<Job[]>> {
+    try {
+      const response = await this.client.get("/saved-jobs");
+      return this.normalizeResponse<Job[]>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async saveJob(jobId: string): Promise<ApiResponse<{ jobId: string }>> {
+    try {
+      const response = await this.client.post("/saved-jobs", { jobId });
+      return this.normalizeResponse<{ jobId: string }>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async unsaveJob(jobId: string): Promise<ApiResponse<{ jobId: string }>> {
+    try {
+      const response = await this.client.delete(`/saved-jobs/${jobId}`);
+      return this.normalizeResponse<{ jobId: string }>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
 }
 
 export const apiClient = new ApiClient();
