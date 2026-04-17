@@ -1,6 +1,6 @@
 "use client";
 
-import { RegisterCredentials } from "@/types";
+import { AuthResponse, RegisterFormFields } from "@/types";
 import { apiClient, setAuthToken, setUser } from "@/utils/api";
 import {
   AlertCircle,
@@ -26,6 +26,10 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  /** Kept outside react-hook-form so role cannot be overwritten by form internals. */
+  const [accountRole, setAccountRole] = useState<
+    "jobseeker" | "employer" | null
+  >(null);
   const router = useRouter();
 
   const {
@@ -33,7 +37,14 @@ export default function RegisterPage() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<RegisterCredentials>();
+  } = useForm<RegisterFormFields>({
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
 
   const password = watch("password");
 
@@ -65,14 +76,19 @@ export default function RegisterPage() {
     setPhotoPreview(null);
   };
 
-  const onSubmit = async (data: RegisterCredentials) => {
+  const onSubmit = async (data: RegisterFormFields) => {
     setIsLoading(true);
     try {
+      if (accountRole !== "jobseeker" && accountRole !== "employer") {
+        toast.error("Please select whether you are a job seeker or an employer.");
+        return;
+      }
+
       const formData = new FormData();
       formData.append("name", data.name);
       formData.append("email", data.email);
       formData.append("password", data.password);
-      formData.append("role", data.role);
+      formData.append("role", accountRole);
 
       if (selectedPhoto) {
         formData.append("photo", selectedPhoto);
@@ -80,18 +96,24 @@ export default function RegisterPage() {
 
       const response = await apiClient.register(formData);
 
-      if (response.success && response.data) {
-        setAuthToken(response.data.token);
-        setUser(response.data.user);
-        toast.success("Registration successful! Welcome to JobPlatform!");
+      const auth = response.data as AuthResponse | undefined;
+      const hasSession = Boolean(
+        response.success && auth?.token && auth?.user,
+      );
 
-        if (response.data.user.role === "employer") {
+      if (hasSession && auth) {
+        setAuthToken(auth.token);
+        setUser(auth.user);
+        toast.success("Registration successful! Welcome to JobPlatform.");
+        if (auth.user.role === "employer") {
           router.push("/my-jobs");
         } else {
           router.push("/jobs");
         }
       } else if (response.success) {
-        toast.success("Registration successful! Please verify your email.");
+        toast.success(
+          "Account created. Check your email to verify, then sign in.",
+        );
         router.push("/login");
       } else {
         toast.error(response.message || "Registration failed");
@@ -218,57 +240,60 @@ export default function RegisterPage() {
               )}
             </div>
 
-            {/* Role Selection */}
+            {/* Account type: React state only (not RHF) — value sent is exactly what you pick */}
             <div>
-              <label
-                htmlFor="role"
+              <span
+                id="account-type-label"
                 className="block text-sm font-medium text-gray-700"
               >
-                I want to
-              </label>
-              <div className="mt-1 grid grid-cols-2 gap-3">
-                <label className="relative flex cursor-pointer rounded-lg border border-gray-300 bg-white p-4 shadow-sm focus:outline-none">
-                  <input
-                    {...register("role", { required: "Please select a role" })}
-                    type="radio"
-                    value="jobseeker"
-                    className="sr-only"
-                  />
+                Account type
+              </span>
+              <p className="text-xs text-gray-500 mt-0.5 mb-2">
+                Choose one — this controls whether you apply to jobs or post them.
+              </p>
+              <div
+                className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+                role="group"
+                aria-labelledby="account-type-label"
+              >
+                <button
+                  type="button"
+                  onClick={() => setAccountRole("jobseeker")}
+                  className={`relative flex rounded-lg border p-4 text-left shadow-sm transition ring-offset-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    accountRole === "jobseeker"
+                      ? "border-blue-600 ring-2 ring-blue-500 bg-blue-50"
+                      : "border-gray-300 bg-white hover:border-gray-400"
+                  }`}
+                >
                   <div className="flex flex-1">
                     <div className="flex flex-col">
                       <div className="flex items-center">
                         <Briefcase className="h-5 w-5 text-blue-600" />
                         <span className="ml-3 block text-sm font-medium text-gray-900">
-                          Find Jobs
+                          Job seeker
                         </span>
                       </div>
-                      <p className="mt-1 flex items-center text-xs text-gray-500">
-                        I&apos;m looking for employment opportunities
+                      <p className="mt-1 text-xs text-gray-500">
+                        I want to find and apply for jobs
                       </p>
                     </div>
                   </div>
-                  <div className="h-5 w-5 text-blue-600" aria-hidden="true">
-                    <svg
-                      className="h-full w-full"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                </label>
+                  {accountRole === "jobseeker" ? (
+                    <span className="text-blue-600 text-sm font-semibold" aria-hidden>
+                      ✓
+                    </span>
+                  ) : null}
+                </button>
 
-                <label className="relative flex cursor-pointer rounded-lg border border-gray-300 bg-white p-4 shadow-sm focus:outline-none">
-                  <input
-                    {...register("role", { required: "Please select a role" })}
-                    type="radio"
-                    value="employer"
-                    className="sr-only"
-                  />
+                <button
+                  type="button"
+                  onClick={() => setAccountRole("employer")}
+                  className={`relative flex rounded-lg border p-4 text-left shadow-sm transition ring-offset-2 focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                    accountRole === "employer"
+                      ? "border-green-600 ring-2 ring-green-500 bg-green-50"
+                      : "border-gray-300 bg-white hover:border-gray-400"
+                  }`}
+                >
                   <div className="flex flex-1">
                     <div className="flex flex-col">
                       <div className="flex items-center">
@@ -277,6 +302,7 @@ export default function RegisterPage() {
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
+                          aria-hidden="true"
                         >
                           <path
                             strokeLinecap="round"
@@ -286,35 +312,48 @@ export default function RegisterPage() {
                           />
                         </svg>
                         <span className="ml-3 block text-sm font-medium text-gray-900">
-                          Hire People
+                          Employer (hiring)
                         </span>
                       </div>
-                      <p className="mt-1 flex items-center text-xs text-gray-500">
-                        I want to post job opportunities
+                      <p className="mt-1 text-xs text-gray-500">
+                        I want to post jobs and review applicants
                       </p>
                     </div>
                   </div>
-                  <div className="h-5 w-5 text-green-600" aria-hidden="true">
-                    <svg
-                      className="h-full w-full"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                </label>
+                  {accountRole === "employer" ? (
+                    <span className="text-green-600 text-sm font-semibold" aria-hidden>
+                      ✓
+                    </span>
+                  ) : null}
+                </button>
               </div>
-              {errors.role && (
-                <div className="mt-2 flex items-center text-sm text-red-600">
-                  <AlertCircle className="h-4 w-4 mr-1" />
-                  {errors.role.message}
-                </div>
-              )}
+              <div className="mt-3">
+                <label
+                  htmlFor="role-select"
+                  className="block text-xs font-medium text-gray-600 mb-1"
+                >
+                  Or choose from list
+                </label>
+                <select
+                  id="role-select"
+                  name="account-type-select"
+                  autoComplete="off"
+                  value={accountRole ?? ""}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    if (v === "jobseeker" || v === "employer") {
+                      setAccountRole(v);
+                    } else {
+                      setAccountRole(null);
+                    }
+                  }}
+                  className="block w-full max-w-md text-sm border border-gray-300 rounded-md px-3 py-2 bg-white"
+                >
+                  <option value="">Select account type…</option>
+                  <option value="jobseeker">Job seeker</option>
+                  <option value="employer">Employer (hiring)</option>
+                </select>
+              </div>
             </div>
 
             {/* Password */}

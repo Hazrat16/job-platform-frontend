@@ -69,9 +69,16 @@ export interface RegisterCredentials {
   email: string;
   password: string;
   confirmPassword: string;
-  role: "jobseeker" | "employer";
+  /** Set via account-type UI before submit */
+  role?: "jobseeker" | "employer";
   photo?: File;
 }
+
+/** Register form fields handled by react-hook-form (role is separate state). */
+export type RegisterFormFields = Pick<
+  RegisterCredentials,
+  "name" | "email" | "password" | "confirmPassword"
+>;
 
 export interface ForgotPasswordData {
   email: string;

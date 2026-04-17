@@ -20,6 +20,13 @@ function resolveApiBaseUrl(): string {
   return "http://127.0.0.1:5000/api";
 }
 
+function readStoredToken(): string | null {
+  if (typeof window === "undefined") return null;
+  const t = localStorage.getItem("token");
+  if (!t || t === "undefined" || t === "null") return null;
+  return t;
+}
+
 class ApiClient {
   private client: AxiosInstance;
 
@@ -33,7 +40,7 @@ class ApiClient {
     // Add auth token to requests
     this.client.interceptors.request.use((config: InternalAxiosRequestConfig) => {
       config.baseURL = resolveApiBaseUrl();
-      const token = localStorage.getItem("token");
+      const token = readStoredToken();
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -224,6 +231,15 @@ class ApiClient {
     }
   }
 
+  async getMyJobs(): Promise<ApiResponse<Job[]>> {
+    try {
+      const response = await this.client.get("/jobs/mine");
+      return this.normalizeResponse<Job[]>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
   async getJob(id: string): Promise<ApiResponse<Job>> {
     try {
       const response = await this.client.get(`/jobs/${id}`);
@@ -324,11 +340,15 @@ export const apiClient = new ApiClient();
 
 // Helper functions
 export const setAuthToken = (token: string) => {
+  if (!token || token === "undefined") {
+    localStorage.removeItem("token");
+    return;
+  }
   localStorage.setItem("token", token);
 };
 
 export const getAuthToken = () => {
-  return localStorage.getItem("token");
+  return readStoredToken();
 };
 
 export const removeAuthToken = () => {
@@ -337,12 +357,41 @@ export const removeAuthToken = () => {
 };
 
 export const setUser = (user: User) => {
-  localStorage.setItem("user", JSON.stringify(user));
+  try {
+    const s = JSON.stringify(user);
+    if (!s || s === "undefined") {
+      localStorage.removeItem("user");
+      return;
+    }
+    localStorage.setItem("user", s);
+  } catch {
+    localStorage.removeItem("user");
+  }
 };
 
 export const getUser = (): User | null => {
-  const user = localStorage.getItem("user");
-  return user ? JSON.parse(user) : null;
+  if (typeof window === "undefined") return null;
+  const raw = localStorage.getItem("user");
+  if (!raw || raw === "undefined" || raw === "null") {
+    return null;
+  }
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    if (
+      !parsed ||
+      typeof parsed !== "object" ||
+      !("_id" in parsed) ||
+      !("email" in parsed) ||
+      !("role" in parsed)
+    ) {
+      localStorage.removeItem("user");
+      return null;
+    }
+    return parsed as User;
+  } catch {
+    localStorage.removeItem("user");
+    return null;
+  }
 };
 
 export const removeUser = () => {
