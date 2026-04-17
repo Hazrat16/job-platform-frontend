@@ -1,5 +1,6 @@
 "use client";
 
+import { apiClient } from "@/utils/api";
 import {
   AlertCircle,
   Briefcase,
@@ -78,18 +79,17 @@ export default function PostJobPage() {
   const onSubmit = async (data: JobFormData) => {
     setIsLoading(true);
     try {
-      // Transform the data for API submission
       const transformedData = {
         ...data,
         requirements: data.requirements.map((req) => req.value).filter(Boolean),
         benefits: data.benefits.map((ben) => ben.value).filter(Boolean),
       };
 
-      // TODO: Replace with actual API call
-      console.log("Job data:", transformedData);
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await apiClient.createJob(transformedData);
+      if (!response.success) {
+        toast.error(response.message || "Failed to post job. Please try again.");
+        return;
+      }
 
       toast.success("Job posted successfully!");
       reset();

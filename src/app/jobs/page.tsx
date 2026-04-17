@@ -1,6 +1,7 @@
 "use client";
 
 import { Job } from "@/types";
+import { apiClient } from "@/utils/api";
 import {
   Bookmark,
   BookmarkPlus,
@@ -15,112 +16,12 @@ import {
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useState } from "react";
-
-// Mock data for demonstration - replace with actual API calls
-const mockJobs: Job[] = [
-  {
-    _id: "1",
-    title: "Senior Frontend Developer",
-    company: "TechCorp Inc.",
-    location: "San Francisco, CA",
-    type: "full-time",
-    salary: { min: 120000, max: 180000, currency: "USD" },
-    description:
-      "We are looking for a talented Senior Frontend Developer to join our team...",
-    requirements: [
-      "React",
-      "TypeScript",
-      "5+ years experience",
-      "Team leadership",
-    ],
-    benefits: [
-      "Health insurance",
-      "Remote work",
-      "Stock options",
-      "Flexible hours",
-    ],
-    employer: {
-      _id: "emp1",
-      name: "TechCorp Inc.",
-      email: "hr@techcorp.com",
-      role: "employer",
-      isVerified: true,
-      createdAt: "2024-01-01",
-      updatedAt: "2024-01-01",
-    },
-    applications: [],
-    status: "active",
-    createdAt: "2024-01-15",
-    updatedAt: "2024-01-15",
-  },
-  {
-    _id: "2",
-    title: "UX/UI Designer",
-    company: "Design Studio",
-    location: "New York, NY",
-    type: "full-time",
-    salary: { min: 80000, max: 120000, currency: "USD" },
-    description: "Join our creative team as a UX/UI Designer...",
-    requirements: [
-      "Figma",
-      "Adobe Creative Suite",
-      "3+ years experience",
-      "Portfolio",
-    ],
-    benefits: [
-      "Creative environment",
-      "Professional development",
-      "Health benefits",
-    ],
-    employer: {
-      _id: "emp2",
-      name: "Design Studio",
-      email: "careers@designstudio.com",
-      role: "employer",
-      isVerified: true,
-      createdAt: "2024-01-01",
-      updatedAt: "2024-01-01",
-    },
-    applications: [],
-    status: "active",
-    createdAt: "2024-01-10",
-    updatedAt: "2024-01-10",
-  },
-  {
-    _id: "3",
-    title: "DevOps Engineer",
-    company: "CloudTech Solutions",
-    location: "Remote",
-    type: "full-time",
-    salary: { min: 100000, max: 150000, currency: "USD" },
-    description:
-      "We need a DevOps Engineer to help us scale our infrastructure...",
-    requirements: ["AWS", "Docker", "Kubernetes", "4+ years experience"],
-    benefits: [
-      "Remote work",
-      "Competitive salary",
-      "Learning budget",
-      "Flexible hours",
-    ],
-    employer: {
-      _id: "emp3",
-      name: "CloudTech Solutions",
-      email: "jobs@cloudtech.com",
-      role: "employer",
-      isVerified: true,
-      createdAt: "2024-01-01",
-      updatedAt: "2024-01-01",
-    },
-    applications: [],
-    status: "active",
-    createdAt: "2024-01-05",
-    updatedAt: "2024-01-05",
-  },
-];
+import toast from "react-hot-toast";
 
 function JobsPageContent() {
   const searchParams = useSearchParams();
-  const [filteredJobs, setFilteredJobs] = useState<Job[]>(mockJobs);
+  const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
+  const [allJobsCount, setAllJobsCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState(
     searchParams.get("search") || ""
   );
@@ -129,36 +30,45 @@ function JobsPageContent() {
   const [selectedSalary, setSelectedSalary] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [savedJobs, setSavedJobs] = useState<string[]>([]);
+  const [sortBy, setSortBy] = useState("recent");
+  const [loading, setLoading] = useState(false);
 
   const filterJobs = useCallback(() => {
-    let filtered = mockJobs;
+    const fetchJobs = async () => {
+      try {
+        setLoading(true);
+        const salaryParts = selectedSalary
+          ? selectedSalary.split("-").map((val) => parseInt(val, 10))
+          : [];
+        const minSalary = salaryParts[0];
+        const maxSalary = salaryParts[1];
 
-    if (searchQuery) {
-      filtered = filtered.filter(
-        (job) =>
-          job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          job.description.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
+        const response = await apiClient.getJobs({
+          search: searchQuery || undefined,
+          location: selectedLocation || undefined,
+          type: selectedType || undefined,
+          minSalary: Number.isFinite(minSalary) ? minSalary : undefined,
+          maxSalary: Number.isFinite(maxSalary) ? maxSalary : undefined,
+          sort: sortBy,
+          limit: 20,
+        });
 
-    if (selectedLocation) {
-      filtered = filtered.filter((job) =>
-        job.location.toLowerCase().includes(selectedLocation.toLowerCase())
-      );
-    }
+        if (!response.success) {
+          toast.error(response.message || "Failed to load jobs");
+          return;
+        }
 
-    if (selectedType) {
-      filtered = filtered.filter((job) => job.type === selectedType);
-    }
+        setFilteredJobs(response.data || []);
+        setAllJobsCount((response.data || []).length);
+      } catch {
+        toast.error("Failed to load jobs");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    if (selectedSalary) {
-      const [min] = selectedSalary.split("-").map(Number);
-      filtered = filtered.filter((job) => job.salary.min >= min);
-    }
-
-    setFilteredJobs(filtered);
-  }, [searchQuery, selectedLocation, selectedType, selectedSalary]);
+    void fetchJobs();
+  }, [searchQuery, selectedLocation, selectedType, selectedSalary, sortBy]);
 
   useEffect(() => {
     filterJobs();
@@ -335,22 +245,27 @@ function JobsPageContent() {
             <div className="mb-6">
               <div className="flex items-center justify-between">
                 <p className="text-gray-600">
-                  Showing {filteredJobs.length} of {mockJobs.length} jobs
+                  Showing {filteredJobs.length} of {allJobsCount} jobs
                 </p>
                 <div className="flex items-center space-x-2">
                   <span className="text-sm text-gray-500">Sort by:</span>
-                  <select className="text-sm border border-gray-300 rounded-md px-2 py-1">
-                    <option>Most Recent</option>
-                    <option>Salary: High to Low</option>
-                    <option>Salary: Low to High</option>
-                    <option>Company Name</option>
+                  <select
+                    className="text-sm border border-gray-300 rounded-md px-2 py-1"
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                  >
+                    <option value="recent">Most Recent</option>
+                    <option value="salary_desc">Salary: High to Low</option>
+                    <option value="salary_asc">Salary: Low to High</option>
                   </select>
                 </div>
               </div>
             </div>
 
             <div className="space-y-4">
-              {filteredJobs.length > 0 ? (
+              {loading ? (
+                <div className="text-center py-12 text-gray-500">Loading jobs...</div>
+              ) : filteredJobs.length > 0 ? (
                 filteredJobs.map((job) => (
                   <div
                     key={job._id}
@@ -482,9 +397,9 @@ function JobsPageContent() {
             {/* Load More */}
             {filteredJobs.length > 0 && (
               <div className="text-center mt-8">
-                <button className="px-6 py-3 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors">
-                  Load More Jobs
-                </button>
+                <p className="text-sm text-gray-500">
+                  Pagination ready from backend (`page`/`limit`) for next iteration.
+                </p>
               </div>
             )}
           </div>

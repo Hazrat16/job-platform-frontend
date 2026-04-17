@@ -14,6 +14,7 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -84,12 +85,14 @@ export default function RegisterPage() {
         setUser(response.data.user);
         toast.success("Registration successful! Welcome to JobPlatform!");
 
-        // Redirect based on user role
         if (response.data.user.role === "employer") {
           router.push("/my-jobs");
         } else {
           router.push("/jobs");
         }
+      } else if (response.success) {
+        toast.success("Registration successful! Please verify your email.");
+        router.push("/login");
       } else {
         toast.error(response.message || "Registration failed");
       }
@@ -418,9 +421,11 @@ export default function RegisterPage() {
               <div className="mt-1">
                 {photoPreview ? (
                   <div className="relative inline-block">
-                    <img
+                    <Image
                       src={photoPreview}
                       alt="Profile preview"
+                      width={80}
+                      height={80}
                       className="h-20 w-20 rounded-full object-cover border-2 border-gray-300"
                     />
                     <button

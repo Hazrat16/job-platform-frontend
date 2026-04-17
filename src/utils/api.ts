@@ -15,7 +15,8 @@ class ApiClient {
   private baseURL: string;
 
   constructor() {
-    this.baseURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+    this.baseURL =
+      process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
     this.client = axios.create({
       baseURL: this.baseURL,
       headers: {
@@ -42,122 +43,240 @@ class ApiClient {
           window.location.href = "/login";
         }
         return Promise.reject(error);
-      }
+      },
     );
+  }
+
+  private normalizeResponse<T>(payload: unknown): ApiResponse<T> {
+    const data = payload as
+      | ApiResponse<T>
+      | { error?: string; message?: string; token?: string; user?: unknown };
+
+    if (typeof data === "object" && data !== null && "success" in data) {
+      return data as ApiResponse<T>;
+    }
+
+    if (
+      typeof data === "object" &&
+      data !== null &&
+      "token" in data &&
+      "user" in data
+    ) {
+      return {
+        success: true,
+        message: "Request successful",
+        data: data as T,
+      };
+    }
+
+    if (typeof data === "object" && data !== null && "error" in data) {
+      return {
+        success: false,
+        message: (data.error as string) || "Request failed",
+      };
+    }
+
+    return {
+      success: true,
+      message: "Request successful",
+      data: data as T,
+    };
+  }
+
+  private extractErrorMessage(error: unknown): string {
+    if (axios.isAxiosError(error)) {
+      const payload = error.response?.data as
+        | { error?: string; message?: string }
+        | undefined;
+      return (
+        payload?.message || payload?.error || error.message || "Request failed"
+      );
+    }
+    if (error instanceof Error) return error.message;
+    return "Request failed";
   }
 
   // Auth endpoints
   async register(data: FormData): Promise<ApiResponse<AuthResponse>> {
-    const response = await this.client.post("/auth/register", data, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    return response.data;
+    try {
+      const response = await this.client.post("/auth/register", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      return this.normalizeResponse<AuthResponse>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
   }
 
   async login(
-    credentials: LoginCredentials
+    credentials: LoginCredentials,
   ): Promise<ApiResponse<AuthResponse>> {
-    const response = await this.client.post("/auth/login", credentials);
-    return response.data;
+    try {
+      const response = await this.client.post("/auth/login", credentials);
+      return this.normalizeResponse<AuthResponse>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
   }
 
   async forgotPassword(data: ForgotPasswordData): Promise<ApiResponse> {
-    const response = await this.client.post("/auth/forgot-password", data);
-    return response.data;
+    try {
+      const response = await this.client.post("/auth/forgot-password", data);
+      return this.normalizeResponse(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
   }
 
   async resetPassword(data: ResetPasswordData): Promise<ApiResponse> {
-    const response = await this.client.post("/auth/reset-password", data);
-    return response.data;
+    try {
+      const response = await this.client.post("/auth/reset-password", data);
+      return this.normalizeResponse(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
   }
 
   async verifyEmail(token: string): Promise<ApiResponse> {
-    const response = await this.client.get(`/auth/verify-email?token=${token}`);
-    return response.data;
+    try {
+      const response = await this.client.get(
+        `/auth/verify-email?token=${token}`,
+      );
+      return this.normalizeResponse(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
   }
 
   async uploadProfilePhoto(
-    photo: File
+    photo: File,
   ): Promise<ApiResponse<{ photo: string }>> {
     const formData = new FormData();
     formData.append("photo", photo);
 
-    const response = await this.client.post("/auth/upload-photo", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    return response.data;
+    try {
+      const response = await this.client.post("/auth/upload-photo", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      return this.normalizeResponse<{ photo: string }>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
   }
 
   // User endpoints
   async getCurrentUser(): Promise<ApiResponse<User>> {
-    const response = await this.client.get("/auth/protected");
-    return response.data;
+    try {
+      const response = await this.client.get("/auth/protected");
+      return this.normalizeResponse<User>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
   }
 
   // Job endpoints (to be implemented when backend adds them)
   async getJobs(params?: Record<string, unknown>): Promise<ApiResponse<Job[]>> {
-    const response = await this.client.get("/jobs", { params });
-    return response.data;
+    try {
+      const response = await this.client.get("/jobs", { params });
+      return this.normalizeResponse<Job[]>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
   }
 
   async getJob(id: string): Promise<ApiResponse<Job>> {
-    const response = await this.client.get(`/jobs/${id}`);
-    return response.data;
+    try {
+      const response = await this.client.get(`/jobs/${id}`);
+      return this.normalizeResponse<Job>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
   }
 
   async createJob(jobData: Partial<Job>): Promise<ApiResponse<Job>> {
-    const response = await this.client.post("/jobs", jobData);
-    return response.data;
+    try {
+      const response = await this.client.post("/jobs", jobData);
+      return this.normalizeResponse<Job>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
   }
 
   async updateJob(
     id: string,
-    jobData: Partial<Job>
+    jobData: Partial<Job>,
   ): Promise<ApiResponse<Job>> {
-    const response = await this.client.put(`/jobs/${id}`, jobData);
-    return response.data;
+    try {
+      const response = await this.client.put(`/jobs/${id}`, jobData);
+      return this.normalizeResponse<Job>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
   }
 
   async deleteJob(id: string): Promise<ApiResponse> {
-    const response = await this.client.delete(`/jobs/${id}`);
-    return response.data;
+    try {
+      const response = await this.client.delete(`/jobs/${id}`);
+      return this.normalizeResponse(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
   }
 
   // Job Application endpoints
   async applyForJob(
     jobId: string,
-    applicationData: FormData
+    applicationData: FormData,
   ): Promise<ApiResponse<JobApplication>> {
-    const response = await this.client.post(
-      `/jobs/${jobId}/apply`,
-      applicationData,
-      {
-        headers: { "Content-Type": "multipart/form-data" },
-      }
-    );
-    return response.data;
+    try {
+      const response = await this.client.post(
+        `/jobs/${jobId}/apply`,
+        applicationData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        },
+      );
+      return this.normalizeResponse<JobApplication>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
   }
 
   async getMyApplications(): Promise<ApiResponse<JobApplication[]>> {
-    const response = await this.client.get("/applications");
-    return response.data;
+    try {
+      const response = await this.client.get("/applications");
+      return this.normalizeResponse<JobApplication[]>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
   }
 
   async getJobApplications(
-    jobId: string
+    jobId: string,
   ): Promise<ApiResponse<JobApplication[]>> {
-    const response = await this.client.get(`/jobs/${jobId}/applications`);
-    return response.data;
+    try {
+      const response = await this.client.get(`/jobs/${jobId}/applications`);
+      return this.normalizeResponse<JobApplication[]>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
   }
 
   async updateApplicationStatus(
     applicationId: string,
-    status: string
+    status: string,
   ): Promise<ApiResponse<JobApplication>> {
-    const response = await this.client.patch(`/applications/${applicationId}`, {
-      status,
-    });
-    return response.data;
+    try {
+      const response = await this.client.patch(
+        `/applications/${applicationId}`,
+        {
+          status,
+        },
+      );
+      return this.normalizeResponse<JobApplication>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
   }
 }
 
