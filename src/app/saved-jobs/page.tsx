@@ -47,19 +47,21 @@ export default function SavedJobsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Saved Jobs</h1>
-        <p className="text-gray-600 mb-6">
+        <h1 className="mb-2 bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-800 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent">
+          Saved Jobs
+        </h1>
+        <p className="mb-6 text-slate-600">
           Jobs you bookmarked from the browse list. Sign in as a job seeker to use this list.
         </p>
 
         {loading ? (
-          <div className="text-gray-500">Loading saved jobs...</div>
+          <div className="text-slate-500">Loading saved jobs...</div>
         ) : jobs.length === 0 ? (
-          <div className="bg-white p-6 rounded-lg shadow text-gray-600">
+          <div className="rounded-3xl border border-dashed border-indigo-200/60 bg-white/70 p-6 text-slate-600 shadow-inner backdrop-blur-sm">
             No saved jobs yet.{" "}
-            <Link href="/jobs" className="text-blue-600 hover:underline">
+            <Link href="/jobs" className="font-medium text-indigo-600 hover:underline">
               Browse jobs
             </Link>{" "}
             and tap the bookmark icon on a listing.
@@ -69,15 +71,15 @@ export default function SavedJobsPage() {
             {jobs.map((job) => (
               <div
                 key={job._id}
-                className="bg-white rounded-lg shadow p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+                className="flex flex-col gap-4 rounded-3xl border border-white/70 bg-white/80 p-5 shadow-lg ring-1 ring-slate-900/5 backdrop-blur-md sm:flex-row sm:items-center sm:justify-between"
               >
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    <Link href={`/jobs/${job._id}`} className="hover:text-blue-600">
+                  <h2 className="text-lg font-semibold text-slate-900">
+                    <Link href={`/jobs/${job._id}`} className="transition-colors hover:text-indigo-600">
                       {job.title}
                     </Link>
                   </h2>
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-gray-600 text-sm mt-1">
+                  <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-600">
                     <span className="flex items-center gap-1">
                       <Briefcase className="h-4 w-4" />
                       {job.company}

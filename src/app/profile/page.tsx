@@ -131,7 +131,7 @@ function CompletenessCard({ data }: { data: ProfileCompleteness }) {
   };
 
   return (
-    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-lg p-5 mb-6">
+    <div className="mb-6 rounded-2xl border border-indigo-200/40 bg-gradient-to-br from-indigo-50/90 via-white/80 to-cyan-50/50 p-5 shadow-md shadow-indigo-900/5 ring-1 ring-white/60 backdrop-blur-sm">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
         <div>
           <h2 className="text-lg font-semibold text-gray-900">Profile strength</h2>
@@ -144,7 +144,7 @@ function CompletenessCard({ data }: { data: ProfileCompleteness }) {
             className="relative h-14 w-14 rounded-full border-4 border-white shadow flex items-center justify-center bg-white"
             aria-label={`Profile ${data.percent} percent complete`}
           >
-            <span className="text-sm font-bold text-blue-700">{data.percent}%</span>
+            <span className="text-sm font-bold text-indigo-700">{data.percent}%</span>
           </div>
         </div>
       </div>
@@ -269,8 +269,8 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
       </div>
     );
   }
@@ -278,16 +278,18 @@ export default function ProfilePage() {
   const role = getUser()?.role;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10">
+    <div className="min-h-screen py-10">
       <div className="max-w-3xl mx-auto px-4">
         <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <h1 className="text-2xl font-bold text-gray-900">Your profile</h1>
+          <h1 className="bg-gradient-to-r from-slate-900 to-indigo-900 bg-clip-text text-2xl font-extrabold tracking-tight text-transparent">
+            Your profile
+          </h1>
           <div className="flex flex-wrap gap-3 text-sm">
-            <Link href="/jobs" className="text-blue-600 hover:text-blue-800">
+            <Link href="/jobs" className="font-medium text-indigo-600 hover:text-indigo-800">
               Browse jobs
             </Link>
             {role === "jobseeker" && (
-              <Link href="/profile/resume" className="text-blue-600 hover:text-blue-800">
+              <Link href="/profile/resume" className="text-indigo-600 hover:text-indigo-800">
                 Résumé →
               </Link>
             )}
@@ -301,7 +303,7 @@ export default function ProfilePage() {
         <form onSubmit={onSave} className="space-y-6">
           <section className="bg-white shadow rounded-lg p-6 space-y-4">
             <div className="flex items-center gap-2 text-gray-900 font-semibold border-b pb-2">
-              <UserIcon className="h-5 w-5 text-blue-600" />
+              <UserIcon className="h-5 w-5 text-indigo-600" />
               Basics
             </div>
             <div>
@@ -345,7 +347,7 @@ export default function ProfilePage() {
 
           <section className="bg-white shadow rounded-lg p-6 space-y-4">
             <div className="flex items-center gap-2 text-gray-900 font-semibold border-b pb-2">
-              <BookOpen className="h-5 w-5 text-blue-600" />
+              <BookOpen className="h-5 w-5 text-indigo-600" />
               Professional summary
             </div>
             <div>
@@ -378,7 +380,7 @@ export default function ProfilePage() {
             <>
               <section className="bg-white shadow rounded-lg p-6 space-y-4">
                 <div className="flex items-center gap-2 text-gray-900 font-semibold border-b pb-2">
-                  <Briefcase className="h-5 w-5 text-blue-600" />
+                  <Briefcase className="h-5 w-5 text-indigo-600" />
                   Skills
                 </div>
                 <div>
@@ -398,13 +400,13 @@ export default function ProfilePage() {
               <section className="bg-white shadow rounded-lg p-6 space-y-4">
                 <div className="flex items-center justify-between border-b pb-2">
                   <div className="flex items-center gap-2 text-gray-900 font-semibold">
-                    <Briefcase className="h-5 w-5 text-blue-600" />
+                    <Briefcase className="h-5 w-5 text-indigo-600" />
                     Experience
                   </div>
                   <button
                     type="button"
                     onClick={() => setExperience((prev) => [...prev, emptyExperience()])}
-                    className="text-sm font-medium text-blue-600 hover:text-blue-800"
+                    className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
                   >
                     + Add role
                   </button>
@@ -562,13 +564,13 @@ export default function ProfilePage() {
               <section className="bg-white shadow rounded-lg p-6 space-y-4">
                 <div className="flex items-center justify-between border-b pb-2">
                   <div className="flex items-center gap-2 text-gray-900 font-semibold">
-                    <GraduationCap className="h-5 w-5 text-blue-600" />
+                    <GraduationCap className="h-5 w-5 text-indigo-600" />
                     Education
                   </div>
                   <button
                     type="button"
                     onClick={() => setEducation((prev) => [...prev, emptyEducation()])}
-                    className="text-sm font-medium text-blue-600 hover:text-blue-800"
+                    className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
                   >
                     + Add school
                   </button>
@@ -756,7 +758,7 @@ export default function ProfilePage() {
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-5 py-2.5 font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:from-indigo-500 hover:to-blue-500 disabled:opacity-50"
           >
             {saving ? (
               <Loader2 className="h-4 w-4 animate-spin" />

@@ -19,7 +19,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 const navLinkClass =
-  "rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2";
+  "rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-white/80 hover:text-slate-900 hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/40 focus-visible:ring-offset-2";
 
 export default function Navbar() {
   const [user, setUser] = useState<UserType | null>(null);
@@ -92,22 +92,29 @@ export default function Navbar() {
   };
 
   const searchInputClass =
-    "w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-900 shadow-sm transition-shadow placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20";
+    "w-full rounded-xl border border-slate-200/80 bg-white/90 py-2.5 pl-10 pr-4 text-sm text-slate-900 shadow-inner shadow-slate-900/5 ring-1 ring-white/60 transition-all placeholder:text-slate-400 focus:border-indigo-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/25";
 
   return (
     <nav
-      className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/85 backdrop-blur-md shadow-sm"
+      className="sticky top-0 z-50 border-b border-white/30 bg-white/75 shadow-[0_1px_0_0_rgba(255,255,255,0.65)_inset,0_12px_40px_-16px_rgba(15,23,42,0.12)] backdrop-blur-xl backdrop-saturate-150"
       aria-label="Main"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-3">
           <Link
             href="/"
-            className="flex shrink-0 items-center gap-2 rounded-lg py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+            className="group flex shrink-0 items-center gap-2.5 rounded-xl py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50 focus-visible:ring-offset-2"
           >
-            <Briefcase className="h-8 w-8 text-blue-600" aria-hidden />
-            <span className="text-lg font-bold tracking-tight text-slate-900 sm:text-xl">
-              JobPlatform
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-500 text-white shadow-lg shadow-indigo-500/30 ring-2 ring-white/50 transition-transform duration-300 group-hover:scale-[1.03]">
+              <Briefcase className="h-5 w-5" aria-hidden />
+            </span>
+            <span className="text-lg font-extrabold tracking-tight sm:text-xl">
+              <span className="bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-800 bg-clip-text text-transparent">
+                Job
+              </span>
+              <span className="bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                Platform
+              </span>
             </span>
           </Link>
 
@@ -141,7 +148,7 @@ export default function Navbar() {
                 {user.role === "employer" && (
                   <Link
                     href="/post-job"
-                    className="ml-1 inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    className="ml-1 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:from-indigo-500 hover:to-blue-500 hover:shadow-indigo-500/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2"
                   >
                     <Plus className="h-4 w-4" aria-hidden />
                     Post Job
@@ -150,12 +157,12 @@ export default function Navbar() {
 
                 <Link
                   href="/notifications"
-                  className="relative ml-1 rounded-lg p-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  className="relative ml-1 rounded-xl p-2 text-slate-600 transition-all hover:bg-white/90 hover:text-slate-900 hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/40 focus-visible:ring-offset-2"
                   aria-label={`Notifications${unreadNotifications > 0 ? `, ${unreadNotifications} unread` : ""}`}
                 >
                   <Bell className="h-5 w-5" aria-hidden />
-                  {unreadNotifications > 0 && (
-                    <span className="absolute right-0.5 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-bold text-white">
+                    {unreadNotifications > 0 && (
+                    <span className="absolute right-0.5 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gradient-to-r from-indigo-600 to-blue-600 px-1 text-[10px] font-bold text-white shadow-sm">
                       {unreadNotifications > 99 ? "99+" : unreadNotifications}
                     </span>
                   )}
@@ -167,7 +174,7 @@ export default function Navbar() {
                     onClick={() => setUserMenuOpen((o) => !o)}
                     aria-expanded={userMenuOpen}
                     aria-haspopup="menu"
-                    className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    className="flex items-center gap-1.5 rounded-xl border border-transparent px-3 py-2 text-sm font-medium text-slate-700 transition-all hover:border-slate-200/80 hover:bg-white/90 hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/40 focus-visible:ring-offset-2"
                   >
                     <User className="h-5 w-5 text-slate-500" aria-hidden />
                     <span className="max-w-[10rem] truncate">{user.name}</span>
@@ -183,7 +190,7 @@ export default function Navbar() {
                   {userMenuOpen && (
                     <div
                       role="menu"
-                      className="absolute right-0 mt-1 w-52 overflow-hidden rounded-xl border border-slate-200/90 bg-white py-1 shadow-lg shadow-slate-200/60"
+                      className="absolute right-0 mt-2 w-56 overflow-hidden rounded-2xl border border-white/60 bg-white/90 py-1 shadow-2xl shadow-indigo-950/10 ring-1 ring-slate-900/5 backdrop-blur-xl"
                     >
                       <Link
                         role="menuitem"
@@ -264,7 +271,7 @@ export default function Navbar() {
                 </Link>
                 <Link
                   href="/register"
-                  className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  className="rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:from-indigo-500 hover:to-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2"
                 >
                   Sign Up
                 </Link>
@@ -319,7 +326,7 @@ export default function Navbar() {
                   {user.role === "employer" && (
                     <Link
                       href="/post-job"
-                      className="rounded-lg px-3 py-3 text-base font-medium text-blue-700 hover:bg-blue-50"
+                      className="mx-1 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-3 py-3 text-center text-base font-semibold text-white shadow-md shadow-indigo-500/20"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Post Job
@@ -397,7 +404,7 @@ export default function Navbar() {
                   </Link>
                   <Link
                     href="/register"
-                    className="rounded-lg px-3 py-3 text-base font-semibold text-blue-700 hover:bg-blue-50"
+                    className="mx-1 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-3 py-3 text-center text-base font-semibold text-white shadow-md shadow-indigo-500/20"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Sign Up

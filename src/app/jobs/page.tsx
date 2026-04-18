@@ -157,16 +157,16 @@ function JobsPageContent() {
   };
 
   const fieldClass =
-    "w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 shadow-sm transition-shadow focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20";
+    "w-full rounded-xl border border-slate-200/90 bg-white/90 px-3 py-2.5 text-sm text-slate-900 shadow-inner shadow-slate-900/5 transition-all focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20";
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="border-b border-slate-200/80 bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+    <div className="min-h-screen">
+      <div className="border-b border-white/40 bg-gradient-to-br from-white/90 via-indigo-50/40 to-cyan-50/30 shadow-sm backdrop-blur-md">
+        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+          <h1 className="bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-800 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
             Find your next role
           </h1>
-          <p className="mt-2 max-w-2xl text-slate-600">
+          <p className="mt-3 max-w-2xl text-slate-600">
             Filter by keywords, location, and salary. Save jobs when you are signed in as a
             job seeker.
           </p>
@@ -176,7 +176,7 @@ function JobsPageContent() {
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
           <div className="lg:col-span-1">
-            <div className="sticky top-24 rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
+            <div className="sticky top-24 rounded-3xl border border-white/70 bg-white/75 p-6 shadow-xl shadow-indigo-950/5 ring-1 ring-slate-900/5 backdrop-blur-xl">
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-base font-semibold text-slate-900">Filters</h2>
                 <button
@@ -312,7 +312,7 @@ function JobsPageContent() {
                 </label>
                 <select
                   id="sort-jobs"
-                  className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="rounded-xl border border-slate-200/90 bg-white/90 px-3 py-2 text-sm text-slate-900 shadow-inner shadow-slate-900/5 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
                 >
@@ -329,7 +329,7 @@ function JobsPageContent() {
                   {[0, 1, 2, 3].map((i) => (
                     <div
                       key={i}
-                      className="animate-pulse rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm"
+                      className="animate-pulse rounded-3xl border border-white/60 bg-white/70 p-6 shadow-lg backdrop-blur-sm"
                     >
                       <div className="mb-3 h-5 w-2/3 max-w-md rounded-lg bg-slate-200" />
                       <div className="mb-4 flex gap-2">
@@ -345,7 +345,7 @@ function JobsPageContent() {
                 filteredJobs.map((job) => (
                   <article
                     key={job._id}
-                    className="group rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm transition-all duration-200 hover:border-slate-300 hover:shadow-md"
+                    className="group rounded-3xl border border-white/70 bg-white/80 p-6 shadow-lg shadow-slate-900/[0.04] ring-1 ring-slate-900/[0.03] backdrop-blur-md transition-all duration-300 hover:border-indigo-200/60 hover:bg-white/95 hover:shadow-xl hover:shadow-indigo-500/10"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="min-w-0 flex-1">
@@ -353,7 +353,7 @@ function JobsPageContent() {
                           <h2 className="text-lg font-semibold text-slate-900 sm:text-xl">
                             <Link
                               href={`/jobs/${job._id}`}
-                              className="transition-colors hover:text-blue-600 focus:outline-none focus-visible:text-blue-600"
+                              className="transition-colors hover:text-indigo-600 focus:outline-none focus-visible:text-indigo-600"
                             >
                               {job.title}
                             </Link>
@@ -430,8 +430,8 @@ function JobsPageContent() {
                               }
                               className={`rounded-full p-2.5 transition-colors disabled:opacity-50 ${
                                 savedJobIds.includes(job._id)
-                                  ? "bg-blue-50 text-blue-600"
-                                  : "text-slate-400 hover:bg-blue-50 hover:text-blue-600"
+                                  ? "bg-indigo-50 text-indigo-600"
+                                  : "text-slate-400 hover:bg-indigo-50 hover:text-indigo-600"
                               }`}
                             >
                               {savedJobIds.includes(job._id) ? (
@@ -443,7 +443,7 @@ function JobsPageContent() {
 
                             <Link
                               href={`/jobs/${job._id}`}
-                              className="inline-flex items-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                              className="inline-flex items-center rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:from-indigo-500 hover:to-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2"
                             >
                               View details
                             </Link>
@@ -454,7 +454,7 @@ function JobsPageContent() {
                   </article>
                 ))
               ) : (
-                <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-14 text-center">
+                <div className="rounded-3xl border border-dashed border-indigo-200/60 bg-white/70 px-6 py-14 text-center shadow-inner backdrop-blur-sm">
                   <Search className="mx-auto mb-4 h-14 w-14 text-slate-300" />
                   <h3 className="text-lg font-semibold text-slate-900">No jobs match</h3>
                   <p className="mx-auto mt-2 max-w-md text-slate-600">
@@ -463,7 +463,7 @@ function JobsPageContent() {
                   <button
                     type="button"
                     onClick={clearFilters}
-                    className="mt-6 inline-flex rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
+                    className="mt-6 inline-flex rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:from-indigo-500 hover:to-blue-500"
                   >
                     Clear filters
                   </button>
@@ -479,7 +479,7 @@ function JobsPageContent() {
 
 function JobsPageFallback() {
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-10 sm:px-6">
+    <div className="min-h-screen px-4 py-10 sm:px-6">
       <div className="mx-auto max-w-7xl space-y-4">
         <div className="h-10 max-w-md animate-pulse rounded-xl bg-slate-200" />
         <div className="h-24 animate-pulse rounded-2xl bg-white shadow-sm" />

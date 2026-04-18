@@ -1,10 +1,14 @@
 import Navbar from "@/components/Navbar";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "JobPlatform - Find Your Dream Job or Hire the Best Talent",
@@ -28,9 +32,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={plusJakarta.variable}>
       <body
-        className={`${inter.className} min-h-screen antialiased bg-slate-50 text-slate-900`}
+        className={`${plusJakarta.className} min-h-screen antialiased text-slate-900`}
       >
         <Navbar />
         <main className="min-h-[calc(100vh-4rem)]">{children}</main>
@@ -38,23 +42,24 @@ export default function RootLayout({
           position="top-center"
           toastOptions={{
             duration: 4000,
-            className: "!rounded-xl !shadow-lg !px-4 !py-3 !text-sm !font-medium",
+            className:
+              "!rounded-2xl !border !border-slate-700/40 !shadow-2xl !shadow-indigo-950/20 !px-4 !py-3 !text-sm !font-medium !backdrop-blur-md",
             style: {
-              background: "#0f172a",
+              background: "linear-gradient(145deg, rgba(15,23,42,0.95), rgba(30,27,75,0.92))",
               color: "#f8fafc",
               maxWidth: "min(100vw - 2rem, 28rem)",
             },
             success: {
               duration: 3200,
               iconTheme: {
-                primary: "#22c55e",
+                primary: "#34d399",
                 secondary: "#fff",
               },
             },
             error: {
               duration: 4800,
               iconTheme: {
-                primary: "#f87171",
+                primary: "#fb7185",
                 secondary: "#fff",
               },
             },

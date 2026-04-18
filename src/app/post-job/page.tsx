@@ -102,14 +102,14 @@ export default function PostJobPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-8">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="mb-2 bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-800 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent">
             Post a New Job
           </h1>
-          <p className="text-gray-600">
+          <p className="text-slate-600">
             Fill out the form below to post your job opportunity. Be as detailed
             as possible to attract the right candidates.
           </p>
@@ -117,9 +117,9 @@ export default function PostJobPage() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
           {/* Basic Information */}
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="rounded-2xl border border-white/70 bg-white/80 p-6 shadow-lg shadow-indigo-950/5 ring-1 ring-slate-900/5 backdrop-blur-md">
             <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-              <Briefcase className="h-5 w-5 mr-2 text-blue-600" />
+              <Briefcase className="mr-2 h-5 w-5 text-indigo-600" />
               Basic Information
             </h2>
 
@@ -237,7 +237,7 @@ export default function PostJobPage() {
           </div>
 
           {/* Salary Information */}
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="rounded-2xl border border-white/70 bg-white/80 p-6 shadow-lg shadow-indigo-950/5 ring-1 ring-slate-900/5 backdrop-blur-md">
             <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
               <DollarSign className="h-5 w-5 mr-2 text-green-600" />
               Salary Information
@@ -333,7 +333,7 @@ export default function PostJobPage() {
           </div>
 
           {/* Job Description */}
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="rounded-2xl border border-white/70 bg-white/80 p-6 shadow-lg shadow-indigo-950/5 ring-1 ring-slate-900/5 backdrop-blur-md">
             <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
               <FileText className="h-5 w-5 mr-2 text-purple-600" />
               Job Description
@@ -375,7 +375,7 @@ export default function PostJobPage() {
           </div>
 
           {/* Requirements */}
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="rounded-2xl border border-white/70 bg-white/80 p-6 shadow-lg shadow-indigo-950/5 ring-1 ring-slate-900/5 backdrop-blur-md">
             <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
               <AlertCircle className="h-5 w-5 mr-2 text-orange-600" />
               Requirements & Skills
@@ -420,7 +420,7 @@ export default function PostJobPage() {
           </div>
 
           {/* Benefits */}
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="rounded-2xl border border-white/70 bg-white/80 p-6 shadow-lg shadow-indigo-950/5 ring-1 ring-slate-900/5 backdrop-blur-md">
             <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
               <Calendar className="h-5 w-5 mr-2 text-green-600" />
               Benefits & Perks
@@ -476,7 +476,7 @@ export default function PostJobPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-6 py-3 font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:from-indigo-500 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isLoading ? (
                 <div className="flex items-center">

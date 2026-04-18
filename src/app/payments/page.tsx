@@ -81,20 +81,22 @@ function PaymentsInner() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen py-8">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div className="mb-6 flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-500 text-white shadow-lg shadow-indigo-500/30 ring-2 ring-white/50">
             <Wallet className="h-6 w-6" aria-hidden />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Payments (BDT)</h1>
-            <p className="text-gray-600 text-sm">
+            <h1 className="bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-800 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent">
+              Payments (BDT)
+            </h1>
+            <p className="text-sm text-slate-600">
               Top up via SSLCOMMERZ (cards, mobile banking, and more). Sandbox test cards are
               listed in the{" "}
               <a
                 href="https://developer.sslcommerz.com/doc/v4/"
-                className="text-blue-600 hover:underline"
+                className="font-medium text-indigo-600 hover:underline"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -105,17 +107,17 @@ function PaymentsInner() {
           </div>
         </div>
 
-        <div className="mb-8 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900">Start a payment</h2>
-          <p className="mt-1 text-sm text-gray-600">
-            Configure <code className="rounded bg-slate-100 px-1">SSLCOMMERZ_*</code> and{" "}
-            <code className="rounded bg-slate-100 px-1">API_PUBLIC_BASE_URL</code> on the API
+        <div className="mb-8 rounded-3xl border border-white/70 bg-white/80 p-6 shadow-xl shadow-indigo-950/5 ring-1 ring-slate-900/5 backdrop-blur-md">
+          <h2 className="text-lg font-bold text-slate-900">Start a payment</h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Configure <code className="rounded-md bg-slate-100/90 px-1.5 py-0.5 text-xs">SSLCOMMERZ_*</code> and{" "}
+            <code className="rounded-md bg-slate-100/90 px-1.5 py-0.5 text-xs">API_PUBLIC_BASE_URL</code> on the API
             server. Callbacks must reach your backend (use a public URL or tunnel for IPN in
             development).
           </p>
           <div className="mt-4 flex flex-wrap items-end gap-3">
             <label className="block">
-              <span className="text-sm font-medium text-gray-700">Amount (BDT)</span>
+              <span className="text-sm font-medium text-slate-700">Amount (BDT)</span>
               <input
                 type="number"
                 min={10}
@@ -123,14 +125,14 @@ function PaymentsInner() {
                 step="1"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="mt-1 block w-40 rounded-lg border border-gray-300 px-3 py-2 text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                className="mt-1 block w-40 rounded-xl border border-slate-200/90 bg-white/90 px-3 py-2 text-slate-900 shadow-inner shadow-slate-900/5 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
               />
             </label>
             <button
               type="button"
               onClick={() => void handlePay()}
               disabled={paying}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:opacity-60"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:from-indigo-500 hover:to-blue-500 disabled:opacity-60"
             >
               {paying ? (
                 <>
@@ -144,11 +146,11 @@ function PaymentsInner() {
           </div>
         </div>
 
-        <h2 className="mb-3 text-lg font-semibold text-gray-900">Recent activity</h2>
+        <h2 className="mb-3 text-lg font-bold text-slate-900">Recent activity</h2>
         {loading ? (
-          <div className="text-gray-500">Loading…</div>
+          <div className="text-slate-500">Loading…</div>
         ) : payments.length === 0 ? (
-          <div className="rounded-lg border border-slate-200 bg-white p-6 text-gray-600 shadow-sm">
+          <div className="rounded-3xl border border-dashed border-indigo-200/60 bg-white/70 p-6 text-slate-600 shadow-inner backdrop-blur-sm">
             No payments yet.
           </div>
         ) : (
@@ -156,12 +158,12 @@ function PaymentsInner() {
             {payments.map((p) => (
               <li
                 key={p._id}
-                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm"
+                className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-white/70 bg-white/75 px-4 py-3 text-sm shadow-md ring-1 ring-slate-900/5 backdrop-blur-sm"
               >
                 <div>
-                  <span className="font-mono text-gray-800">{p.tranId}</span>
-                  <span className="mx-2 text-gray-400">·</span>
-                  <span className="font-semibold text-gray-900">
+                  <span className="font-mono text-slate-800">{p.tranId}</span>
+                  <span className="mx-2 text-slate-400">·</span>
+                  <span className="font-semibold text-slate-900">
                     ৳{p.amount.toLocaleString("en-BD")}
                   </span>
                   <span className="mx-2 text-gray-400">·</span>
@@ -185,8 +187,8 @@ function PaymentsInner() {
           </ul>
         )}
 
-        <p className="mt-8 text-center text-sm text-gray-500">
-          <Link href="/my-jobs" className="text-blue-600 hover:underline">
+        <p className="mt-8 text-center text-sm text-slate-500">
+          <Link href="/my-jobs" className="font-medium text-indigo-600 hover:underline">
             Back to My Jobs
           </Link>
         </p>
@@ -199,7 +201,7 @@ export default function PaymentsPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center bg-gray-50 text-gray-600">
+        <div className="flex min-h-screen items-center justify-center text-slate-600">
           Loading…
         </div>
       }

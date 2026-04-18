@@ -36,7 +36,7 @@ export default function ApplicationsPage() {
   }, []);
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-slate-50 py-10">
+    <div className="min-h-[calc(100vh-4rem)] py-10">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight text-slate-900">My applications</h1>

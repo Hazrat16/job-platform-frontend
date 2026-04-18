@@ -40,7 +40,7 @@ export default function ApplyForJobPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <form onSubmit={onSubmit} className="bg-white shadow rounded-lg p-6 space-y-5">
           <h1 className="text-2xl font-bold text-gray-900">Apply for this Job</h1>
