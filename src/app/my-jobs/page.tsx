@@ -98,14 +98,27 @@ export default function MyJobsPage() {
                     {job.location}
                     <span className="mx-2">·</span>
                     <span className="capitalize">{job.status}</span>
+                    <span className="mx-2">·</span>
+                    <span>
+                      {job.applicationCount ?? 0}{" "}
+                      {(job.applicationCount ?? 0) === 1 ? "applicant" : "applicants"}
+                    </span>
                   </p>
                 </div>
-                <Link
-                  href={`/jobs/${job._id}`}
-                  className="text-sm text-blue-600 hover:underline shrink-0"
-                >
-                  View
-                </Link>
+                <div className="flex shrink-0 flex-col items-end gap-2 sm:flex-row sm:items-center">
+                  <Link
+                    href={`/my-jobs/${job._id}/applications`}
+                    className="text-sm font-medium text-blue-600 hover:underline"
+                  >
+                    View applicants
+                  </Link>
+                  <Link
+                    href={`/jobs/${job._id}`}
+                    className="text-sm text-slate-600 hover:underline"
+                  >
+                    Public listing
+                  </Link>
+                </div>
               </li>
             ))}
           </ul>

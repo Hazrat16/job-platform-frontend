@@ -78,6 +78,8 @@ export interface Job {
   benefits: string[];
   employer: User;
   applications: JobApplication[];
+  /** Set on employer “my jobs” list from the server. */
+  applicationCount?: number;
   status: "active" | "closed" | "draft";
   createdAt: string;
   updatedAt: string;
@@ -85,7 +87,7 @@ export interface Job {
 
 export interface JobApplication {
   _id: string;
-  job: Job;
+  job: Pick<Job, "_id" | "title" | "company" | "status"> & { employer?: string };
   applicant: User;
   resume: string;
   coverLetter?: string;
