@@ -11,6 +11,7 @@ import {
   Plus,
   Search,
   User,
+  Wallet,
   X,
 } from "lucide-react";
 import Link from "next/link";
@@ -233,6 +234,17 @@ export default function Navbar() {
                           My Jobs
                         </Link>
                       )}
+                      {user.role === "employer" && (
+                        <Link
+                          role="menuitem"
+                          href="/payments"
+                          className="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
+                          onClick={() => setUserMenuOpen(false)}
+                        >
+                          <Wallet className="h-4 w-4 text-slate-500" aria-hidden />
+                          Payments (BDT)
+                        </Link>
+                      )}
                       <button
                         type="button"
                         role="menuitem"
@@ -355,6 +367,15 @@ export default function Navbar() {
                       onClick={() => setIsMenuOpen(false)}
                     >
                       My Jobs
+                    </Link>
+                  )}
+                  {user.role === "employer" && (
+                    <Link
+                      href="/payments"
+                      className="rounded-lg px-3 py-3 text-base font-medium text-slate-800 hover:bg-slate-50"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Payments (BDT)
                     </Link>
                   )}
                   <button

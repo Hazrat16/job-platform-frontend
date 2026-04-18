@@ -6,7 +6,9 @@ import {
   JobApplication,
   Notification,
   LoginCredentials,
+  Payment,
   ResetPasswordData,
+  SslCommerzInitData,
   User,
 } from "@/types";
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
@@ -392,6 +394,28 @@ class ApiClient {
     try {
       const response = await this.client.post("/notifications/read-all");
       return this.normalizeResponse(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async initSslCommerzPayment(
+    amount: number,
+  ): Promise<ApiResponse<SslCommerzInitData>> {
+    try {
+      const response = await this.client.post("/payments/sslcommerz/init", {
+        amount,
+      });
+      return this.normalizeResponse<SslCommerzInitData>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async getMyPayments(): Promise<ApiResponse<Payment[]>> {
+    try {
+      const response = await this.client.get("/payments/me");
+      return this.normalizeResponse<Payment[]>(response.data);
     } catch (error) {
       return { success: false, message: this.extractErrorMessage(error) };
     }

@@ -157,3 +157,25 @@ export interface ApiResponse<T = unknown> {
     [key: string]: unknown;
   };
 }
+
+export type PaymentStatus = "pending" | "completed" | "failed" | "cancelled";
+
+export interface Payment {
+  _id: string;
+  user: string;
+  tranId: string;
+  amount: number;
+  currency: string;
+  status: PaymentStatus;
+  purpose?: string;
+  valId?: string;
+  sessionKey?: string;
+  bankTranId?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SslCommerzInitData {
+  gatewayUrl: string;
+  tranId: string;
+}
