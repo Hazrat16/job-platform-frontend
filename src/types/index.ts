@@ -179,3 +179,32 @@ export interface SslCommerzInitData {
   gatewayUrl: string;
   tranId: string;
 }
+
+export interface ResumeFitBilingualText {
+  en: string;
+  bn: string;
+}
+
+export interface ResumeFitBilingualLists {
+  en: string[];
+  bn: string[];
+}
+
+export interface ResumeFitAnalysis {
+  matchPercent: number;
+  atsScore: {
+    overall: number;
+    keywordAlignment: number;
+    structureClarity: number;
+    roleFitSummary: ResumeFitBilingualText;
+  };
+  missingSkills: ResumeFitBilingualLists;
+  suggestions: ResumeFitBilingualLists;
+  summary: ResumeFitBilingualText;
+  rejectionLikelyReasons: ResumeFitBilingualLists;
+}
+
+export interface ResumeFitRewrite {
+  improvedCv: ResumeFitBilingualText;
+  changeHighlights: ResumeFitBilingualLists;
+}

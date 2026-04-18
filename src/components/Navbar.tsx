@@ -10,6 +10,7 @@ import {
   Menu,
   Plus,
   Search,
+  Sparkles,
   User,
   Wallet,
   X,
@@ -143,6 +144,16 @@ export default function Navbar() {
               Browse Jobs
             </Link>
 
+            {user && (
+              <Link
+                href="/resume-fit"
+                className={`${navLinkClass} inline-flex items-center gap-1.5 text-indigo-700`}
+              >
+                <Sparkles className="h-4 w-4 shrink-0 text-indigo-500" aria-hidden />
+                Resume fit
+              </Link>
+            )}
+
             {user ? (
               <>
                 {user.role === "employer" && (
@@ -199,6 +210,15 @@ export default function Navbar() {
                         onClick={() => setUserMenuOpen(false)}
                       >
                         Profile
+                      </Link>
+                      <Link
+                        role="menuitem"
+                        href="/resume-fit"
+                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-indigo-700 hover:bg-indigo-50"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        <Sparkles className="h-4 w-4 text-indigo-500" aria-hidden />
+                        Resume fit (AI)
                       </Link>
                       <Link
                         role="menuitem"
@@ -320,6 +340,17 @@ export default function Navbar() {
               >
                 Browse Jobs
               </Link>
+
+              {user && (
+                <Link
+                  href="/resume-fit"
+                  className="flex items-center gap-2 rounded-lg px-3 py-3 text-base font-medium text-indigo-700 hover:bg-indigo-50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <Sparkles className="h-5 w-5 shrink-0" aria-hidden />
+                  Resume fit (AI)
+                </Link>
+              )}
 
               {user ? (
                 <>

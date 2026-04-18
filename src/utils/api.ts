@@ -8,6 +8,8 @@ import {
   LoginCredentials,
   Payment,
   ResetPasswordData,
+  ResumeFitAnalysis,
+  ResumeFitRewrite,
   SslCommerzInitData,
   User,
 } from "@/types";
@@ -416,6 +418,37 @@ class ApiClient {
     try {
       const response = await this.client.get("/payments/me");
       return this.normalizeResponse<Payment[]>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async analyzeResumeFit(formData: FormData): Promise<ApiResponse<ResumeFitAnalysis>> {
+    try {
+      const response = await this.client.post("/resume-fit/analyze", formData, {
+        transformRequest: [
+          (data, headers) => {
+            if (data instanceof FormData) {
+              delete headers["Content-Type"];
+            }
+            return data;
+          },
+        ],
+      });
+      return this.normalizeResponse<ResumeFitAnalysis>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async rewriteResumeFit(payload: {
+    resumeText: string;
+    jobDescription?: string;
+    jobId?: string;
+  }): Promise<ApiResponse<ResumeFitRewrite>> {
+    try {
+      const response = await this.client.post("/resume-fit/rewrite", payload);
+      return this.normalizeResponse<ResumeFitRewrite>(response.data);
     } catch (error) {
       return { success: false, message: this.extractErrorMessage(error) };
     }
