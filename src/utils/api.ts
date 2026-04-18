@@ -4,6 +4,7 @@ import {
   ForgotPasswordData,
   Job,
   JobApplication,
+  Notification,
   LoginCredentials,
   ResetPasswordData,
   User,
@@ -357,6 +358,40 @@ class ApiClient {
     try {
       const response = await this.client.delete(`/saved-jobs/${jobId}`);
       return this.normalizeResponse<{ jobId: string }>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async getNotifications(params?: {
+    limit?: number;
+    unreadOnly?: boolean;
+  }): Promise<ApiResponse<Notification[]>> {
+    try {
+      const response = await this.client.get("/notifications", { params });
+      return this.normalizeResponse<Notification[]>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async markNotificationRead(
+    notificationId: string,
+  ): Promise<ApiResponse<Notification>> {
+    try {
+      const response = await this.client.patch(
+        `/notifications/${notificationId}/read`,
+      );
+      return this.normalizeResponse<Notification>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async markAllNotificationsRead(): Promise<ApiResponse> {
+    try {
+      const response = await this.client.post("/notifications/read-all");
+      return this.normalizeResponse(response.data);
     } catch (error) {
       return { success: false, message: this.extractErrorMessage(error) };
     }

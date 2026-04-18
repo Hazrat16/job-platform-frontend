@@ -132,9 +132,28 @@ export interface ResetPasswordData {
   confirmPassword: string;
 }
 
+export type NotificationType = "application_received" | "application_status";
+
+export interface Notification {
+  _id: string;
+  userId: string;
+  type: NotificationType;
+  title: string;
+  body: string;
+  read: boolean;
+  href?: string;
+  metadata?: Record<string, unknown>;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface ApiResponse<T = unknown> {
   success: boolean;
   message: string;
   data?: T;
   error?: string;
+  meta?: {
+    unreadCount?: number;
+    [key: string]: unknown;
+  };
 }

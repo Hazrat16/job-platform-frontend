@@ -2,10 +2,19 @@
 
 import { User as UserType } from "@/types";
 import { cn } from "@/lib/cn";
-import { getUser, removeAuthToken, removeUser } from "@/utils/api";
-import { Briefcase, ChevronDown, Menu, Plus, Search, User, X } from "lucide-react";
+import { apiClient, getUser, removeAuthToken, removeUser } from "@/utils/api";
+import {
+  Bell,
+  Briefcase,
+  ChevronDown,
+  Menu,
+  Plus,
+  Search,
+  User,
+  X,
+} from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 const navLinkClass =
@@ -16,13 +25,36 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [unreadNotifications, setUnreadNotifications] = useState(0);
   const router = useRouter();
+  const pathname = usePathname();
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const currentUser = getUser();
     setUser(currentUser);
   }, []);
+
+  useEffect(() => {
+    if (!user) {
+      setUnreadNotifications(0);
+      return;
+    }
+    let cancelled = false;
+    const refresh = async () => {
+      const res = await apiClient.getNotifications({ limit: 1 });
+      if (cancelled || !res.success) return;
+      if (typeof res.meta?.unreadCount === "number") {
+        setUnreadNotifications(res.meta.unreadCount);
+      }
+    };
+    void refresh();
+    const interval = setInterval(refresh, 45_000);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [user, pathname]);
 
   useEffect(() => {
     if (!userMenuOpen) return;
@@ -115,6 +147,19 @@ export default function Navbar() {
                   </Link>
                 )}
 
+                <Link
+                  href="/notifications"
+                  className="relative ml-1 rounded-lg p-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  aria-label={`Notifications${unreadNotifications > 0 ? `, ${unreadNotifications} unread` : ""}`}
+                >
+                  <Bell className="h-5 w-5" aria-hidden />
+                  {unreadNotifications > 0 && (
+                    <span className="absolute right-0.5 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-bold text-white">
+                      {unreadNotifications > 99 ? "99+" : unreadNotifications}
+                    </span>
+                  )}
+                </Link>
+
                 <div className="relative ml-1" ref={userMenuRef}>
                   <button
                     type="button"
@@ -146,6 +191,19 @@ export default function Navbar() {
                         onClick={() => setUserMenuOpen(false)}
                       >
                         Profile
+                      </Link>
+                      <Link
+                        role="menuitem"
+                        href="/notifications"
+                        className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        Notifications
+                        {unreadNotifications > 0 && (
+                          <span className="ml-2 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-800">
+                            {unreadNotifications > 99 ? "99+" : unreadNotifications}
+                          </span>
+                        )}
                       </Link>
                       <Link
                         role="menuitem"
@@ -261,6 +319,18 @@ export default function Navbar() {
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Profile
+                  </Link>
+                  <Link
+                    href="/notifications"
+                    className="rounded-lg px-3 py-3 text-base font-medium text-slate-800 hover:bg-slate-50"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Notifications
+                    {unreadNotifications > 0 && (
+                      <span className="ml-2 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-800">
+                        {unreadNotifications > 99 ? "99+" : unreadNotifications}
+                      </span>
+                    )}
                   </Link>
                   <Link
                     href="/applications"
