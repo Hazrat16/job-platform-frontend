@@ -423,7 +423,7 @@ export default function ProfilePage() {
         <form onSubmit={onSave} className="space-y-6">
           {isEditing ? (
           <fieldset className="space-y-6">
-          <section className="bg-card shadow rounded-lg p-6 space-y-4">
+          <section id="basics" className="bg-card shadow rounded-lg p-6 space-y-4">
             <div className="flex items-center gap-2 text-foreground font-semibold border-b pb-2">
               <UserIcon className="h-5 w-5 text-accent" />
               Basics
@@ -467,7 +467,7 @@ export default function ProfilePage() {
             </div>
           </section>
 
-          <section className="bg-card shadow rounded-lg p-6 space-y-4">
+          <section id="summary" className="bg-card shadow rounded-lg p-6 space-y-4">
             <div className="flex items-center gap-2 text-foreground font-semibold border-b pb-2">
               <BookOpen className="h-5 w-5 text-accent" />
               Professional summary
@@ -500,7 +500,7 @@ export default function ProfilePage() {
 
           {role === "jobseeker" && (
             <>
-              <section className="bg-card shadow rounded-lg p-6 space-y-4">
+              <section id="skills" className="bg-card shadow rounded-lg p-6 space-y-4">
                 <div className="flex items-center gap-2 text-foreground font-semibold border-b pb-2">
                   <Briefcase className="h-5 w-5 text-accent" />
                   Skills
@@ -519,7 +519,7 @@ export default function ProfilePage() {
                 </div>
               </section>
 
-              <section className="bg-card shadow rounded-lg p-6 space-y-4">
+              <section id="experience" className="bg-card shadow rounded-lg p-6 space-y-4">
                 <div className="flex items-center justify-between border-b pb-2">
                   <div className="flex items-center gap-2 text-foreground font-semibold">
                     <Briefcase className="h-5 w-5 text-accent" />
@@ -683,7 +683,7 @@ export default function ProfilePage() {
                 )}
               </section>
 
-              <section className="bg-card shadow rounded-lg p-6 space-y-4">
+              <section id="education" className="bg-card shadow rounded-lg p-6 space-y-4">
                 <div className="flex items-center justify-between border-b pb-2">
                   <div className="flex items-center gap-2 text-foreground font-semibold">
                     <GraduationCap className="h-5 w-5 text-accent" />
@@ -847,7 +847,7 @@ export default function ProfilePage() {
             </>
           )}
 
-          <section className="bg-card shadow rounded-lg p-6 space-y-3">
+          <section id="links" className="bg-card shadow rounded-lg p-6 space-y-3">
             <p className="text-foreground font-semibold border-b pb-2">Links</p>
             <input
               type="url"
@@ -877,7 +877,7 @@ export default function ProfilePage() {
           </fieldset>
           ) : (
             <div className="space-y-6">
-              <section className="bg-card shadow rounded-lg p-6 space-y-4">
+              <section id="skills" className="bg-card shadow rounded-lg p-6 space-y-4">
                 <div className="flex items-center gap-2 text-foreground font-semibold border-b pb-2">
                   <UserIcon className="h-5 w-5 text-accent" />
                   Basics
@@ -906,7 +906,7 @@ export default function ProfilePage() {
 
               {role === "jobseeker" && (
                 <>
-                  <section className="bg-card shadow rounded-lg p-6 space-y-4">
+                  <section id="experience" className="bg-card shadow rounded-lg p-6 space-y-4">
                     <div className="flex items-center gap-2 text-foreground font-semibold border-b pb-2">
                       <Briefcase className="h-5 w-5 text-accent" />
                       Skills
@@ -924,7 +924,7 @@ export default function ProfilePage() {
                     )}
                   </section>
 
-                  <section className="bg-card shadow rounded-lg p-6 space-y-4">
+                  <section id="education" className="bg-card shadow rounded-lg p-6 space-y-4">
                     <div className="flex items-center gap-2 text-foreground font-semibold border-b pb-2">
                       <Briefcase className="h-5 w-5 text-accent" />
                       Experience
@@ -966,7 +966,7 @@ export default function ProfilePage() {
                 </>
               )}
 
-              <section className="bg-card shadow rounded-lg p-6 space-y-3">
+              <section id="links" className="bg-card shadow rounded-lg p-6 space-y-3">
                 <p className="text-foreground font-semibold border-b pb-2">Links</p>
                 <p className="text-sm"><span className="text-fg-subtle">LinkedIn:</span> <span className="text-foreground">{linkedIn || "—"}</span></p>
                 <p className="text-sm"><span className="text-fg-subtle">GitHub:</span> <span className="text-foreground">{github || "—"}</span></p>
@@ -975,7 +975,7 @@ export default function ProfilePage() {
             </div>
           )}
 
-          <section className="bg-card shadow rounded-lg p-6 space-y-4">
+          <section id="sessions" className="bg-card shadow rounded-lg p-6 space-y-4">
             <div className="flex items-center justify-between border-b pb-2">
               <p className="text-foreground font-semibold">Active sessions</p>
               <button
