@@ -6,10 +6,12 @@ import {
   useCallback,
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
+import { createPortal } from "react-dom";
 
 export type FilterSelectOption = { value: string; label: string };
 
@@ -37,7 +39,13 @@ export function FilterSelect({
 }: FilterSelectProps) {
   const listboxId = useId();
   const containerRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
+  const [menuStyle, setMenuStyle] = useState<{
+    top: number;
+    left: number;
+    width: number;
+  } | null>(null);
   const found = options.findIndex((o) => o.value === value);
   const selectedIndex = found >= 0 ? found : 0;
   const [highlightedIndex, setHighlightedIndex] = useState(selectedIndex);
@@ -61,6 +69,27 @@ export function FilterSelect({
     document.addEventListener("pointerdown", onPointerDown);
     return () => document.removeEventListener("pointerdown", onPointerDown);
   }, [open, close]);
+
+  useLayoutEffect(() => {
+    if (!open) return;
+    const updateMenuPosition = () => {
+      const trigger = buttonRef.current;
+      if (!trigger) return;
+      const rect = trigger.getBoundingClientRect();
+      setMenuStyle({
+        top: rect.bottom + 6,
+        left: rect.left,
+        width: rect.width,
+      });
+    };
+    updateMenuPosition();
+    window.addEventListener("resize", updateMenuPosition);
+    window.addEventListener("scroll", updateMenuPosition, true);
+    return () => {
+      window.removeEventListener("resize", updateMenuPosition);
+      window.removeEventListener("scroll", updateMenuPosition, true);
+    };
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -113,6 +142,7 @@ export function FilterSelect({
       ref={containerRef}
       className={cn(
         "relative",
+        open && "z-[80]",
         fullWidth
           ? "w-full"
           : "inline-block min-w-[14rem] max-w-[min(100vw-2rem,20rem)] shrink-0",
@@ -120,6 +150,7 @@ export function FilterSelect({
       )}
     >
       <button
+        ref={buttonRef}
         type="button"
         id={id}
         role="combobox"
@@ -144,45 +175,53 @@ export function FilterSelect({
         aria-hidden
       />
 
-      {open && (
-        <ul
-          id={listboxId}
-          role="listbox"
-          tabIndex={-1}
-          className="absolute left-0 right-0 top-full z-50 mt-1.5 max-h-72 overflow-auto rounded-xl border border-border bg-popover py-1 shadow-lg shadow-foreground/10 ring-1 ring-border dark:shadow-black/40"
-        >
-          {options.map((opt, idx) => {
-            const isSelected = opt.value === value;
-            const isHighlighted = idx === highlightedIndex;
-            return (
-              <li
-                key={opt.value === "" ? "__all__" : opt.value}
-                id={`${id}-option-${idx}`}
-                role="option"
-                aria-selected={isSelected}
-                className={cn(
-                  "mx-1 flex cursor-pointer items-center gap-2 rounded-lg px-2.5 py-2 text-sm text-foreground outline-none transition-colors",
-                  isHighlighted && "bg-card-muted",
-                  !isHighlighted && isSelected && "bg-accent-muted",
-                  isHighlighted && isSelected && "bg-accent-muted-strong",
-                )}
-                onMouseEnter={() => setHighlightedIndex(idx)}
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={() => selectIndex(idx)}
-              >
-                <span className="min-w-0 flex-1 truncate">{opt.label}</span>
-                {isSelected && (
-                  <Check
-                    className="h-4 w-4 shrink-0 text-accent"
-                    strokeWidth={2.5}
-                    aria-hidden
-                  />
-                )}
-              </li>
-            );
-          })}
-        </ul>
-      )}
+      {open && menuStyle && typeof document !== "undefined"
+        ? createPortal(
+            <ul
+              id={listboxId}
+              role="listbox"
+              tabIndex={-1}
+              className="fixed z-[9999] max-h-72 overflow-auto rounded-xl border border-border bg-popover py-1 shadow-lg shadow-foreground/10 ring-1 ring-border dark:shadow-black/40"
+              style={{
+                top: menuStyle.top,
+                left: menuStyle.left,
+                width: menuStyle.width,
+              }}
+            >
+              {options.map((opt, idx) => {
+                const isSelected = opt.value === value;
+                const isHighlighted = idx === highlightedIndex;
+                return (
+                  <li
+                    key={opt.value === "" ? "__all__" : opt.value}
+                    id={`${id}-option-${idx}`}
+                    role="option"
+                    aria-selected={isSelected}
+                    className={cn(
+                      "mx-1 flex cursor-pointer items-center gap-2 rounded-lg px-2.5 py-2 text-sm text-foreground outline-none transition-colors",
+                      isHighlighted && "bg-card-muted",
+                      !isHighlighted && isSelected && "bg-accent-muted",
+                      isHighlighted && isSelected && "bg-accent-muted-strong",
+                    )}
+                    onMouseEnter={() => setHighlightedIndex(idx)}
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => selectIndex(idx)}
+                  >
+                    <span className="min-w-0 flex-1 truncate">{opt.label}</span>
+                    {isSelected && (
+                      <Check
+                        className="h-4 w-4 shrink-0 text-accent"
+                        strokeWidth={2.5}
+                        aria-hidden
+                      />
+                    )}
+                  </li>
+                );
+              })}
+            </ul>,
+            document.body,
+          )
+        : null}
     </div>
   );
 }

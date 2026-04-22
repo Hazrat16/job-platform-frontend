@@ -1,5 +1,6 @@
 "use client";
 
+import { FilterSelect } from "@/components/FilterSelect";
 import { apiClient } from "@/utils/api";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import {
@@ -41,6 +42,8 @@ export default function PostJobPage() {
     register,
     control,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors },
     reset,
   } = useForm<JobFormData>({
@@ -77,6 +80,9 @@ export default function PostJobPage() {
     control,
     name: "benefits",
   });
+
+  const selectedType = watch("type");
+  const selectedCurrency = watch("salary.currency");
 
   const onSubmit = async (data: JobFormData) => {
     setIsLoading(true);
@@ -221,18 +227,27 @@ export default function PostJobPage() {
                 >
                   Job Type *
                 </label>
-                <select
-                  {...register("type", { required: "Job type is required" })}
+                <FilterSelect
                   id="type"
-                  className={`w-full px-3 py-2 border rounded-md focus:ring-accent focus:border-accent ${
-                    errors.type ? "border-red-300" : "border-border-strong"
-                  }`}
-                >
-                  <option value="full-time">Full Time</option>
-                  <option value="part-time">Part Time</option>
-                  <option value="contract">Contract</option>
-                  <option value="internship">Internship</option>
-                </select>
+                  value={selectedType}
+                  onChange={(value) =>
+                    setValue("type", value as JobFormData["type"], {
+                      shouldValidate: true,
+                      shouldDirty: true,
+                    })
+                  }
+                  options={[
+                    { value: "full-time", label: "Full Time" },
+                    { value: "part-time", label: "Part Time" },
+                    { value: "contract", label: "Contract" },
+                    { value: "internship", label: "Internship" },
+                  ]}
+                  className={errors.type ? "rounded-xl ring-2 ring-red-300/60" : ""}
+                />
+                <input
+                  type="hidden"
+                  {...register("type", { required: "Job type is required" })}
+                />
                 {errors.type && (
                   <div className="mt-1 flex items-center text-sm text-red-600">
                     <AlertCircle className="h-4 w-4 mr-1" />
@@ -312,23 +327,32 @@ export default function PostJobPage() {
                 >
                   Currency *
                 </label>
-                <select
+                <FilterSelect
+                  id="currency"
+                  value={selectedCurrency}
+                  onChange={(value) =>
+                    setValue("salary.currency", value, {
+                      shouldValidate: true,
+                      shouldDirty: true,
+                    })
+                  }
+                  options={[
+                    { value: "USD", label: "USD ($)" },
+                    { value: "EUR", label: "EUR (€)" },
+                    { value: "GBP", label: "GBP (£)" },
+                    { value: "CAD", label: "CAD (C$)" },
+                    { value: "AUD", label: "AUD (A$)" },
+                  ]}
+                  className={
+                    errors.salary?.currency ? "rounded-xl ring-2 ring-red-300/60" : ""
+                  }
+                />
+                <input
+                  type="hidden"
                   {...register("salary.currency", {
                     required: "Currency is required",
                   })}
-                  id="currency"
-                  className={`w-full px-3 py-2 border rounded-md focus:ring-accent focus:border-accent ${
-                    errors.salary?.currency
-                      ? "border-red-300"
-                      : "border-border-strong"
-                  }`}
-                >
-                  <option value="USD">USD ($)</option>
-                  <option value="EUR">EUR (€)</option>
-                  <option value="GBP">GBP (£)</option>
-                  <option value="CAD">CAD (C$)</option>
-                  <option value="AUD">AUD (A$)</option>
-                </select>
+                />
                 {errors.salary?.currency && (
                   <div className="mt-1 flex items-center text-sm text-red-600">
                     <AlertCircle className="h-4 w-4 mr-1" />

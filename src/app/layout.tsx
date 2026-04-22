@@ -1,3 +1,4 @@
+import AppSidebar from "@/components/AppSidebar";
 import Navbar from "@/components/Navbar";
 import MonitoringBootstrap from "@/components/MonitoringBootstrap";
 import { THEME_BOOTSTRAP_SCRIPT } from "@/lib/theme";
@@ -46,7 +47,10 @@ export default function RootLayout({
         />
         <MonitoringBootstrap />
         <Navbar />
-        <main className="min-h-[calc(100vh-4rem)]">{children}</main>
+        <div className="flex min-h-[calc(100vh-4rem)]">
+          <AppSidebar />
+          <main className="min-h-[calc(100vh-4rem)] flex-1">{children}</main>
+        </div>
         <Toaster
           position="top-center"
           toastOptions={{

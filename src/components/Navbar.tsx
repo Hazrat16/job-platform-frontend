@@ -9,7 +9,6 @@ import {
   Briefcase,
   ChevronDown,
   Menu,
-  Plus,
   Search,
   Sparkles,
   User,
@@ -144,33 +143,10 @@ export default function Navbar() {
           </div>
 
           <div className="hidden items-center gap-1 md:flex">
-            <Link href="/jobs" className={navLinkClass}>
-              Browse Jobs
-            </Link>
             <ThemeToggle className="mx-0.5" />
-
-            {user && (
-              <Link
-                href="/resume-fit"
-                className={`${navLinkClass} inline-flex items-center gap-1.5 text-link`}
-              >
-                <Sparkles className="h-4 w-4 shrink-0 text-link-soft" aria-hidden />
-                Resume fit
-              </Link>
-            )}
 
             {user ? (
               <>
-                {user.role === "employer" && (
-                  <Link
-                    href="/post-job"
-                    className="ml-1 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent to-accent-end px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-accent/25 transition-all hover:brightness-110 hover:shadow-accent/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:shadow-foreground/50"
-                  >
-                    <Plus className="h-4 w-4" aria-hidden />
-                    Post Job
-                  </Link>
-                )}
-
                 <Link
                   href="/notifications"
                   className="relative ml-1 rounded-xl p-2 text-fg-muted transition-all hover:bg-card hover:text-foreground hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
