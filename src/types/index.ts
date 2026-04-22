@@ -60,6 +60,9 @@ export interface User {
   profileCompleteness?: ProfileCompleteness | null;
   createdAt?: string;
   updatedAt?: string;
+  isSuspended?: boolean;
+  suspendedAt?: string;
+  deletedAt?: string;
 }
 
 export interface Job {
@@ -81,6 +84,19 @@ export interface Job {
   /** Set on employer “my jobs” list from the server. */
   applicationCount?: number;
   status: "active" | "closed" | "draft";
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string;
+}
+
+export interface DataDeletionRequest {
+  _id: string;
+  userId: string | Pick<User, "_id" | "name" | "email" | "role">;
+  reason?: string;
+  status: "pending" | "approved" | "rejected" | "processed";
+  requestedAt: string;
+  reviewedAt?: string;
+  reviewedBy?: string | Pick<User, "_id" | "name" | "email">;
   createdAt: string;
   updatedAt: string;
 }

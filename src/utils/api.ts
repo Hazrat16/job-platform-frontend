@@ -1,6 +1,7 @@
 import {
   ApiResponse,
   AuthResponse,
+  DataDeletionRequest,
   ForgotPasswordData,
   Job,
   JobApplication,
@@ -327,6 +328,15 @@ class ApiClient {
     }
   }
 
+  async requestDataDeletion(reason?: string): Promise<ApiResponse<DataDeletionRequest>> {
+    try {
+      const response = await this.client.post("/profile/data-deletion-request", { reason });
+      return this.normalizeResponse<DataDeletionRequest>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
   // User endpoints (same as getProfile; kept for backward compatibility)
   async getCurrentUser(): Promise<ApiResponse<User>> {
     return this.getProfile();
@@ -588,6 +598,69 @@ class ApiClient {
     try {
       const response = await this.client.post("/resume-fit/rewrite", payload);
       return this.normalizeResponse<ResumeFitRewrite>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async adminListUsers(): Promise<ApiResponse<User[]>> {
+    try {
+      const response = await this.client.get("/admin/users");
+      return this.normalizeResponse<User[]>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async adminModerateUser(
+    id: string,
+    action: "suspend" | "unsuspend" | "soft_delete",
+  ): Promise<ApiResponse<User>> {
+    try {
+      const response = await this.client.patch(`/admin/users/${id}`, { action });
+      return this.normalizeResponse<User>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async adminListJobs(): Promise<ApiResponse<Job[]>> {
+    try {
+      const response = await this.client.get("/admin/jobs");
+      return this.normalizeResponse<Job[]>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async adminModerateJob(
+    id: string,
+    action: "close" | "soft_delete" | "restore",
+  ): Promise<ApiResponse<Job>> {
+    try {
+      const response = await this.client.patch(`/admin/jobs/${id}`, { action });
+      return this.normalizeResponse<Job>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async adminListDeletionRequests(): Promise<ApiResponse<DataDeletionRequest[]>> {
+    try {
+      const response = await this.client.get("/admin/deletion-requests");
+      return this.normalizeResponse<DataDeletionRequest[]>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async adminReviewDeletionRequest(
+    id: string,
+    status: "approved" | "rejected" | "processed",
+  ): Promise<ApiResponse<DataDeletionRequest>> {
+    try {
+      const response = await this.client.patch(`/admin/deletion-requests/${id}`, { status });
+      return this.normalizeResponse<DataDeletionRequest>(response.data);
     } catch (error) {
       return { success: false, message: this.extractErrorMessage(error) };
     }

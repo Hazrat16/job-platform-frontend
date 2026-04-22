@@ -218,6 +218,14 @@ export default function Navbar() {
                       </Link>
                       <Link
                         role="menuitem"
+                        href="/profile/data-deletion"
+                        className="block px-4 py-2.5 text-sm text-fg-muted hover:bg-card-muted"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        Request Data Deletion
+                      </Link>
+                      <Link
+                        role="menuitem"
                         href="/resume-fit"
                         className="flex items-center gap-2 px-4 py-2.5 text-sm text-link hover:bg-accent-muted"
                         onClick={() => setUserMenuOpen(false)}
@@ -274,6 +282,32 @@ export default function Navbar() {
                           My Jobs
                         </Link>
                       )}
+                      {user.role === "admin" && (
+                        <Link
+                          role="menuitem"
+                          href="/admin"
+                          className="block px-4 py-2.5 text-sm text-fg-muted hover:bg-card-muted"
+                          onClick={() => setUserMenuOpen(false)}
+                        >
+                          Admin Panel
+                        </Link>
+                      )}
+                      <Link
+                        role="menuitem"
+                        href="/privacy"
+                        className="block px-4 py-2.5 text-sm text-fg-muted hover:bg-card-muted"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        Privacy
+                      </Link>
+                      <Link
+                        role="menuitem"
+                        href="/terms"
+                        className="block px-4 py-2.5 text-sm text-fg-muted hover:bg-card-muted"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        Terms
+                      </Link>
                       {user.role === "employer" && (
                         <Link
                           role="menuitem"
@@ -385,6 +419,13 @@ export default function Navbar() {
                     Profile
                   </Link>
                   <Link
+                    href="/profile/data-deletion"
+                    className="rounded-lg px-3 py-3 text-base font-medium text-foreground hover:bg-card-muted"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Request Data Deletion
+                  </Link>
+                  <Link
                     href="/notifications"
                     className="rounded-lg px-3 py-3 text-base font-medium text-foreground hover:bg-card-muted"
                     onClick={() => setIsMenuOpen(false)}
@@ -421,6 +462,29 @@ export default function Navbar() {
                       My Jobs
                     </Link>
                   )}
+                  {user.role === "admin" && (
+                    <Link
+                      href="/admin"
+                      className="rounded-lg px-3 py-3 text-base font-medium text-foreground hover:bg-card-muted"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Admin Panel
+                    </Link>
+                  )}
+                  <Link
+                    href="/privacy"
+                    className="rounded-lg px-3 py-3 text-base font-medium text-foreground hover:bg-card-muted"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Privacy
+                  </Link>
+                  <Link
+                    href="/terms"
+                    className="rounded-lg px-3 py-3 text-base font-medium text-foreground hover:bg-card-muted"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Terms
+                  </Link>
                   {user.role === "employer" && (
                     <Link
                       href="/payments"
@@ -454,6 +518,20 @@ export default function Navbar() {
                   >
                     Sign Up
                   </Link>
+                <Link
+                  href="/privacy"
+                  className="rounded-lg px-3 py-3 text-base font-medium text-foreground hover:bg-card-muted"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Privacy
+                </Link>
+                <Link
+                  href="/terms"
+                  className="rounded-lg px-3 py-3 text-base font-medium text-foreground hover:bg-card-muted"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Terms
+                </Link>
                 </>
               )}
             </div>
