@@ -258,3 +258,30 @@ export interface ResumeFitRewrite {
   improvedCv: ResumeFitBilingualText;
   changeHighlights: ResumeFitBilingualLists;
 }
+
+export interface ActivitySummaryEntry {
+  key: string;
+  count: number;
+}
+
+export interface ActivityEventRecord {
+  event: string;
+  timestamp: number;
+  path: string;
+  href?: string;
+  role?: string;
+  userId?: string | null;
+  properties?: Record<string, unknown>;
+}
+
+export interface ActivitySummary {
+  totals: {
+    events: number;
+    uniquePaths: number;
+    uniqueRoles: number;
+  };
+  byEvent: ActivitySummaryEntry[];
+  byPath: ActivitySummaryEntry[];
+  byRole: ActivitySummaryEntry[];
+  recent: ActivityEventRecord[];
+}

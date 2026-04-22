@@ -1,6 +1,6 @@
 "use client";
 
-import { DataDeletionRequest, Job, User } from "@/types";
+import { ActivitySummary, DataDeletionRequest, Job, User } from "@/types";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { apiClient } from "@/utils/api";
 import { Loader2 } from "lucide-react";
@@ -13,6 +13,7 @@ export default function AdminPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [deletionRequests, setDeletionRequests] = useState<DataDeletionRequest[]>([]);
+  const [activitySummary, setActivitySummary] = useState<ActivitySummary | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -20,14 +21,16 @@ export default function AdminPage() {
     const load = async () => {
       setLoading(true);
       try {
-        const [u, j, d] = await Promise.all([
+        const [u, j, d, a] = await Promise.all([
           apiClient.adminListUsers(),
           apiClient.adminListJobs(),
           apiClient.adminListDeletionRequests(),
+          apiClient.getActivitySummary(),
         ]);
         if (u.success) setUsers(u.data || []);
         if (j.success) setJobs(j.data || []);
         if (d.success) setDeletionRequests(d.data || []);
+        if (a.success && a.data) setActivitySummary(a.data);
       } finally {
         setLoading(false);
       }
@@ -88,6 +91,78 @@ export default function AdminPage() {
         <section className="rounded-2xl border border-border bg-card p-5">
           <h1 className="text-2xl font-bold text-foreground">Admin moderation</h1>
           <p className="text-sm text-fg-muted">Review users, jobs, and deletion requests.</p>
+        </section>
+
+        <section className="rounded-2xl border border-border bg-card p-5">
+          <h2 className="mb-3 text-lg font-semibold text-foreground">User activity analytics</h2>
+          {!activitySummary ? (
+            <p className="text-sm text-fg-subtle">No activity data yet.</p>
+          ) : (
+            <div className="space-y-5">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div className="rounded-lg border border-border p-3">
+                  <p className="text-xs text-fg-subtle">Total events</p>
+                  <p className="text-xl font-bold text-foreground">{activitySummary.totals.events}</p>
+                </div>
+                <div className="rounded-lg border border-border p-3">
+                  <p className="text-xs text-fg-subtle">Unique paths</p>
+                  <p className="text-xl font-bold text-foreground">{activitySummary.totals.uniquePaths}</p>
+                </div>
+                <div className="rounded-lg border border-border p-3">
+                  <p className="text-xs text-fg-subtle">Roles active</p>
+                  <p className="text-xl font-bold text-foreground">{activitySummary.totals.uniqueRoles}</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <div className="rounded-lg border border-border p-3">
+                  <p className="mb-2 text-sm font-medium text-foreground">Top events</p>
+                  <ul className="space-y-1 text-sm">
+                    {activitySummary.byEvent.slice(0, 8).map((row) => (
+                      <li key={row.key} className="flex items-center justify-between text-fg-muted">
+                        <span>{row.key}</span>
+                        <span className="font-medium text-foreground">{row.count}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="rounded-lg border border-border p-3">
+                  <p className="mb-2 text-sm font-medium text-foreground">Top pages</p>
+                  <ul className="space-y-1 text-sm">
+                    {activitySummary.byPath.slice(0, 8).map((row) => (
+                      <li key={row.key} className="flex items-center justify-between text-fg-muted">
+                        <span className="truncate">{row.key}</span>
+                        <span className="font-medium text-foreground">{row.count}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="rounded-lg border border-border p-3">
+                  <p className="mb-2 text-sm font-medium text-foreground">Role activity</p>
+                  <ul className="space-y-1 text-sm">
+                    {activitySummary.byRole.map((row) => (
+                      <li key={row.key} className="flex items-center justify-between text-fg-muted">
+                        <span>{row.key}</span>
+                        <span className="font-medium text-foreground">{row.count}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <div className="rounded-lg border border-border p-3">
+                <p className="mb-2 text-sm font-medium text-foreground">Recent activity</p>
+                <ul className="max-h-64 space-y-1 overflow-auto text-xs">
+                  {activitySummary.recent.slice(0, 30).map((row, idx) => (
+                    <li key={`${row.timestamp}-${idx}`} className="rounded border border-border px-2 py-1 text-fg-muted">
+                      <span className="font-medium text-foreground">{row.event}</span> · {row.path} ·{" "}
+                      {row.role || "unknown"} · {new Date(row.timestamp).toLocaleString()}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
         </section>
 
         <section className="rounded-2xl border border-border bg-card p-5">

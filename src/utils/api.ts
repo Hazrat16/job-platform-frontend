@@ -1,4 +1,5 @@
 import {
+  ActivitySummary,
   ApiResponse,
   AuthResponse,
   DataDeletionRequest,
@@ -661,6 +662,15 @@ class ApiClient {
     try {
       const response = await this.client.patch(`/admin/deletion-requests/${id}`, { status });
       return this.normalizeResponse<DataDeletionRequest>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async getActivitySummary(): Promise<ApiResponse<ActivitySummary>> {
+    try {
+      const response = await this.client.get("/monitoring/activity");
+      return this.normalizeResponse<ActivitySummary>(response.data);
     } catch (error) {
       return { success: false, message: this.extractErrorMessage(error) };
     }
