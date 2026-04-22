@@ -91,16 +91,24 @@ export default function NotificationsPage() {
               )}
             </p>
           </div>
-          {unreadCount > 0 && (
-            <button
-              type="button"
-              onClick={() => void markAllRead()}
-              className="inline-flex items-center justify-center gap-2 self-start rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-colors hover:bg-card-muted"
+          <div className="flex items-center gap-2">
+            <Link
+              href="/notifications/preferences"
+              className="inline-flex items-center justify-center rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-colors hover:bg-card-muted"
             >
-              <CheckCheck className="h-4 w-4" />
-              Mark all read
-            </button>
-          )}
+              Preferences
+            </Link>
+            {unreadCount > 0 && (
+              <button
+                type="button"
+                onClick={() => void markAllRead()}
+                className="inline-flex items-center justify-center gap-2 self-start rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-colors hover:bg-card-muted"
+              >
+                <CheckCheck className="h-4 w-4" />
+                Mark all read
+              </button>
+            )}
+          </div>
         </div>
 
         {loading ? (

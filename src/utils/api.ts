@@ -6,6 +6,7 @@ import {
   JobApplication,
   Notification,
   LoginCredentials,
+  NotificationPreferences,
   Payment,
   ResetPasswordData,
   ResumeFitAnalysis,
@@ -513,6 +514,27 @@ class ApiClient {
     try {
       const response = await this.client.post("/notifications/read-all");
       return this.normalizeResponse(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async getNotificationPreferences(): Promise<ApiResponse<NotificationPreferences>> {
+    try {
+      const response = await this.client.get("/notifications/preferences");
+      return this.normalizeResponse<NotificationPreferences>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async updateNotificationPreferences(payload: {
+    inApp?: Partial<NotificationPreferences["inApp"]>;
+    email?: Partial<NotificationPreferences["email"]>;
+  }): Promise<ApiResponse<NotificationPreferences>> {
+    try {
+      const response = await this.client.patch("/notifications/preferences", payload);
+      return this.normalizeResponse<NotificationPreferences>(response.data);
     } catch (error) {
       return { success: false, message: this.extractErrorMessage(error) };
     }

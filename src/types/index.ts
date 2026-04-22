@@ -137,7 +137,14 @@ export interface ResetPasswordData {
   confirmPassword: string;
 }
 
-export type NotificationType = "application_received" | "application_status";
+export type NotificationType =
+  | "application_received"
+  | "application_status"
+  | "job_closing_soon";
+export type NotificationPreferenceKey =
+  | "applicationReceived"
+  | "applicationStatus"
+  | "jobClosingSoon";
 
 export interface Notification {
   _id: string;
@@ -148,6 +155,15 @@ export interface Notification {
   read: boolean;
   href?: string;
   metadata?: Record<string, unknown>;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface NotificationPreferences {
+  _id: string;
+  userId: string;
+  inApp: Record<NotificationPreferenceKey, boolean>;
+  email: Record<NotificationPreferenceKey, boolean>;
   createdAt: string;
   updatedAt: string;
 }

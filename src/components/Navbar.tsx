@@ -240,6 +240,14 @@ export default function Navbar() {
                       </Link>
                       <Link
                         role="menuitem"
+                        href="/notifications/preferences"
+                        className="block px-4 py-2.5 text-sm text-fg-muted hover:bg-card-muted"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        Notification Preferences
+                      </Link>
+                      <Link
+                        role="menuitem"
                         href="/applications"
                         className="block px-4 py-2.5 text-sm text-fg-muted hover:bg-card-muted"
                         onClick={() => setUserMenuOpen(false)}
