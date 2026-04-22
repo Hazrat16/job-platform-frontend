@@ -615,7 +615,7 @@ class ApiClient {
 
   async adminModerateUser(
     id: string,
-    action: "suspend" | "unsuspend" | "soft_delete",
+    action: "suspend" | "unsuspend" | "soft_delete" | "promote_to_admin",
   ): Promise<ApiResponse<User>> {
     try {
       const response = await this.client.patch(`/admin/users/${id}`, { action });

@@ -7,9 +7,169 @@ import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
+function BarChart({
+  title,
+  rows,
+  tone = "accent",
+}: {
+  title: string;
+  rows: Array<{ key: string; count: number }>;
+  tone?: "accent" | "link" | "success";
+}) {
+  const max = rows[0]?.count ?? 1;
+  const barTone =
+    tone === "link"
+      ? "bg-link-soft/70"
+      : tone === "success"
+        ? "bg-success/70"
+        : "bg-accent/70";
+
+  return (
+    <div className="rounded-lg border border-border p-3">
+      <p className="mb-3 text-sm font-medium text-foreground">{title}</p>
+      {rows.length === 0 ? (
+        <p className="text-sm text-fg-subtle">No data yet.</p>
+      ) : (
+        <ul className="space-y-2">
+          {rows.map((row) => {
+            const pct = Math.max(4, Math.round((row.count / max) * 100));
+            return (
+              <li key={row.key} className="space-y-1">
+                <div className="flex items-center justify-between gap-2 text-xs">
+                  <span className="truncate text-fg-muted">{row.key}</span>
+                  <span className="font-semibold text-foreground">{row.count}</span>
+                </div>
+                <div className="h-2 rounded-full bg-card-muted">
+                  <div className={`h-2 rounded-full ${barTone}`} style={{ width: `${pct}%` }} />
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+function ActivityLineChart({
+  title,
+  points,
+}: {
+  title: string;
+  points: Array<{ label: string; count: number }>;
+}) {
+  const chartWidth = 760;
+  const chartHeight = 220;
+  const padLeft = 36;
+  const padRight = 10;
+  const padTop = 12;
+  const padBottom = 30;
+  const innerWidth = chartWidth - padLeft - padRight;
+  const innerHeight = chartHeight - padTop - padBottom;
+
+  const maxCount = Math.max(1, ...points.map((p) => p.count));
+  const stepX = points.length > 1 ? innerWidth / (points.length - 1) : 0;
+  const toX = (i: number) => padLeft + i * stepX;
+  const toY = (count: number) => padTop + innerHeight - (count / maxCount) * innerHeight;
+
+  const path = points
+    .map((p, i) => `${i === 0 ? "M" : "L"} ${toX(i).toFixed(1)} ${toY(p.count).toFixed(1)}`)
+    .join(" ");
+
+  return (
+    <div className="rounded-lg border border-border p-3">
+      <p className="mb-2 text-sm font-medium text-foreground">{title}</p>
+      {points.length === 0 ? (
+        <p className="text-sm text-fg-subtle">No trend data yet.</p>
+      ) : (
+        <div className="overflow-x-auto">
+          <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="h-56 w-full min-w-[760px]">
+            {[0, 1, 2, 3, 4].map((idx) => {
+              const y = padTop + (innerHeight / 4) * idx;
+              return (
+                <line
+                  key={idx}
+                  x1={padLeft}
+                  y1={y}
+                  x2={chartWidth - padRight}
+                  y2={y}
+                  stroke="currentColor"
+                  className="text-border"
+                  strokeOpacity={0.45}
+                  strokeWidth={1}
+                />
+              );
+            })}
+
+            <path d={path} fill="none" stroke="currentColor" className="text-accent" strokeWidth={2.5} />
+            {points.map((p, i) => (
+              <circle
+                key={`${p.label}-${i}`}
+                cx={toX(i)}
+                cy={toY(p.count)}
+                r={3}
+                fill="currentColor"
+                className="text-accent"
+              />
+            ))}
+
+            <line
+              x1={padLeft}
+              y1={chartHeight - padBottom}
+              x2={chartWidth - padRight}
+              y2={chartHeight - padBottom}
+              stroke="currentColor"
+              className="text-border-strong"
+              strokeWidth={1.2}
+            />
+            <line
+              x1={padLeft}
+              y1={padTop}
+              x2={padLeft}
+              y2={chartHeight - padBottom}
+              stroke="currentColor"
+              className="text-border-strong"
+              strokeWidth={1.2}
+            />
+
+            {points.map((p, i) =>
+              i % 3 === 0 || i === points.length - 1 ? (
+                <text
+                  key={`x-${p.label}-${i}`}
+                  x={toX(i)}
+                  y={chartHeight - 8}
+                  textAnchor="middle"
+                  className="fill-fg-subtle text-[10px]"
+                >
+                  {p.label}
+                </text>
+              ) : null,
+            )}
+
+            {[0, Math.round(maxCount / 2), maxCount].map((value) => (
+              <text
+                key={`y-${value}`}
+                x={padLeft - 6}
+                y={toY(value) + 3}
+                textAnchor="end"
+                className="fill-fg-subtle text-[10px]"
+              >
+                {value}
+              </text>
+            ))}
+          </svg>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function AdminPage() {
   const { ready } = useAuthGuard({ roles: ["admin"] });
   const [loading, setLoading] = useState(true);
+  const [activeView, setActiveView] = useState<"analytics" | "users" | "jobs" | "deletions">(
+    "analytics",
+  );
   const [users, setUsers] = useState<User[]>([]);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [deletionRequests, setDeletionRequests] = useState<DataDeletionRequest[]>([]);
@@ -38,7 +198,10 @@ export default function AdminPage() {
     void load();
   }, [ready]);
 
-  const moderateUser = async (id: string, action: "suspend" | "unsuspend" | "soft_delete") => {
+  const moderateUser = async (
+    id: string,
+    action: "suspend" | "unsuspend" | "soft_delete" | "promote_to_admin",
+  ) => {
     setBusyId(id);
     try {
       const res = await apiClient.adminModerateUser(id, action);
@@ -91,8 +254,55 @@ export default function AdminPage() {
         <section className="rounded-2xl border border-border bg-card p-5">
           <h1 className="text-2xl font-bold text-foreground">Admin moderation</h1>
           <p className="text-sm text-fg-muted">Review users, jobs, and deletion requests.</p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setActiveView("analytics")}
+              className={`rounded-lg px-3 py-1.5 text-sm ${
+                activeView === "analytics"
+                  ? "bg-accent-muted text-foreground"
+                  : "border border-border text-fg-muted hover:bg-card-muted"
+              }`}
+            >
+              Analytics
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveView("users")}
+              className={`rounded-lg px-3 py-1.5 text-sm ${
+                activeView === "users"
+                  ? "bg-accent-muted text-foreground"
+                  : "border border-border text-fg-muted hover:bg-card-muted"
+              }`}
+            >
+              Users
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveView("jobs")}
+              className={`rounded-lg px-3 py-1.5 text-sm ${
+                activeView === "jobs"
+                  ? "bg-accent-muted text-foreground"
+                  : "border border-border text-fg-muted hover:bg-card-muted"
+              }`}
+            >
+              Jobs
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveView("deletions")}
+              className={`rounded-lg px-3 py-1.5 text-sm ${
+                activeView === "deletions"
+                  ? "bg-accent-muted text-foreground"
+                  : "border border-border text-fg-muted hover:bg-card-muted"
+              }`}
+            >
+              Deletion Requests
+            </button>
+          </div>
         </section>
 
+        {activeView === "analytics" && (
         <section className="rounded-2xl border border-border bg-card p-5">
           <h2 className="mb-3 text-lg font-semibold text-foreground">User activity analytics</h2>
           {!activitySummary ? (
@@ -115,40 +325,15 @@ export default function AdminPage() {
               </div>
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                <div className="rounded-lg border border-border p-3">
-                  <p className="mb-2 text-sm font-medium text-foreground">Top events</p>
-                  <ul className="space-y-1 text-sm">
-                    {activitySummary.byEvent.slice(0, 8).map((row) => (
-                      <li key={row.key} className="flex items-center justify-between text-fg-muted">
-                        <span>{row.key}</span>
-                        <span className="font-medium text-foreground">{row.count}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="rounded-lg border border-border p-3">
-                  <p className="mb-2 text-sm font-medium text-foreground">Top pages</p>
-                  <ul className="space-y-1 text-sm">
-                    {activitySummary.byPath.slice(0, 8).map((row) => (
-                      <li key={row.key} className="flex items-center justify-between text-fg-muted">
-                        <span className="truncate">{row.key}</span>
-                        <span className="font-medium text-foreground">{row.count}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="rounded-lg border border-border p-3">
-                  <p className="mb-2 text-sm font-medium text-foreground">Role activity</p>
-                  <ul className="space-y-1 text-sm">
-                    {activitySummary.byRole.map((row) => (
-                      <li key={row.key} className="flex items-center justify-between text-fg-muted">
-                        <span>{row.key}</span>
-                        <span className="font-medium text-foreground">{row.count}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <BarChart title="Top events" rows={activitySummary.byEvent.slice(0, 8)} tone="accent" />
+                <BarChart title="Top pages" rows={activitySummary.byPath.slice(0, 8)} tone="link" />
+                <BarChart title="Role activity" rows={activitySummary.byRole} tone="success" />
               </div>
+
+              <ActivityLineChart
+                title="Activity trend (last 24h)"
+                points={activitySummary.trend24h}
+              />
 
               <div className="rounded-lg border border-border p-3">
                 <p className="mb-2 text-sm font-medium text-foreground">Recent activity</p>
@@ -164,7 +349,9 @@ export default function AdminPage() {
             </div>
           )}
         </section>
+        )}
 
+        {activeView === "users" && (
         <section className="rounded-2xl border border-border bg-card p-5">
           <h2 className="mb-3 text-lg font-semibold text-foreground">Users</h2>
           <div className="space-y-2">
@@ -177,11 +364,22 @@ export default function AdminPage() {
                 <button disabled={busyId===u._id} onClick={() => void moderateUser(u._id, "suspend")} className="rounded-md border border-border px-2 py-1 text-xs">Suspend</button>
                 <button disabled={busyId===u._id} onClick={() => void moderateUser(u._id, "unsuspend")} className="rounded-md border border-border px-2 py-1 text-xs">Unsuspend</button>
                 <button disabled={busyId===u._id} onClick={() => void moderateUser(u._id, "soft_delete")} className="rounded-md border border-destructive px-2 py-1 text-xs text-destructive">Soft delete</button>
+                {u.role !== "admin" && (
+                  <button
+                    disabled={busyId===u._id}
+                    onClick={() => void moderateUser(u._id, "promote_to_admin")}
+                    className="rounded-md border border-accent px-2 py-1 text-xs text-accent"
+                  >
+                    Make admin
+                  </button>
+                )}
               </div>
             ))}
           </div>
         </section>
+        )}
 
+        {activeView === "jobs" && (
         <section className="rounded-2xl border border-border bg-card p-5">
           <h2 className="mb-3 text-lg font-semibold text-foreground">Jobs</h2>
           <div className="space-y-2">
@@ -198,7 +396,9 @@ export default function AdminPage() {
             ))}
           </div>
         </section>
+        )}
 
+        {activeView === "deletions" && (
         <section className="rounded-2xl border border-border bg-card p-5">
           <h2 className="mb-3 text-lg font-semibold text-foreground">Data deletion requests</h2>
           <div className="space-y-2">
@@ -215,6 +415,7 @@ export default function AdminPage() {
             ))}
           </div>
         </section>
+        )}
       </div>
     </div>
   );

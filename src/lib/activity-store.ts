@@ -8,6 +8,12 @@ export type StoredActivityEvent = {
   properties?: Record<string, unknown>;
 };
 
+export type ActivityTrendPoint = {
+  label: string;
+  timestamp: number;
+  count: number;
+};
+
 const MAX_EVENTS = 5000;
 const events: StoredActivityEvent[] = [];
 
@@ -27,10 +33,28 @@ export function getActivitySummary() {
   const byPath = new Map<string, number>();
   const byRole = new Map<string, number>();
 
+  const now = Date.now();
+  const hourMs = 60 * 60 * 1000;
+  const bucketCount = 24;
+  const buckets: ActivityTrendPoint[] = Array.from({ length: bucketCount }, (_, idx) => {
+    const bucketStart = now - (bucketCount - 1 - idx) * hourMs;
+    const dt = new Date(bucketStart);
+    const label = `${String(dt.getHours()).padStart(2, "0")}:00`;
+    return { label, timestamp: bucketStart, count: 0 };
+  });
+
   for (const e of events) {
     byEvent.set(e.event, (byEvent.get(e.event) ?? 0) + 1);
     byPath.set(e.path || "/", (byPath.get(e.path || "/") ?? 0) + 1);
     byRole.set(e.role || "unknown", (byRole.get(e.role || "unknown") ?? 0) + 1);
+    const diff = now - e.timestamp;
+    if (diff >= 0 && diff < bucketCount * hourMs) {
+      const indexFromNow = Math.floor(diff / hourMs);
+      const bucketIndex = bucketCount - 1 - indexFromNow;
+      if (bucketIndex >= 0 && bucketIndex < buckets.length) {
+        buckets[bucketIndex].count += 1;
+      }
+    }
   }
 
   const toSortedEntries = (map: Map<string, number>) =>
@@ -47,6 +71,7 @@ export function getActivitySummary() {
     byEvent: toSortedEntries(byEvent),
     byPath: toSortedEntries(byPath),
     byRole: toSortedEntries(byRole),
+    trend24h: buckets,
     recent: getRecentActivityEvents(40),
   };
 }

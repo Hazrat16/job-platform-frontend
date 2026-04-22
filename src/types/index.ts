@@ -274,6 +274,12 @@ export interface ActivityEventRecord {
   properties?: Record<string, unknown>;
 }
 
+export interface ActivityTrendPoint {
+  label: string;
+  timestamp: number;
+  count: number;
+}
+
 export interface ActivitySummary {
   totals: {
     events: number;
@@ -283,5 +289,6 @@ export interface ActivitySummary {
   byEvent: ActivitySummaryEntry[];
   byPath: ActivitySummaryEntry[];
   byRole: ActivitySummaryEntry[];
+  trend24h: ActivityTrendPoint[];
   recent: ActivityEventRecord[];
 }
