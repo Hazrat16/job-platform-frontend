@@ -29,6 +29,13 @@ export function getRecentActivityEvents(limit = 100): StoredActivityEvent[] {
 }
 
 export function getActivitySummary() {
+  return getActivitySummaryFor();
+}
+
+export function getActivitySummaryFor(filter?: {
+  userId?: string;
+  role?: string;
+}) {
   const byEvent = new Map<string, number>();
   const byPath = new Map<string, number>();
   const byRole = new Map<string, number>();
@@ -43,7 +50,13 @@ export function getActivitySummary() {
     return { label, timestamp: bucketStart, count: 0 };
   });
 
-  for (const e of events) {
+  const filtered = events.filter((e) => {
+    if (filter?.userId && e.userId !== filter.userId) return false;
+    if (filter?.role && e.role !== filter.role) return false;
+    return true;
+  });
+
+  for (const e of filtered) {
     byEvent.set(e.event, (byEvent.get(e.event) ?? 0) + 1);
     byPath.set(e.path || "/", (byPath.get(e.path || "/") ?? 0) + 1);
     byRole.set(e.role || "unknown", (byRole.get(e.role || "unknown") ?? 0) + 1);
@@ -64,7 +77,7 @@ export function getActivitySummary() {
 
   return {
     totals: {
-      events: events.length,
+      events: filtered.length,
       uniquePaths: byPath.size,
       uniqueRoles: byRole.size,
     },
@@ -72,6 +85,6 @@ export function getActivitySummary() {
     byPath: toSortedEntries(byPath),
     byRole: toSortedEntries(byRole),
     trend24h: buckets,
-    recent: getRecentActivityEvents(40),
+    recent: filtered.slice(-40).reverse(),
   };
 }

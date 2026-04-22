@@ -667,9 +667,12 @@ class ApiClient {
     }
   }
 
-  async getActivitySummary(): Promise<ApiResponse<ActivitySummary>> {
+  async getActivitySummary(params?: {
+    userId?: string;
+    role?: "jobseeker" | "employer" | "admin";
+  }): Promise<ApiResponse<ActivitySummary>> {
     try {
-      const response = await this.client.get("/monitoring/activity");
+      const response = await this.client.get("/monitoring/activity", { params });
       return this.normalizeResponse<ActivitySummary>(response.data);
     } catch (error) {
       return { success: false, message: this.extractErrorMessage(error) };

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getActivitySummary, pushActivityEvent } from "@/lib/activity-store";
+import { getActivitySummaryFor, pushActivityEvent } from "@/lib/activity-store";
 
 export async function POST(request: NextRequest) {
   try {
@@ -39,8 +39,11 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET() {
-  const summary = getActivitySummary();
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const userId = searchParams.get("userId") || undefined;
+  const role = searchParams.get("role") || undefined;
+  const summary = getActivitySummaryFor({ userId, role });
   return NextResponse.json({
     success: true,
     message: "Activity summary loaded",

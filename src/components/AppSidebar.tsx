@@ -11,6 +11,7 @@ import {
   FolderHeart,
   Home,
   LayoutDashboard,
+  LineChart,
   LogOut,
   Settings2,
   Shield,
@@ -79,10 +80,12 @@ export default function AppSidebar() {
       base.splice(2, 0, { href: "/applications", label: "My Applications", icon: LayoutDashboard });
       base.splice(3, 0, { href: "/saved-jobs", label: "Saved Jobs", icon: FolderHeart });
       base.splice(4, 0, { href: "/resume-fit", label: "Resume Fit", icon: FileSearch });
+      base.splice(5, 0, { href: "/analytics", label: "My Analytics", icon: LineChart });
     }
     if (role === "employer") {
       base.splice(2, 0, { href: "/my-jobs", label: "My Jobs", icon: LayoutDashboard });
       base.splice(3, 0, { href: "/post-job", label: "Post Job", icon: Briefcase });
+      base.splice(4, 0, { href: "/analytics", label: "My Analytics", icon: LineChart });
     }
     if (role === "admin") {
       base.splice(2, 0, { href: "/admin", label: "Admin Panel", icon: Shield });
