@@ -92,6 +92,11 @@ export interface JobApplication {
   resume: string;
   coverLetter?: string;
   status: "pending" | "reviewed" | "shortlisted" | "rejected" | "accepted";
+  statusHistory?: Array<{
+    status: "pending" | "reviewed" | "shortlisted" | "rejected" | "accepted";
+    changedAt: string;
+    note?: string;
+  }>;
   createdAt: string;
   updatedAt: string;
 }

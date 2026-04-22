@@ -14,6 +14,7 @@ export default function MyJobsPage() {
   const { ready } = useAuthGuard({ roles: ["employer"] });
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
+  const [statusBusyId, setStatusBusyId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!ready) {
@@ -34,6 +35,21 @@ export default function MyJobsPage() {
 
     void load();
   }, [ready, router]);
+
+  const onStatusChange = async (jobId: string, status: "draft" | "active" | "closed") => {
+    setStatusBusyId(jobId);
+    try {
+      const res = await apiClient.updateJobStatus(jobId, status);
+      if (!res.success || !res.data) {
+        toast.error(res.message || "Could not update job status");
+        return;
+      }
+      setJobs((prev) => prev.map((job) => (job._id === jobId ? res.data! : job)));
+      toast.success("Job status updated");
+    } finally {
+      setStatusBusyId(null);
+    }
+  };
 
   if (!ready || loading) {
     return (
@@ -94,7 +110,9 @@ export default function MyJobsPage() {
                     <MapPin className="h-3.5 w-3.5" />
                     {job.location}
                     <span className="mx-2">·</span>
-                    <span className="capitalize">{job.status}</span>
+                    <span className="capitalize">
+                      {job.status === "active" ? "published" : job.status}
+                    </span>
                     <span className="mx-2">·</span>
                     <span>
                       {job.applicationCount ?? 0}{" "}
@@ -103,6 +121,22 @@ export default function MyJobsPage() {
                   </p>
                 </div>
                 <div className="flex shrink-0 flex-col items-end gap-2 sm:flex-row sm:items-center">
+                  <select
+                    value={job.status}
+                    disabled={statusBusyId === job._id}
+                    onChange={(e) =>
+                      void onStatusChange(
+                        job._id,
+                        e.target.value as "draft" | "active" | "closed",
+                      )
+                    }
+                    className="rounded-md border border-border bg-card px-2.5 py-1.5 text-xs text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 disabled:opacity-60"
+                    aria-label="Change job status"
+                  >
+                    <option value="draft">Draft</option>
+                    <option value="active">Published</option>
+                    <option value="closed">Closed</option>
+                  </select>
                   <Link
                     href={`/my-jobs/${job._id}/applications`}
                     className="text-sm font-medium text-accent hover:underline"

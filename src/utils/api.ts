@@ -380,6 +380,18 @@ class ApiClient {
     }
   }
 
+  async updateJobStatus(
+    id: string,
+    status: "draft" | "active" | "closed" | "published",
+  ): Promise<ApiResponse<Job>> {
+    try {
+      const response = await this.client.patch(`/jobs/${id}/status`, { status });
+      return this.normalizeResponse<Job>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
   async deleteJob(id: string): Promise<ApiResponse> {
     try {
       const response = await this.client.delete(`/jobs/${id}`);

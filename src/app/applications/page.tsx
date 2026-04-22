@@ -15,10 +15,19 @@ const statusColors: Record<string, string> = {
   accepted: "bg-emerald-50 text-emerald-900 ring-1 ring-emerald-100",
 };
 
+const STATUS_LABEL: Record<JobApplication["status"], string> = {
+  pending: "Pending",
+  reviewed: "Reviewed",
+  shortlisted: "Shortlisted",
+  rejected: "Rejected",
+  accepted: "Accepted",
+};
+
 export default function ApplicationsPage() {
   const { ready } = useAuthGuard({ roles: ["jobseeker"] });
   const [applications, setApplications] = useState<JobApplication[]>([]);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (!ready) return;
@@ -26,9 +35,12 @@ export default function ApplicationsPage() {
       try {
         const response = await apiClient.getMyApplications();
         if (!response.success) {
-          toast.error(response.message || "Failed to load applications");
+          const msg = response.message || "Failed to load applications";
+          setErrorMessage(msg);
+          toast.error(msg);
           return;
         }
+        setErrorMessage("");
         setApplications(response.data || []);
       } finally {
         setLoading(false);
@@ -65,6 +77,18 @@ export default function ApplicationsPage() {
               />
             ))}
           </div>
+        ) : errorMessage ? (
+          <div className="rounded-2xl border border-border bg-card px-6 py-8 text-center text-fg-muted">
+            <p className="mb-2 font-medium text-foreground">Could not load applications</p>
+            <p className="mb-4 text-sm">{errorMessage}</p>
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="rounded-xl border border-border px-4 py-2 text-sm font-medium text-fg-muted hover:bg-card-muted"
+            >
+              Try again
+            </button>
+          </div>
         ) : applications.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-12 text-center text-fg-muted">
             <p className="mb-4">You have not applied to any jobs yet.</p>
@@ -90,6 +114,25 @@ export default function ApplicationsPage() {
                   <p className="mt-1 text-sm text-fg-subtle">
                     Applied {new Date(application.createdAt).toLocaleDateString()}
                   </p>
+                  <div className="mt-3 rounded-lg bg-card-muted/40 px-3 py-2">
+                    <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-fg-subtle">
+                      Timeline
+                    </p>
+                    <ol className="space-y-1 text-xs text-fg-muted">
+                      {(application.statusHistory && application.statusHistory.length > 0
+                        ? application.statusHistory
+                        : [{ status: application.status, changedAt: application.updatedAt }]
+                      ).map((entry, idx) => (
+                        <li key={`${entry.status}-${entry.changedAt}-${idx}`}>
+                          <span className="font-medium text-foreground">
+                            {STATUS_LABEL[entry.status as JobApplication["status"]] ??
+                              entry.status}
+                          </span>{" "}
+                          — {new Date(entry.changedAt).toLocaleString()}
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
                 </div>
                 <div className="flex shrink-0 flex-wrap items-center gap-3">
                   <span

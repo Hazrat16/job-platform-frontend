@@ -23,6 +23,14 @@ const STATUS_OPTIONS: JobApplication["status"][] = [
   "accepted",
 ];
 
+const STATUS_LABEL: Record<JobApplication["status"], string> = {
+  pending: "Pending",
+  reviewed: "Reviewed",
+  shortlisted: "Shortlisted",
+  rejected: "Rejected",
+  accepted: "Accepted",
+};
+
 export default function JobApplicationsPage() {
   const params = useParams();
   const router = useRouter();
@@ -157,6 +165,27 @@ export default function JobApplicationsPage() {
                           {app.coverLetter}
                         </div>
                       )}
+                      <div className="mt-4 rounded-lg border border-border bg-card-muted/35 p-3">
+                        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-fg-subtle">
+                          Application timeline
+                        </p>
+                        <ol className="space-y-2 text-xs text-fg-muted">
+                          {(app.statusHistory && app.statusHistory.length > 0
+                            ? app.statusHistory
+                            : [{ status: app.status, changedAt: app.updatedAt }])
+                          .map((entry, idx) => (
+                            <li key={`${entry.status}-${entry.changedAt}-${idx}`}>
+                              <span className="font-medium text-foreground">
+                                {STATUS_LABEL[entry.status as JobApplication["status"]] ??
+                                  entry.status}
+                              </span>{" "}
+                              on{" "}
+                              {new Date(entry.changedAt).toLocaleString()}
+                              {entry.note ? ` — ${entry.note}` : ""}
+                            </li>
+                          ))}
+                        </ol>
+                      </div>
                     </div>
 
                     <div className="flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center lg:flex-col lg:items-stretch">
