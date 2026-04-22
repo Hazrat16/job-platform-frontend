@@ -21,12 +21,14 @@ import {
   Briefcase,
   GraduationCap,
   Loader2,
+  PencilLine,
   Save,
   User as UserIcon,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 const emptyProfile: UserProfile = {
@@ -204,6 +206,45 @@ export default function ProfilePage() {
   const [sessionsLoading, setSessionsLoading] = useState(false);
   const [revokeBusyId, setRevokeBusyId] = useState<string | null>(null);
   const [logoutAllBusy, setLogoutAllBusy] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [loadedProfile, setLoadedProfile] = useState<ReturnType<typeof normalizeLoadedUser> | null>(
+    null,
+  );
+
+  function normalizeLoadedUser(u: NonNullable<Awaited<ReturnType<typeof apiClient.getProfile>>["data"]>) {
+    const p = { ...emptyProfile, ...u.profile };
+    return {
+      name: u.name ?? "",
+      completeness: u.profileCompleteness ?? null,
+      headline: p.headline ?? "",
+      bio: p.bio ?? "",
+      phone: p.phone ?? "",
+      location: p.location ?? "",
+      skillsText: (p.skills ?? []).join(", "),
+      linkedIn: p.linkedIn ?? "",
+      github: p.github ?? "",
+      portfolio: p.portfolio ?? "",
+      experience: mapExperience(p.experience),
+      education: mapEducation(p.education),
+      user: u,
+    };
+  }
+
+  const applyLoadedState = useCallback((next: ReturnType<typeof normalizeLoadedUser>) => {
+    setName(next.name);
+    setCompleteness(next.completeness);
+    setHeadline(next.headline);
+    setBio(next.bio);
+    setPhone(next.phone);
+    setLocation(next.location);
+    setSkillsText(next.skillsText);
+    setLinkedIn(next.linkedIn);
+    setGithub(next.github);
+    setPortfolio(next.portfolio);
+    setExperience(next.experience);
+    setEducation(next.education);
+    setUser(next.user);
+  }, []);
 
   useEffect(() => {
     if (!getAuthToken()) {
@@ -221,21 +262,9 @@ export default function ProfilePage() {
         setLoading(false);
         return;
       }
-      const u = res.data;
-      setName(u.name);
-      setCompleteness(u.profileCompleteness ?? null);
-      const p = { ...emptyProfile, ...u.profile };
-      setHeadline(p.headline ?? "");
-      setBio(p.bio ?? "");
-      setPhone(p.phone ?? "");
-      setLocation(p.location ?? "");
-      setSkillsText((p.skills ?? []).join(", "));
-      setLinkedIn(p.linkedIn ?? "");
-      setGithub(p.github ?? "");
-      setPortfolio(p.portfolio ?? "");
-      setExperience(mapExperience(p.experience));
-      setEducation(mapEducation(p.education));
-      setUser(u);
+      const normalized = normalizeLoadedUser(res.data);
+      setLoadedProfile(normalized);
+      applyLoadedState(normalized);
       if (sessionRes.success) {
         setSessions(sessionRes.data ?? []);
       }
@@ -243,7 +272,7 @@ export default function ProfilePage() {
     };
 
     void load();
-  }, [router]);
+  }, [router, applyLoadedState]);
 
   const onSave = async (e: FormEvent) => {
     e.preventDefault();
@@ -278,7 +307,10 @@ export default function ProfilePage() {
         return;
       }
       setUser(res.data);
-      setCompleteness(res.data.profileCompleteness ?? null);
+      const normalized = normalizeLoadedUser(res.data);
+      setLoadedProfile(normalized);
+      applyLoadedState(normalized);
+      setIsEditing(false);
       toast.success("Profile saved");
     } finally {
       setSaving(false);
@@ -357,6 +389,30 @@ export default function ProfilePage() {
                 Résumé →
               </Link>
             )}
+            {isEditing ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (loadedProfile) applyLoadedState(loadedProfile);
+                    setIsEditing(false);
+                  }}
+                  className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 font-medium text-fg-muted hover:bg-card-muted"
+                >
+                  <X className="h-4 w-4" />
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setIsEditing(true)}
+                className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 font-medium text-accent hover:bg-card-muted"
+              >
+                <PencilLine className="h-4 w-4" />
+                Edit profile
+              </button>
+            )}
           </div>
         </div>
 
@@ -365,6 +421,8 @@ export default function ProfilePage() {
         )}
 
         <form onSubmit={onSave} className="space-y-6">
+          {isEditing ? (
+          <fieldset className="space-y-6">
           <section className="bg-card shadow rounded-lg p-6 space-y-4">
             <div className="flex items-center gap-2 text-foreground font-semibold border-b pb-2">
               <UserIcon className="h-5 w-5 text-accent" />
@@ -378,7 +436,7 @@ export default function ProfilePage() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full border border-border-strong rounded-md px-3 py-2"
+                className="w-full border border-border-strong rounded-md px-3 py-2 disabled:bg-card-muted"
                 required
                 minLength={2}
               />
@@ -392,7 +450,7 @@ export default function ProfilePage() {
                   type="text"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full border border-border-strong rounded-md px-3 py-2"
+                  className="w-full border border-border-strong rounded-md px-3 py-2 disabled:bg-card-muted"
                 />
               </div>
               <div>
@@ -403,7 +461,7 @@ export default function ProfilePage() {
                   type="text"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="w-full border border-border-strong rounded-md px-3 py-2"
+                  className="w-full border border-border-strong rounded-md px-3 py-2 disabled:bg-card-muted"
                 />
               </div>
             </div>
@@ -423,7 +481,7 @@ export default function ProfilePage() {
                 value={headline}
                 onChange={(e) => setHeadline(e.target.value)}
                 placeholder="e.g. Senior Full-stack Engineer"
-                className="w-full border border-border-strong rounded-md px-3 py-2"
+                className="w-full border border-border-strong rounded-md px-3 py-2 disabled:bg-card-muted"
               />
             </div>
             <div>
@@ -435,7 +493,7 @@ export default function ProfilePage() {
                 onChange={(e) => setBio(e.target.value)}
                 rows={4}
                 placeholder="Describe your background, strengths, and what you are looking for."
-                className="w-full border border-border-strong rounded-md px-3 py-2"
+                className="w-full border border-border-strong rounded-md px-3 py-2 disabled:bg-card-muted"
               />
             </div>
           </section>
@@ -470,7 +528,7 @@ export default function ProfilePage() {
                   <button
                     type="button"
                     onClick={() => setExperience((prev) => [...prev, emptyExperience()])}
-                    className="text-sm font-medium text-accent hover:text-link"
+                    className="text-sm font-medium text-accent hover:text-link disabled:opacity-50"
                   >
                     + Add role
                   </button>
@@ -492,7 +550,7 @@ export default function ProfilePage() {
                             onClick={() =>
                               setExperience((prev) => prev.filter((_, i) => i !== index))
                             }
-                            className="text-sm text-red-600 hover:text-red-800"
+                            className="text-sm text-red-600 hover:text-red-800 disabled:opacity-50"
                           >
                             Remove
                           </button>
@@ -511,7 +569,7 @@ export default function ProfilePage() {
                                   ),
                                 )
                               }
-                              className="w-full border border-border-strong rounded-md px-3 py-2 text-sm"
+                              className="w-full border border-border-strong rounded-md px-3 py-2 text-sm disabled:bg-card-muted"
                             />
                           </div>
                           <div>
@@ -527,7 +585,7 @@ export default function ProfilePage() {
                                   ),
                                 )
                               }
-                              className="w-full border border-border-strong rounded-md px-3 py-2 text-sm"
+                              className="w-full border border-border-strong rounded-md px-3 py-2 text-sm disabled:bg-card-muted"
                             />
                           </div>
                         </div>
@@ -544,7 +602,7 @@ export default function ProfilePage() {
                                 ),
                               )
                             }
-                            className="w-full border border-border-strong rounded-md px-3 py-2 text-sm"
+                            className="w-full border border-border-strong rounded-md px-3 py-2 text-sm disabled:bg-card-muted"
                           />
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -562,7 +620,7 @@ export default function ProfilePage() {
                                 )
                               }
                               placeholder="e.g. Jan 2022"
-                              className="w-full border border-border-strong rounded-md px-3 py-2 text-sm"
+                              className="w-full border border-border-strong rounded-md px-3 py-2 text-sm disabled:bg-card-muted"
                             />
                           </div>
                           <div>
@@ -616,7 +674,7 @@ export default function ProfilePage() {
                               )
                             }
                             rows={3}
-                            className="w-full border border-border-strong rounded-md px-3 py-2 text-sm"
+                            className="w-full border border-border-strong rounded-md px-3 py-2 text-sm disabled:bg-card-muted"
                           />
                         </div>
                       </div>
@@ -634,7 +692,7 @@ export default function ProfilePage() {
                   <button
                     type="button"
                     onClick={() => setEducation((prev) => [...prev, emptyEducation()])}
-                    className="text-sm font-medium text-accent hover:text-link"
+                    className="text-sm font-medium text-accent hover:text-link disabled:opacity-50"
                   >
                     + Add school
                   </button>
@@ -656,7 +714,7 @@ export default function ProfilePage() {
                             onClick={() =>
                               setEducation((prev) => prev.filter((_, i) => i !== index))
                             }
-                            className="text-sm text-red-600 hover:text-red-800"
+                            className="text-sm text-red-600 hover:text-red-800 disabled:opacity-50"
                           >
                             Remove
                           </button>
@@ -675,7 +733,7 @@ export default function ProfilePage() {
                                   ),
                                 )
                               }
-                              className="w-full border border-border-strong rounded-md px-3 py-2 text-sm"
+                              className="w-full border border-border-strong rounded-md px-3 py-2 text-sm disabled:bg-card-muted"
                             />
                           </div>
                           <div>
@@ -691,7 +749,7 @@ export default function ProfilePage() {
                                   ),
                                 )
                               }
-                              className="w-full border border-border-strong rounded-md px-3 py-2 text-sm"
+                              className="w-full border border-border-strong rounded-md px-3 py-2 text-sm disabled:bg-card-muted"
                             />
                           </div>
                         </div>
@@ -708,7 +766,7 @@ export default function ProfilePage() {
                                 ),
                               )
                             }
-                            className="w-full border border-border-strong rounded-md px-3 py-2 text-sm"
+                            className="w-full border border-border-strong rounded-md px-3 py-2 text-sm disabled:bg-card-muted"
                           />
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -725,7 +783,7 @@ export default function ProfilePage() {
                                   ),
                                 )
                               }
-                              className="w-full border border-border-strong rounded-md px-3 py-2 text-sm"
+                              className="w-full border border-border-strong rounded-md px-3 py-2 text-sm disabled:bg-card-muted"
                             />
                           </div>
                           <div>
@@ -778,7 +836,7 @@ export default function ProfilePage() {
                               )
                             }
                             rows={2}
-                            className="w-full border border-border-strong rounded-md px-3 py-2 text-sm"
+                            className="w-full border border-border-strong rounded-md px-3 py-2 text-sm disabled:bg-card-muted"
                           />
                         </div>
                       </div>
@@ -797,6 +855,7 @@ export default function ProfilePage() {
               onChange={(e) => setLinkedIn(e.target.value)}
               placeholder="LinkedIn URL"
               className="w-full border border-border-strong rounded-md px-3 py-2"
+              disabled={!isEditing}
             />
             <input
               type="url"
@@ -804,6 +863,7 @@ export default function ProfilePage() {
               onChange={(e) => setGithub(e.target.value)}
               placeholder="GitHub URL"
               className="w-full border border-border-strong rounded-md px-3 py-2"
+              disabled={!isEditing}
             />
             <input
               type="url"
@@ -811,8 +871,109 @@ export default function ProfilePage() {
               onChange={(e) => setPortfolio(e.target.value)}
               placeholder="Portfolio URL"
               className="w-full border border-border-strong rounded-md px-3 py-2"
+              disabled={!isEditing}
             />
           </section>
+          </fieldset>
+          ) : (
+            <div className="space-y-6">
+              <section className="bg-card shadow rounded-lg p-6 space-y-4">
+                <div className="flex items-center gap-2 text-foreground font-semibold border-b pb-2">
+                  <UserIcon className="h-5 w-5 text-accent" />
+                  Basics
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                  <p><span className="text-fg-subtle">Full name:</span> <span className="text-foreground">{name || "—"}</span></p>
+                  <p><span className="text-fg-subtle">Phone:</span> <span className="text-foreground">{phone || "—"}</span></p>
+                  <p><span className="text-fg-subtle">Location:</span> <span className="text-foreground">{location || "—"}</span></p>
+                </div>
+              </section>
+
+              <section className="bg-card shadow rounded-lg p-6 space-y-4">
+                <div className="flex items-center gap-2 text-foreground font-semibold border-b pb-2">
+                  <BookOpen className="h-5 w-5 text-accent" />
+                  Professional summary
+                </div>
+                <div className="text-sm">
+                  <p className="text-fg-subtle">Headline</p>
+                  <p className="mt-1 text-foreground">{headline || "—"}</p>
+                </div>
+                <div className="text-sm">
+                  <p className="text-fg-subtle">Bio</p>
+                  <p className="mt-1 whitespace-pre-wrap text-foreground">{bio || "—"}</p>
+                </div>
+              </section>
+
+              {role === "jobseeker" && (
+                <>
+                  <section className="bg-card shadow rounded-lg p-6 space-y-4">
+                    <div className="flex items-center gap-2 text-foreground font-semibold border-b pb-2">
+                      <Briefcase className="h-5 w-5 text-accent" />
+                      Skills
+                    </div>
+                    {skillsText.trim() ? (
+                      <div className="flex flex-wrap gap-2">
+                        {skillsText.split(",").map((s) => s.trim()).filter(Boolean).map((skill) => (
+                          <span key={skill} className="rounded-full bg-accent-muted px-2.5 py-1 text-xs font-medium text-link">
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-fg-subtle">No skills added.</p>
+                    )}
+                  </section>
+
+                  <section className="bg-card shadow rounded-lg p-6 space-y-4">
+                    <div className="flex items-center gap-2 text-foreground font-semibold border-b pb-2">
+                      <Briefcase className="h-5 w-5 text-accent" />
+                      Experience
+                    </div>
+                    {experience.length === 0 ? (
+                      <p className="text-sm text-fg-subtle">No experience added yet.</p>
+                    ) : (
+                      <div className="space-y-3">
+                        {experience.map((row, index) => (
+                          <div key={row._id ?? `exp-view-${index}`} className="rounded-md border border-border p-3">
+                            <p className="font-medium text-foreground">{row.title || "Untitled role"}{row.company ? ` · ${row.company}` : ""}</p>
+                            <p className="text-sm text-fg-subtle">{row.location || "Location not set"} · {row.startDate || "Start"} - {row.current ? "Present" : row.endDate || "End"}</p>
+                            {row.description ? <p className="mt-1 whitespace-pre-wrap text-sm text-fg-muted">{row.description}</p> : null}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </section>
+
+                  <section className="bg-card shadow rounded-lg p-6 space-y-4">
+                    <div className="flex items-center gap-2 text-foreground font-semibold border-b pb-2">
+                      <GraduationCap className="h-5 w-5 text-accent" />
+                      Education
+                    </div>
+                    {education.length === 0 ? (
+                      <p className="text-sm text-fg-subtle">No education added yet.</p>
+                    ) : (
+                      <div className="space-y-3">
+                        {education.map((row, index) => (
+                          <div key={row._id ?? `edu-view-${index}`} className="rounded-md border border-border p-3">
+                            <p className="font-medium text-foreground">{row.degree || "Degree not set"}{row.school ? ` · ${row.school}` : ""}</p>
+                            <p className="text-sm text-fg-subtle">{row.field || "Field not set"} · {row.startYear || "Start"} - {row.current ? "Present" : row.endYear || "End"}</p>
+                            {row.description ? <p className="mt-1 whitespace-pre-wrap text-sm text-fg-muted">{row.description}</p> : null}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </section>
+                </>
+              )}
+
+              <section className="bg-card shadow rounded-lg p-6 space-y-3">
+                <p className="text-foreground font-semibold border-b pb-2">Links</p>
+                <p className="text-sm"><span className="text-fg-subtle">LinkedIn:</span> <span className="text-foreground">{linkedIn || "—"}</span></p>
+                <p className="text-sm"><span className="text-fg-subtle">GitHub:</span> <span className="text-foreground">{github || "—"}</span></p>
+                <p className="text-sm"><span className="text-fg-subtle">Portfolio:</span> <span className="text-foreground">{portfolio || "—"}</span></p>
+              </section>
+            </div>
+          )}
 
           <section className="bg-card shadow rounded-lg p-6 space-y-4">
             <div className="flex items-center justify-between border-b pb-2">
@@ -882,18 +1043,22 @@ export default function ProfilePage() {
             Email and role cannot be changed here.
           </div>
 
-          <button
-            type="submit"
-            disabled={saving}
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent to-accent-end px-5 py-2.5 font-semibold text-white shadow-lg shadow-accent/20 transition-all hover:brightness-110 disabled:opacity-50"
-          >
-            {saving ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Save className="h-4 w-4" />
-            )}
-            Save profile
-          </button>
+          {isEditing ? (
+            <button
+              type="submit"
+              disabled={saving}
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent to-accent-end px-5 py-2.5 font-semibold text-white shadow-lg shadow-accent/20 transition-all hover:brightness-110 disabled:opacity-50"
+            >
+              {saving ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Save className="h-4 w-4" />
+              )}
+              Save profile
+            </button>
+          ) : (
+            <p className="text-sm text-fg-subtle">Profile is in view mode. Click Edit profile to make changes.</p>
+          )}
         </form>
       </div>
     </div>
