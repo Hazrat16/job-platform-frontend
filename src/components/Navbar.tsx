@@ -1,6 +1,7 @@
 "use client";
 
 import { Briefcase, Search } from "lucide-react";
+import { trackActivity } from "@/lib/analytics";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -12,6 +13,7 @@ export default function Navbar() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
+      trackActivity("job_search", { query: searchQuery.trim() });
       router.push(`/jobs?search=${encodeURIComponent(searchQuery.trim())}`);
       setSearchQuery("");
     }

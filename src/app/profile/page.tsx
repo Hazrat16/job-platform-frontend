@@ -30,6 +30,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { trackActivity } from "@/lib/analytics";
 
 const emptyProfile: UserProfile = {
   headline: "",
@@ -311,6 +312,12 @@ export default function ProfilePage() {
       setLoadedProfile(normalized);
       applyLoadedState(normalized);
       setIsEditing(false);
+      trackActivity("profile_save", {
+        hasHeadline: Boolean(headline.trim()),
+        hasBio: Boolean(bio.trim()),
+        experienceCount: experience.length,
+        educationCount: education.length,
+      });
       toast.success("Profile saved");
     } finally {
       setSaving(false);

@@ -6,6 +6,7 @@ import {
   Briefcase,
   ChevronLeft,
   ChevronRight,
+  ChevronsUpDown,
   FileSearch,
   FolderHeart,
   Home,
@@ -19,9 +20,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ThemeToggle } from "./ThemeToggle";
 import { useRouter } from "next/navigation";
+import { trackActivity } from "@/lib/analytics";
 
 type SidebarItem = {
   href: string;
@@ -37,6 +39,9 @@ export default function AppSidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [role, setRole] = useState<"jobseeker" | "employer" | "admin" | null>(null);
   const [hasUser, setHasUser] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [accountOpen, setAccountOpen] = useState(false);
+  const accountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -44,7 +49,25 @@ export default function AppSidebar() {
     const user = getUser();
     setRole(user?.role ?? null);
     setHasUser(Boolean(user));
+    setUserName(user?.name ?? "");
   }, []);
+
+  useEffect(() => {
+    if (!accountOpen) return;
+    const onPointerDown = (e: PointerEvent) => {
+      if (accountRef.current?.contains(e.target as Node)) return;
+      setAccountOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setAccountOpen(false);
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [accountOpen]);
 
   const primaryItems = useMemo<SidebarItem[]>(() => {
     const base: SidebarItem[] = [
@@ -78,29 +101,16 @@ export default function AppSidebar() {
     return base;
   }, [role]);
 
-  const profileSectionItems = useMemo<SidebarItem[]>(() => {
-    if (!pathname.startsWith("/profile")) return [];
-    return [
-      { href: "/profile#basics", label: "Profile: Basics", icon: UserCircle2 },
-      { href: "/profile#summary", label: "Profile: Summary", icon: FileSearch },
-      { href: "/profile#skills", label: "Profile: Skills", icon: Briefcase },
-      { href: "/profile#experience", label: "Profile: Experience", icon: LayoutDashboard },
-      { href: "/profile#education", label: "Profile: Education", icon: LayoutDashboard },
-      { href: "/profile#links", label: "Profile: Links", icon: Settings2 },
-      { href: "/profile#sessions", label: "Profile: Sessions", icon: Shield },
-    ];
-  }, [pathname]);
-
   const hiddenOnRoutes = ["/login", "/register", "/forgot-password", "/reset-password"];
   if (hiddenOnRoutes.some((r) => pathname.startsWith(r))) return null;
 
   return (
     <aside
-      className={`hidden border-r border-border bg-card md:block ${
+      className={`hidden border-r border-border bg-card md:sticky md:top-16 md:block md:h-[calc(100vh-4rem)] ${
         collapsed ? "w-20" : "w-64"
       } transition-all duration-200`}
     >
-      <div className="flex h-[calc(100vh-4rem)] flex-col">
+      <div className="flex h-full flex-col">
         <div className="flex items-center justify-between border-b border-border px-3 py-3">
           {!collapsed ? (
             <p className="text-xs font-semibold uppercase tracking-wide text-fg-subtle">
@@ -142,31 +152,6 @@ export default function AppSidebar() {
               </Link>
             );
           })}
-          {profileSectionItems.length > 0 && !collapsed && (
-            <p className="px-3 pt-2 text-[11px] font-semibold uppercase tracking-wide text-fg-subtle">
-              Profile sections
-            </p>
-          )}
-          {profileSectionItems.map((item) => {
-            const active = pathname === item.href;
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-2 rounded-xl px-3 py-2 text-sm transition-colors ${
-                  active
-                    ? "bg-accent-muted text-foreground"
-                    : "text-fg-muted hover:bg-card-muted hover:text-foreground"
-                }`}
-                title={collapsed ? item.label : undefined}
-              >
-                <Icon className="h-4 w-4 shrink-0" />
-                {!collapsed && <span>{item.label}</span>}
-              </Link>
-            );
-          })}
-
           {secondaryItems.map((item) => {
             const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
             const Icon = item.icon;
@@ -188,28 +173,51 @@ export default function AppSidebar() {
           })}
         </nav>
         <div className="border-t border-border p-2">
+          {hasUser && !collapsed && (
+            <div className="relative mb-2" ref={accountRef}>
+              <button
+                type="button"
+                onClick={() => setAccountOpen((v) => !v)}
+                className="flex w-full items-center justify-between rounded-xl border border-border bg-card-muted/40 px-3 py-2 text-left hover:bg-card-muted"
+                aria-expanded={accountOpen}
+                aria-haspopup="menu"
+              >
+                <p className="truncate text-sm font-medium text-foreground">{userName}</p>
+                <ChevronsUpDown className="h-4 w-4 text-fg-subtle" />
+              </button>
+              {accountOpen && (
+                <div
+                  role="menu"
+                  className="absolute inset-x-0 top-full z-20 mt-1 overflow-hidden rounded-xl border border-border bg-popover py-1 shadow-lg"
+                >
+                  <button
+                    type="button"
+                    role="menuitem"
+                    className="flex w-full items-center gap-2 px-3 py-2 text-sm text-destructive hover:bg-destructive-muted"
+                    onClick={async () => {
+                      setAccountOpen(false);
+                      trackActivity("sign_out", { source: "sidebar_account_menu" });
+                      try {
+                        await apiClient.logout();
+                      } catch {}
+                      removeUser();
+                      removeAuthToken();
+                      router.push("/login");
+                    }}
+                  >
+                    <LogOut className="h-4 w-4 shrink-0" />
+                    <span>Sign out</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
           <div className="mb-2 flex items-center gap-2 rounded-xl px-2 py-1.5 text-fg-muted">
             <SunMoon className="h-4 w-4 shrink-0" />
             {!collapsed && <span className="text-sm">Theme</span>}
             <ThemeToggle className="ml-auto" />
           </div>
-          {hasUser ? (
-            <button
-              type="button"
-              className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-destructive hover:bg-destructive-muted"
-              onClick={async () => {
-                try {
-                  await apiClient.logout();
-                } catch {}
-                removeUser();
-                removeAuthToken();
-                router.push("/login");
-              }}
-            >
-              <LogOut className="h-4 w-4 shrink-0" />
-              {!collapsed && <span>Sign out</span>}
-            </button>
-          ) : (
+          {!hasUser ? (
             <Link
               href="/login"
               className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-fg-muted hover:bg-card-muted hover:text-foreground"
@@ -217,7 +225,7 @@ export default function AppSidebar() {
               <UserCircle2 className="h-4 w-4 shrink-0" />
               {!collapsed && <span>Sign in</span>}
             </Link>
-          )}
+          ) : null}
         </div>
       </div>
     </aside>

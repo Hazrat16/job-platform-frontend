@@ -1,6 +1,7 @@
 "use client";
 
 import { apiClient } from "@/utils/api";
+import { trackActivity } from "@/lib/analytics";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
@@ -33,6 +34,10 @@ export default function ApplyForJobPage() {
       }
 
       toast.success("Application submitted successfully");
+      trackActivity("apply_submit", {
+        jobId: params.id,
+        hasCoverLetter: coverLetter.trim().length > 0,
+      });
       router.push("/applications");
     } finally {
       setLoading(false);

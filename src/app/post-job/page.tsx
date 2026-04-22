@@ -1,6 +1,7 @@
 "use client";
 
 import { FilterSelect } from "@/components/FilterSelect";
+import { trackActivity } from "@/lib/analytics";
 import { apiClient } from "@/utils/api";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import {
@@ -100,6 +101,11 @@ export default function PostJobPage() {
       }
 
       toast.success("Job posted successfully!");
+      trackActivity("post_job_submit", {
+        type: data.type,
+        hasBenefits: transformedData.benefits.length > 0,
+        hasRequirements: transformedData.requirements.length > 0,
+      });
       reset();
       router.push("/my-jobs");
     } catch {

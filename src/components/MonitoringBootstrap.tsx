@@ -1,5 +1,7 @@
 "use client";
 
+import { trackActivity } from "@/lib/analytics";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useReportWebVitals } from "next/web-vitals";
 import { useEffect } from "react";
 
@@ -26,6 +28,9 @@ function sendJson(path: string, payload: unknown) {
 }
 
 export default function MonitoringBootstrap() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   useReportWebVitals((metric) => {
     sendJson("/api/monitoring/web-vitals", {
       name: metric.name,
@@ -37,6 +42,13 @@ export default function MonitoringBootstrap() {
       timestamp: Date.now(),
     });
   });
+
+  useEffect(() => {
+    trackActivity("page_view", {
+      pathname,
+      query: searchParams.toString(),
+    });
+  }, [pathname, searchParams]);
 
   useEffect(() => {
     const onError = (event: ErrorEvent) => {
