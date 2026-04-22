@@ -51,8 +51,8 @@ export default function MyJobsPage() {
       <div className="max-w-4xl mx-auto px-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">My job posts</h1>
-            <p className="text-gray-600 mt-1">
+            <h1 className="text-2xl font-bold text-foreground">My job posts</h1>
+            <p className="text-fg-muted mt-1">
               Manage listings you have published.
             </p>
           </div>
@@ -66,8 +66,8 @@ export default function MyJobsPage() {
         </div>
 
         {jobs.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-8 text-center text-gray-600">
-            <Briefcase className="h-12 w-12 mx-auto text-gray-300 mb-3" />
+          <div className="bg-card rounded-lg shadow p-8 text-center text-fg-muted">
+            <Briefcase className="mx-auto mb-3 h-12 w-12 text-fg-subtle" />
             <p className="mb-4">You have not posted any jobs yet.</p>
             <Link
               href="/post-job"
@@ -81,10 +81,10 @@ export default function MyJobsPage() {
             {jobs.map((job) => (
               <li
                 key={job._id}
-                className="bg-white rounded-lg shadow border border-gray-200 p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+                className="bg-card rounded-lg shadow border border-border p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
               >
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900">
+                  <h2 className="text-lg font-semibold text-foreground">
                     <Link
                       href={`/jobs/${job._id}`}
                       className="hover:text-blue-600"
@@ -92,8 +92,8 @@ export default function MyJobsPage() {
                       {job.title}
                     </Link>
                   </h2>
-                  <p className="text-gray-600 text-sm">{job.company}</p>
-                  <p className="text-gray-500 text-sm flex items-center gap-1 mt-1">
+                  <p className="text-fg-muted text-sm">{job.company}</p>
+                  <p className="text-fg-subtle text-sm flex items-center gap-1 mt-1">
                     <MapPin className="h-3.5 w-3.5" />
                     {job.location}
                     <span className="mx-2">·</span>
@@ -114,7 +114,7 @@ export default function MyJobsPage() {
                   </Link>
                   <Link
                     href={`/jobs/${job._id}`}
-                    className="text-sm text-slate-600 hover:underline"
+                    className="text-sm text-fg-muted hover:underline"
                   >
                     Public listing
                   </Link>

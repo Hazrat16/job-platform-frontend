@@ -180,20 +180,20 @@ function JobsPageContent() {
       contract: "bg-violet-50 text-violet-800 ring-1 ring-violet-100",
       internship: "bg-amber-50 text-amber-900 ring-1 ring-amber-100",
     };
-    return colors[type as keyof typeof colors] || "bg-slate-100 text-slate-700 ring-1 ring-slate-200";
+    return colors[type as keyof typeof colors] || "bg-card-muted text-fg-muted ring-1 ring-border";
   };
 
   const fieldClass =
-    "w-full rounded-xl border border-slate-200/90 bg-white/90 px-3 py-2.5 text-sm text-slate-900 shadow-inner shadow-slate-900/5 transition-all focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20";
+    "w-full rounded-xl border border-border bg-card/90 px-3 py-2.5 text-sm text-foreground shadow-inner shadow-foreground/5 transition-all focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20";
 
   return (
     <div className="min-h-screen">
-      <div className="border-b border-white/40 bg-gradient-to-br from-white/90 via-indigo-50/40 to-cyan-50/30 shadow-sm backdrop-blur-md">
+      <div className="border-b border-border/40 bg-gradient-to-br from-card/90 via-accent-muted/60 to-cyan-500/15 shadow-sm backdrop-blur-md dark:via-indigo-950/45 dark:to-cyan-950/25">
         <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-          <h1 className="bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-800 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
+          <h1 className="bg-gradient-to-r from-foreground via-indigo-600 to-foreground dark:via-indigo-400 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
             Find your next role
           </h1>
-          <p className="mt-3 max-w-2xl text-slate-600">
+          <p className="mt-3 max-w-2xl text-fg-muted">
             Filter by keywords, location, and salary. Save jobs when you are signed in as a
             job seeker.
           </p>
@@ -203,13 +203,13 @@ function JobsPageContent() {
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
           <div className="lg:col-span-1">
-            <div className="sticky top-24 rounded-3xl border border-white/70 bg-white/75 p-6 shadow-xl shadow-indigo-950/5 ring-1 ring-slate-900/5 backdrop-blur-xl">
+            <div className="sticky top-24 rounded-3xl border border-border/70 bg-card/75 p-6 shadow-xl shadow-foreground/5 ring-1 ring-foreground/5 backdrop-blur-xl">
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-base font-semibold text-slate-900">Filters</h2>
+                <h2 className="text-base font-semibold text-foreground">Filters</h2>
                 <button
                   type="button"
                   onClick={() => setShowFilters(!showFilters)}
-                  className="rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800 lg:hidden"
+                  className="rounded-lg p-2 text-fg-subtle transition-colors hover:bg-card-muted hover:text-foreground lg:hidden"
                   aria-expanded={showFilters}
                   aria-controls="job-filters"
                   aria-label={showFilters ? "Hide filters" : "Show filters"}
@@ -229,12 +229,12 @@ function JobsPageContent() {
                 <div className="mb-6">
                   <label
                     htmlFor="search"
-                    className="mb-2 block text-sm font-medium text-slate-700"
+                    className="mb-2 block text-sm font-medium text-fg-muted"
                   >
                     Search
                   </label>
                   <div className="relative">
-                    <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                    <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-subtle" />
                     <input
                       type="text"
                       id="search"
@@ -249,7 +249,7 @@ function JobsPageContent() {
                 <div className="mb-6">
                   <label
                     htmlFor="location"
-                    className="mb-2 block text-sm font-medium text-slate-700"
+                    className="mb-2 block text-sm font-medium text-fg-muted"
                   >
                     Location
                   </label>
@@ -266,7 +266,7 @@ function JobsPageContent() {
                 <div className="mb-6">
                   <label
                     htmlFor="type"
-                    className="mb-2 block text-sm font-medium text-slate-700"
+                    className="mb-2 block text-sm font-medium text-fg-muted"
                   >
                     Job type
                   </label>
@@ -281,7 +281,7 @@ function JobsPageContent() {
                 <div className="mb-6">
                   <label
                     htmlFor="salary"
-                    className="mb-2 block text-sm font-medium text-slate-700"
+                    className="mb-2 block text-sm font-medium text-fg-muted"
                   >
                     Salary range
                   </label>
@@ -301,7 +301,7 @@ function JobsPageContent() {
                   <button
                     type="button"
                     onClick={clearFilters}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100"
+                    className="w-full rounded-xl border border-border bg-card-muted px-4 py-2.5 text-sm font-medium text-fg-muted transition-colors hover:bg-card-muted"
                   >
                     Clear all filters
                   </button>
@@ -313,15 +313,15 @@ function JobsPageContent() {
           {/* Job Listings */}
           <div className="lg:col-span-3">
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm text-slate-600">
-                <span className="font-semibold text-slate-900">{filteredJobs.length}</span>{" "}
+              <p className="text-sm text-fg-muted">
+                <span className="font-semibold text-foreground">{filteredJobs.length}</span>{" "}
                 {filteredJobs.length === 1 ? "job" : "jobs"}
                 {allJobsCount > 0 && (
-                  <span className="text-slate-500"> in this list</span>
+                  <span className="text-fg-subtle"> in this list</span>
                 )}
               </p>
               <div className="flex flex-wrap items-center gap-2">
-                <label htmlFor="sort-jobs" className="text-sm text-slate-500">
+                <label htmlFor="sort-jobs" className="text-sm text-fg-subtle">
                   Sort
                 </label>
                 <FilterSelect
@@ -340,15 +340,15 @@ function JobsPageContent() {
                   {[0, 1, 2, 3].map((i) => (
                     <div
                       key={i}
-                      className="animate-pulse rounded-3xl border border-white/60 bg-white/70 p-6 shadow-lg backdrop-blur-sm"
+                      className="animate-pulse rounded-3xl border border-border/60 bg-card/70 p-6 shadow-lg backdrop-blur-sm"
                     >
-                      <div className="mb-3 h-5 w-2/3 max-w-md rounded-lg bg-slate-200" />
+                      <div className="mb-3 h-5 w-2/3 max-w-md rounded-lg bg-skeleton" />
                       <div className="mb-4 flex gap-2">
-                        <div className="h-4 w-24 rounded bg-slate-100" />
-                        <div className="h-4 w-28 rounded bg-slate-100" />
+                        <div className="h-4 w-24 rounded bg-card-muted" />
+                        <div className="h-4 w-28 rounded bg-card-muted" />
                       </div>
-                      <div className="mb-2 h-3 w-full rounded bg-slate-100" />
-                      <div className="h-3 w-full max-w-lg rounded bg-slate-100 opacity-90" />
+                      <div className="mb-2 h-3 w-full rounded bg-card-muted" />
+                      <div className="h-3 w-full max-w-lg rounded bg-card-muted opacity-90" />
                     </div>
                   ))}
                 </div>
@@ -356,15 +356,15 @@ function JobsPageContent() {
                 filteredJobs.map((job) => (
                   <article
                     key={job._id}
-                    className="group rounded-3xl border border-white/70 bg-white/80 p-6 shadow-lg shadow-slate-900/[0.04] ring-1 ring-slate-900/[0.03] backdrop-blur-md transition-all duration-300 hover:border-indigo-200/60 hover:bg-white/95 hover:shadow-xl hover:shadow-indigo-500/10"
+                    className="group rounded-3xl border border-border/70 bg-card/80 p-6 shadow-lg shadow-foreground/[0.04] ring-1 ring-foreground/[0.03] backdrop-blur-md transition-all duration-300 hover:border-accent/40 hover:bg-card/95 hover:shadow-xl hover:shadow-indigo-500/10"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="min-w-0 flex-1">
                         <div className="mb-2 flex flex-wrap items-center gap-2 sm:gap-3">
-                          <h2 className="text-lg font-semibold text-slate-900 sm:text-xl">
+                          <h2 className="text-lg font-semibold text-foreground sm:text-xl">
                             <Link
                               href={`/jobs/${job._id}`}
-                              className="transition-colors hover:text-indigo-600 focus:outline-none focus-visible:text-indigo-600"
+                              className="transition-colors hover:text-accent focus:outline-none focus-visible:text-accent"
                             >
                               {job.title}
                             </Link>
@@ -380,48 +380,48 @@ function JobsPageContent() {
                           </span>
                         </div>
 
-                        <div className="mb-3 flex flex-wrap gap-x-4 gap-y-2 text-sm text-slate-600">
+                        <div className="mb-3 flex flex-wrap gap-x-4 gap-y-2 text-sm text-fg-muted">
                           <div className="flex items-center gap-1">
-                            <Briefcase className="h-4 w-4 shrink-0 text-slate-400" />
+                            <Briefcase className="h-4 w-4 shrink-0 text-fg-subtle" />
                             <span>{job.company}</span>
                           </div>
                           <div className="flex items-center gap-1">
-                            <MapPin className="h-4 w-4 shrink-0 text-slate-400" />
+                            <MapPin className="h-4 w-4 shrink-0 text-fg-subtle" />
                             <span>{job.location}</span>
                           </div>
                           <div className="flex items-center gap-1">
-                            <DollarSign className="h-4 w-4 shrink-0 text-slate-400" />
+                            <DollarSign className="h-4 w-4 shrink-0 text-fg-subtle" />
                             <span>{formatSalary(job.salary)}</span>
                           </div>
                           <div className="flex items-center gap-1">
-                            <Calendar className="h-4 w-4 shrink-0 text-slate-400" />
+                            <Calendar className="h-4 w-4 shrink-0 text-fg-subtle" />
                             <span>
                               {new Date(job.createdAt).toLocaleDateString()}
                             </span>
                           </div>
                         </div>
 
-                        <p className="mb-4 line-clamp-2 text-slate-600">{job.description}</p>
+                        <p className="mb-4 line-clamp-2 text-fg-muted">{job.description}</p>
 
                         <div className="mb-4 flex flex-wrap gap-2">
                           {job.requirements.slice(0, 3).map((req, index) => (
                             <span
                               key={index}
-                              className="rounded-lg bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700"
+                              className="rounded-lg bg-card-muted px-2 py-1 text-xs font-medium text-fg-muted"
                             >
                               {req}
                             </span>
                           ))}
                           {job.requirements.length > 3 && (
-                            <span className="rounded-lg bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600">
+                            <span className="rounded-lg bg-card-muted px-2 py-1 text-xs font-medium text-fg-muted">
                               +{job.requirements.length - 3} more
                             </span>
                           )}
                         </div>
 
-                        <div className="flex flex-col gap-4 border-t border-slate-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="flex flex-col gap-4 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
                           <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-                            <span className="font-medium text-slate-500">Benefits</span>
+                            <span className="font-medium text-fg-subtle">Benefits</span>
                             {job.benefits.slice(0, 2).map((benefit, index) => (
                               <span key={index} className="text-emerald-700">
                                 {benefit}
@@ -441,8 +441,8 @@ function JobsPageContent() {
                               }
                               className={`rounded-full p-2.5 transition-colors disabled:opacity-50 ${
                                 savedJobIds.includes(job._id)
-                                  ? "bg-indigo-50 text-indigo-600"
-                                  : "text-slate-400 hover:bg-indigo-50 hover:text-indigo-600"
+                                  ? "bg-accent-muted text-accent"
+                                  : "text-fg-subtle hover:bg-accent-muted hover:text-accent"
                               }`}
                             >
                               {savedJobIds.includes(job._id) ? (
@@ -454,7 +454,7 @@ function JobsPageContent() {
 
                             <Link
                               href={`/jobs/${job._id}`}
-                              className="inline-flex items-center rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:from-indigo-500 hover:to-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2"
+                              className="inline-flex items-center rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:from-indigo-500 hover:to-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                             >
                               View details
                             </Link>
@@ -465,10 +465,10 @@ function JobsPageContent() {
                   </article>
                 ))
               ) : (
-                <div className="rounded-3xl border border-dashed border-indigo-200/60 bg-white/70 px-6 py-14 text-center shadow-inner backdrop-blur-sm">
-                  <Search className="mx-auto mb-4 h-14 w-14 text-slate-300" />
-                  <h3 className="text-lg font-semibold text-slate-900">No jobs match</h3>
-                  <p className="mx-auto mt-2 max-w-md text-slate-600">
+                <div className="rounded-3xl border border-dashed border-accent/40 bg-card/70 px-6 py-14 text-center shadow-inner backdrop-blur-sm">
+                  <Search className="mx-auto mb-4 h-14 w-14 text-fg-subtle" />
+                  <h3 className="text-lg font-semibold text-foreground">No jobs match</h3>
+                  <p className="mx-auto mt-2 max-w-md text-fg-muted">
                     Loosen filters or clear search to see more roles.
                   </p>
                   <button
@@ -492,15 +492,15 @@ function JobsPageFallback() {
   return (
     <div className="min-h-screen px-4 py-10 sm:px-6">
       <div className="mx-auto max-w-7xl space-y-4">
-        <div className="h-10 max-w-md animate-pulse rounded-xl bg-slate-200" />
-        <div className="h-24 animate-pulse rounded-2xl bg-white shadow-sm" />
+        <div className="h-10 max-w-md animate-pulse rounded-xl bg-skeleton" />
+        <div className="h-24 animate-pulse rounded-2xl bg-card shadow-sm" />
         <div className="grid gap-8 lg:grid-cols-4">
-          <div className="hidden h-64 animate-pulse rounded-2xl bg-white shadow-sm lg:block" />
+          <div className="hidden h-64 animate-pulse rounded-2xl bg-card shadow-sm lg:block" />
           <div className="space-y-4 lg:col-span-3">
             {[0, 1, 2].map((i) => (
               <div
                 key={i}
-                className="h-40 animate-pulse rounded-2xl border border-slate-200/80 bg-white"
+                className="h-40 animate-pulse rounded-2xl border border-border bg-card"
               />
             ))}
           </div>

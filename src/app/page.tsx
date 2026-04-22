@@ -29,8 +29,8 @@ export default function HomePage() {
           className="pointer-events-none absolute inset-0 opacity-[0.4]"
           aria-hidden
           style={{
-            backgroundImage: `linear-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(var(--grid-line) 1px, transparent 1px),
+              linear-gradient(90deg, var(--grid-line) 1px, transparent 1px)`,
             backgroundSize: "48px 48px",
           }}
         />
@@ -39,10 +39,10 @@ export default function HomePage() {
 
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
           <div className="text-center">
-            <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-indigo-200/60 bg-white/70 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-indigo-700 shadow-sm shadow-indigo-500/10 backdrop-blur-md sm:text-sm">
+            <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-accent/40 bg-card/70 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-link shadow-sm shadow-indigo-500/10 backdrop-blur-md sm:text-sm">
               Hiring &amp; job search
             </p>
-            <h1 className="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl lg:text-6xl lg:leading-[1.08]">
+            <h1 className="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight text-foreground md:text-5xl lg:text-6xl lg:leading-[1.08]">
               Find your next role or{" "}
               <span className="relative inline-block">
                 <span className="bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 bg-clip-text text-transparent">
@@ -54,14 +54,14 @@ export default function HomePage() {
                 />
               </span>
             </h1>
-            <p className="mx-auto mb-12 mt-6 max-w-2xl text-lg leading-relaxed text-slate-600 md:text-xl">
+            <p className="mx-auto mb-12 mt-6 max-w-2xl text-lg leading-relaxed text-fg-muted md:text-xl">
               Search real listings, save jobs, and manage applications—without noisy clutter or
               guesswork.
             </p>
             <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
               <Link
                 href="/jobs"
-                className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-600 to-blue-600 px-8 py-4 text-base font-semibold text-white shadow-xl shadow-indigo-500/25 transition-all hover:from-indigo-500 hover:to-blue-500 hover:shadow-indigo-500/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2"
+                className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-600 to-blue-600 px-8 py-4 text-base font-semibold text-white shadow-xl shadow-indigo-500/25 transition-all hover:from-indigo-500 hover:to-blue-500 hover:shadow-indigo-500/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
               >
                 <Search className="mr-2 h-5 w-5" aria-hidden />
                 Browse jobs
@@ -69,25 +69,25 @@ export default function HomePage() {
               {!user ? (
                 <Link
                   href="/register"
-                  className="inline-flex items-center justify-center rounded-2xl border border-white/70 bg-white/80 px-8 py-4 text-base font-semibold text-slate-800 shadow-lg shadow-slate-900/5 backdrop-blur-md transition-all hover:border-indigo-200/80 hover:bg-white hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/40 focus-visible:ring-offset-2"
+                  className="inline-flex items-center justify-center rounded-2xl border border-border/70 bg-card/80 px-8 py-4 text-base font-semibold text-foreground shadow-lg shadow-foreground/5 backdrop-blur-md transition-all hover:border-accent/50 hover:bg-card hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2"
                 >
-                  <Briefcase className="mr-2 h-5 w-5 text-indigo-600" aria-hidden />
+                  <Briefcase className="mr-2 h-5 w-5 text-accent" aria-hidden />
                   Create account
                 </Link>
               ) : user.role === "employer" ? (
                 <Link
                   href="/my-jobs"
-                  className="inline-flex items-center justify-center rounded-2xl border border-white/70 bg-white/80 px-8 py-4 text-base font-semibold text-slate-800 shadow-lg shadow-slate-900/5 backdrop-blur-md transition-all hover:border-indigo-200/80 hover:bg-white hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/40 focus-visible:ring-offset-2"
+                  className="inline-flex items-center justify-center rounded-2xl border border-border/70 bg-card/80 px-8 py-4 text-base font-semibold text-foreground shadow-lg shadow-foreground/5 backdrop-blur-md transition-all hover:border-accent/50 hover:bg-card hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2"
                 >
-                  <LayoutDashboard className="mr-2 h-5 w-5 text-indigo-600" aria-hidden />
+                  <LayoutDashboard className="mr-2 h-5 w-5 text-accent" aria-hidden />
                   My jobs
                 </Link>
               ) : (
                 <Link
                   href="/profile"
-                  className="inline-flex items-center justify-center rounded-2xl border border-white/70 bg-white/80 px-8 py-4 text-base font-semibold text-slate-800 shadow-lg shadow-slate-900/5 backdrop-blur-md transition-all hover:border-indigo-200/80 hover:bg-white hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/40 focus-visible:ring-offset-2"
+                  className="inline-flex items-center justify-center rounded-2xl border border-border/70 bg-card/80 px-8 py-4 text-base font-semibold text-foreground shadow-lg shadow-foreground/5 backdrop-blur-md transition-all hover:border-accent/50 hover:bg-card hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2"
                 >
-                  <Users className="mr-2 h-5 w-5 text-indigo-600" aria-hidden />
+                  <Users className="mr-2 h-5 w-5 text-accent" aria-hidden />
                   Your profile
                 </Link>
               )}
@@ -99,10 +99,10 @@ export default function HomePage() {
       <div className="relative py-20 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
-            <h2 className="mb-4 text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
+            <h2 className="mb-4 text-3xl font-extrabold tracking-tight text-foreground md:text-4xl">
               Built for a calm workflow
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-slate-600">
+            <p className="mx-auto max-w-2xl text-lg text-fg-muted">
               Straightforward tools for candidates and hiring teams—no hype, just what you need
               to move faster.
             </p>
@@ -149,22 +149,22 @@ export default function HomePage() {
             ].map((item) => (
               <div
                 key={item.title}
-                className="group rounded-3xl border border-white/60 bg-white/65 p-8 text-center shadow-lg shadow-slate-900/[0.04] ring-1 ring-slate-900/[0.03] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-indigo-200/50 hover:bg-white/85 hover:shadow-xl hover:shadow-indigo-500/10"
+                className="group rounded-3xl border border-border/60 bg-card/65 p-8 text-center shadow-lg shadow-foreground/[0.04] ring-1 ring-foreground/[0.03] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/45 hover:bg-card/85 hover:shadow-xl hover:shadow-indigo-500/10"
               >
                 <div
-                  className={`mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${item.color} text-white shadow-lg shadow-slate-900/15`}
+                  className={`mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${item.color} text-white shadow-lg shadow-foreground/15`}
                 >
                   <item.icon className="h-7 w-7" aria-hidden />
                 </div>
-                <h3 className="mb-2 text-lg font-bold text-slate-900">{item.title}</h3>
-                <p className="text-sm leading-relaxed text-slate-600">{item.body}</p>
+                <h3 className="mb-2 text-lg font-bold text-foreground">{item.title}</h3>
+                <p className="text-sm leading-relaxed text-fg-muted">{item.body}</p>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      <div className="relative border-y border-white/50 bg-white/50 py-16 shadow-inner shadow-slate-900/5 backdrop-blur-md">
+      <div className="relative border-y border-border/50 bg-card/50 py-16 shadow-inner shadow-foreground/5 backdrop-blur-md">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {[
@@ -187,10 +187,10 @@ export default function HomePage() {
             ].map((item) => (
               <div
                 key={item.title}
-                className="rounded-2xl border border-slate-200/50 bg-gradient-to-br from-white/90 to-slate-50/80 p-6 shadow-md shadow-slate-900/5 ring-1 ring-white/80"
+                className="rounded-2xl border border-border bg-gradient-to-br from-card/90 to-card-muted/80 p-6 shadow-md shadow-foreground/5 ring-1 ring-border/80"
               >
-                <h3 className="mb-2 font-bold text-slate-900">{item.title}</h3>
-                <p className="text-sm leading-relaxed text-slate-600">{item.body}</p>
+                <h3 className="mb-2 font-bold text-foreground">{item.title}</h3>
+                <p className="text-sm leading-relaxed text-fg-muted">{item.body}</p>
               </div>
             ))}
           </div>
@@ -222,14 +222,14 @@ export default function HomePage() {
               <>
                 <Link
                   href="/register"
-                  className="inline-flex items-center justify-center rounded-2xl bg-white px-8 py-4 text-base font-semibold text-indigo-700 shadow-xl shadow-slate-900/15 transition-all hover:bg-indigo-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-700"
+                  className="inline-flex items-center justify-center rounded-2xl bg-card px-8 py-4 text-base font-semibold text-link shadow-xl shadow-foreground/15 transition-all hover:bg-accent-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-700"
                 >
                   Get started
                   <ArrowRight className="ml-2 h-5 w-5" aria-hidden />
                 </Link>
                 <Link
                   href="/jobs"
-                  className="inline-flex items-center justify-center rounded-2xl border-2 border-white/40 bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-700"
+                  className="inline-flex items-center justify-center rounded-2xl border-2 border-border/40 bg-card/10 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm transition-all hover:bg-card/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-700"
                 >
                   Browse jobs
                 </Link>
@@ -238,14 +238,14 @@ export default function HomePage() {
               <>
                 <Link
                   href="/post-job"
-                  className="inline-flex items-center justify-center rounded-2xl bg-white px-8 py-4 text-base font-semibold text-indigo-700 shadow-xl shadow-slate-900/15 transition-all hover:bg-indigo-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-700"
+                  className="inline-flex items-center justify-center rounded-2xl bg-card px-8 py-4 text-base font-semibold text-link shadow-xl shadow-foreground/15 transition-all hover:bg-accent-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-700"
                 >
                   Post a job
                   <ArrowRight className="ml-2 h-5 w-5" aria-hidden />
                 </Link>
                 <Link
                   href="/my-jobs"
-                  className="inline-flex items-center justify-center rounded-2xl border-2 border-white/40 bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-700"
+                  className="inline-flex items-center justify-center rounded-2xl border-2 border-border/40 bg-card/10 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm transition-all hover:bg-card/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-700"
                 >
                   My jobs
                 </Link>
@@ -254,14 +254,14 @@ export default function HomePage() {
               <>
                 <Link
                   href="/jobs"
-                  className="inline-flex items-center justify-center rounded-2xl bg-white px-8 py-4 text-base font-semibold text-indigo-700 shadow-xl shadow-slate-900/15 transition-all hover:bg-indigo-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-700"
+                  className="inline-flex items-center justify-center rounded-2xl bg-card px-8 py-4 text-base font-semibold text-link shadow-xl shadow-foreground/15 transition-all hover:bg-accent-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-700"
                 >
                   Browse jobs
                   <ArrowRight className="ml-2 h-5 w-5" aria-hidden />
                 </Link>
                 <Link
                   href="/applications"
-                  className="inline-flex items-center justify-center rounded-2xl border-2 border-white/40 bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-700"
+                  className="inline-flex items-center justify-center rounded-2xl border-2 border-border/40 bg-card/10 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm transition-all hover:bg-card/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-700"
                 >
                   My applications
                 </Link>
@@ -271,7 +271,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <footer className="relative border-t border-white/10 bg-slate-950 py-14 text-white">
+      <footer className="relative border-t border-footer-border bg-footer py-14 text-white">
         <div
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-indigo-400/50 to-transparent"
           aria-hidden
@@ -285,16 +285,16 @@ export default function HomePage() {
                 </span>
                 <span className="text-xl font-extrabold tracking-tight">JobPlatform</span>
               </div>
-              <p className="text-sm leading-relaxed text-slate-400">
+              <p className="text-sm leading-relaxed text-footer-muted">
                 Connecting talented professionals with amazing opportunities worldwide.
               </p>
             </div>
 
             <div>
-              <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-slate-300">
+              <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-footer-muted">
                 For job seekers
               </h3>
-              <ul className="space-y-2.5 text-sm text-slate-400">
+              <ul className="space-y-2.5 text-sm text-footer-muted">
                 <li>
                   <Link href="/jobs" className="transition-colors hover:text-white">
                     Browse Jobs
@@ -317,10 +317,10 @@ export default function HomePage() {
             </div>
 
             <div>
-              <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-slate-300">
+              <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-footer-muted">
                 For employers
               </h3>
-              <ul className="space-y-2.5 text-sm text-slate-400">
+              <ul className="space-y-2.5 text-sm text-footer-muted">
                 <li>
                   <Link href="/post-job" className="transition-colors hover:text-white">
                     Post a Job
@@ -343,10 +343,10 @@ export default function HomePage() {
             </div>
 
             <div>
-              <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-slate-300">
+              <h3 className="mb-4 text-sm font-bold uppercase tracking-wider text-footer-muted">
                 Company
               </h3>
-              <ul className="space-y-2.5 text-sm text-slate-400">
+              <ul className="space-y-2.5 text-sm text-footer-muted">
                 <li>
                   <Link href="/about" className="transition-colors hover:text-white">
                     About Us
@@ -366,7 +366,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="mt-12 border-t border-slate-800/80 pt-8 text-center text-sm text-slate-500">
+          <div className="mt-12 border-t border-footer-border pt-8 text-center text-sm text-footer-muted">
             <p>&copy; 2026 JobPlatform. All rights reserved.</p>
           </div>
         </div>

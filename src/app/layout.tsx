@@ -1,6 +1,8 @@
 import Navbar from "@/components/Navbar";
+import { THEME_BOOTSTRAP_SCRIPT } from "@/lib/theme";
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import Script from "next/script";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
@@ -32,10 +34,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={plusJakarta.variable}>
+    <html lang="en" className={plusJakarta.variable} suppressHydrationWarning>
       <body
         className={`${plusJakarta.className} min-h-screen bg-background text-foreground antialiased`}
       >
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }}
+        />
         <Navbar />
         <main className="min-h-[calc(100vh-4rem)]">{children}</main>
         <Toaster
@@ -43,24 +50,22 @@ export default function RootLayout({
           toastOptions={{
             duration: 4000,
             className:
-              "!rounded-2xl !border !border-slate-700/40 !shadow-2xl !shadow-indigo-950/20 !px-4 !py-3 !text-sm !font-medium !backdrop-blur-md",
+              "!rounded-2xl !border !border-border !bg-card !text-foreground !shadow-2xl !shadow-foreground/10 !px-4 !py-3 !text-sm !font-medium !backdrop-blur-md dark:!shadow-black/40",
             style: {
-              background: "linear-gradient(145deg, rgba(15,23,42,0.95), rgba(30,27,75,0.92))",
-              color: "#f8fafc",
               maxWidth: "min(100vw - 2rem, 28rem)",
             },
             success: {
               duration: 3200,
               iconTheme: {
                 primary: "#34d399",
-                secondary: "#fff",
+                secondary: "currentColor",
               },
             },
             error: {
               duration: 4800,
               iconTheme: {
                 primary: "#fb7185",
-                secondary: "#fff",
+                secondary: "currentColor",
               },
             },
           }}

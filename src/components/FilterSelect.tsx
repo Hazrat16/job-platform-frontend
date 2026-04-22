@@ -25,7 +25,7 @@ type FilterSelectProps = {
 };
 
 const triggerBase =
-  "relative flex w-full items-center rounded-xl border border-slate-200/90 bg-white px-3 py-2.5 pr-11 text-left text-sm text-slate-900 shadow-inner shadow-slate-900/5 transition-[color,box-shadow,border-color] hover:border-slate-300/90 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20";
+  "relative flex w-full items-center rounded-xl border border-input-border bg-input px-3 py-2.5 pr-11 text-left text-sm text-foreground shadow-inner shadow-foreground/5 transition-[color,box-shadow,border-color] hover:border-border-strong focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20";
 
 export function FilterSelect({
   id,
@@ -124,7 +124,7 @@ export function FilterSelect({
         id={id}
         role="combobox"
         aria-autocomplete="list"
-        className={cn(triggerBase, open && "border-indigo-300 ring-2 ring-indigo-500/15")}
+        className={cn(triggerBase, open && "border-accent ring-2 ring-accent/20")}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={listboxId}
@@ -138,8 +138,8 @@ export function FilterSelect({
       </button>
       <ChevronDown
         className={cn(
-          "pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500 transition-transform duration-200",
-          open && "rotate-180 text-indigo-600",
+          "pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-subtle transition-transform duration-200",
+          open && "rotate-180 text-accent",
         )}
         aria-hidden
       />
@@ -149,7 +149,7 @@ export function FilterSelect({
           id={listboxId}
           role="listbox"
           tabIndex={-1}
-          className="absolute left-0 right-0 top-full z-50 mt-1.5 max-h-72 overflow-auto rounded-xl border border-slate-200 bg-white py-1 shadow-lg shadow-slate-900/[0.08] ring-1 ring-slate-900/[0.04]"
+          className="absolute left-0 right-0 top-full z-50 mt-1.5 max-h-72 overflow-auto rounded-xl border border-border bg-popover py-1 shadow-lg shadow-foreground/10 ring-1 ring-border dark:shadow-black/40"
         >
           {options.map((opt, idx) => {
             const isSelected = opt.value === value;
@@ -161,11 +161,10 @@ export function FilterSelect({
                 role="option"
                 aria-selected={isSelected}
                 className={cn(
-                  "mx-1 flex cursor-pointer items-center gap-2 rounded-lg px-2.5 py-2 text-sm outline-none transition-colors",
-                  isHighlighted && "bg-slate-100",
-                  !isHighlighted && isSelected && "bg-indigo-50 text-indigo-950",
-                  !isHighlighted && !isSelected && "text-slate-800",
-                  isHighlighted && isSelected && "bg-indigo-100/90 text-indigo-950",
+                  "mx-1 flex cursor-pointer items-center gap-2 rounded-lg px-2.5 py-2 text-sm text-foreground outline-none transition-colors",
+                  isHighlighted && "bg-card-muted",
+                  !isHighlighted && isSelected && "bg-accent-muted",
+                  isHighlighted && isSelected && "bg-accent-muted-strong",
                 )}
                 onMouseEnter={() => setHighlightedIndex(idx)}
                 onMouseDown={(e) => e.preventDefault()}
@@ -174,7 +173,7 @@ export function FilterSelect({
                 <span className="min-w-0 flex-1 truncate">{opt.label}</span>
                 {isSelected && (
                   <Check
-                    className="h-4 w-4 shrink-0 text-indigo-600"
+                    className="h-4 w-4 shrink-0 text-accent"
                     strokeWidth={2.5}
                     aria-hidden
                   />

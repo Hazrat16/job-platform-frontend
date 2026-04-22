@@ -131,20 +131,20 @@ function CompletenessCard({ data }: { data: ProfileCompleteness }) {
   };
 
   return (
-    <div className="mb-6 rounded-2xl border border-indigo-200/40 bg-gradient-to-br from-indigo-50/90 via-white/80 to-cyan-50/50 p-5 shadow-md shadow-indigo-900/5 ring-1 ring-white/60 backdrop-blur-sm">
+    <div className="mb-6 rounded-2xl border border-accent/40 bg-gradient-to-br from-accent-muted/90 via-card/80 to-cyan-500/15 p-5 shadow-md shadow-foreground/5 ring-1 ring-border/60 backdrop-blur-sm dark:from-indigo-950/40 dark:via-card/80 dark:to-cyan-950/20">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">Profile strength</h2>
-          <p className="text-sm text-gray-600">
+          <h2 className="text-lg font-semibold text-foreground">Profile strength</h2>
+          <p className="text-sm text-fg-muted">
             Complete your profile to stand out to employers.
           </p>
         </div>
         <div className="flex items-center gap-3">
           <div
-            className="relative h-14 w-14 rounded-full border-4 border-white shadow flex items-center justify-center bg-white"
+            className="relative flex h-14 w-14 items-center justify-center rounded-full border-4 border-card bg-card shadow"
             aria-label={`Profile ${data.percent} percent complete`}
           >
-            <span className="text-sm font-bold text-indigo-700">{data.percent}%</span>
+            <span className="text-sm font-bold text-link">{data.percent}%</span>
           </div>
         </div>
       </div>
@@ -156,7 +156,7 @@ function CompletenessCard({ data }: { data: ProfileCompleteness }) {
               className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
                 data.sections[key]
                   ? "bg-green-100 text-green-800"
-                  : "bg-gray-200 text-gray-700"
+                  : "bg-skeleton text-fg-muted"
               }`}
             >
               {labels[key]}
@@ -166,7 +166,7 @@ function CompletenessCard({ data }: { data: ProfileCompleteness }) {
         )}
       </div>
       {data.missingTips.length > 0 && (
-        <ul className="text-sm text-gray-700 space-y-1 list-disc list-inside">
+        <ul className="text-sm text-fg-muted space-y-1 list-disc list-inside">
           {data.missingTips.slice(0, 5).map((tip, i) => (
             <li key={i}>{tip}</li>
           ))}
@@ -270,7 +270,7 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-accent" />
       </div>
     );
   }
@@ -281,15 +281,15 @@ export default function ProfilePage() {
     <div className="min-h-screen py-10">
       <div className="max-w-3xl mx-auto px-4">
         <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <h1 className="bg-gradient-to-r from-slate-900 to-indigo-900 bg-clip-text text-2xl font-extrabold tracking-tight text-transparent">
+          <h1 className="bg-gradient-to-r from-foreground to-indigo-600 dark:to-indigo-400 bg-clip-text text-2xl font-extrabold tracking-tight text-transparent">
             Your profile
           </h1>
           <div className="flex flex-wrap gap-3 text-sm">
-            <Link href="/jobs" className="font-medium text-indigo-600 hover:text-indigo-800">
+            <Link href="/jobs" className="font-medium text-accent hover:text-link">
               Browse jobs
             </Link>
             {role === "jobseeker" && (
-              <Link href="/profile/resume" className="text-indigo-600 hover:text-indigo-800">
+              <Link href="/profile/resume" className="text-accent hover:text-link">
                 Résumé →
               </Link>
             )}
@@ -301,57 +301,57 @@ export default function ProfilePage() {
         )}
 
         <form onSubmit={onSave} className="space-y-6">
-          <section className="bg-white shadow rounded-lg p-6 space-y-4">
-            <div className="flex items-center gap-2 text-gray-900 font-semibold border-b pb-2">
-              <UserIcon className="h-5 w-5 text-indigo-600" />
+          <section className="bg-card shadow rounded-lg p-6 space-y-4">
+            <div className="flex items-center gap-2 text-foreground font-semibold border-b pb-2">
+              <UserIcon className="h-5 w-5 text-accent" />
               Basics
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-fg-muted mb-1">
                 Full name
               </label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2"
+                className="w-full border border-border-strong rounded-md px-3 py-2"
                 required
                 minLength={2}
               />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-fg-muted mb-1">
                   Phone
                 </label>
                 <input
                   type="text"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
+                  className="w-full border border-border-strong rounded-md px-3 py-2"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-fg-muted mb-1">
                   Location
                 </label>
                 <input
                   type="text"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2"
+                  className="w-full border border-border-strong rounded-md px-3 py-2"
                 />
               </div>
             </div>
           </section>
 
-          <section className="bg-white shadow rounded-lg p-6 space-y-4">
-            <div className="flex items-center gap-2 text-gray-900 font-semibold border-b pb-2">
-              <BookOpen className="h-5 w-5 text-indigo-600" />
+          <section className="bg-card shadow rounded-lg p-6 space-y-4">
+            <div className="flex items-center gap-2 text-foreground font-semibold border-b pb-2">
+              <BookOpen className="h-5 w-5 text-accent" />
               Professional summary
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-fg-muted mb-1">
                 Headline
               </label>
               <input
@@ -359,11 +359,11 @@ export default function ProfilePage() {
                 value={headline}
                 onChange={(e) => setHeadline(e.target.value)}
                 placeholder="e.g. Senior Full-stack Engineer"
-                className="w-full border border-gray-300 rounded-md px-3 py-2"
+                className="w-full border border-border-strong rounded-md px-3 py-2"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-fg-muted mb-1">
                 Bio
               </label>
               <textarea
@@ -371,20 +371,20 @@ export default function ProfilePage() {
                 onChange={(e) => setBio(e.target.value)}
                 rows={4}
                 placeholder="Describe your background, strengths, and what you are looking for."
-                className="w-full border border-gray-300 rounded-md px-3 py-2"
+                className="w-full border border-border-strong rounded-md px-3 py-2"
               />
             </div>
           </section>
 
           {role === "jobseeker" && (
             <>
-              <section className="bg-white shadow rounded-lg p-6 space-y-4">
-                <div className="flex items-center gap-2 text-gray-900 font-semibold border-b pb-2">
-                  <Briefcase className="h-5 w-5 text-indigo-600" />
+              <section className="bg-card shadow rounded-lg p-6 space-y-4">
+                <div className="flex items-center gap-2 text-foreground font-semibold border-b pb-2">
+                  <Briefcase className="h-5 w-5 text-accent" />
                   Skills
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-fg-muted mb-1">
                     Skills (comma-separated)
                   </label>
                   <input
@@ -392,27 +392,27 @@ export default function ProfilePage() {
                     value={skillsText}
                     onChange={(e) => setSkillsText(e.target.value)}
                     placeholder="React, Node.js, MongoDB"
-                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    className="w-full border border-border-strong rounded-md px-3 py-2"
                   />
                 </div>
               </section>
 
-              <section className="bg-white shadow rounded-lg p-6 space-y-4">
+              <section className="bg-card shadow rounded-lg p-6 space-y-4">
                 <div className="flex items-center justify-between border-b pb-2">
-                  <div className="flex items-center gap-2 text-gray-900 font-semibold">
-                    <Briefcase className="h-5 w-5 text-indigo-600" />
+                  <div className="flex items-center gap-2 text-foreground font-semibold">
+                    <Briefcase className="h-5 w-5 text-accent" />
                     Experience
                   </div>
                   <button
                     type="button"
                     onClick={() => setExperience((prev) => [...prev, emptyExperience()])}
-                    className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
+                    className="text-sm font-medium text-accent hover:text-link"
                   >
                     + Add role
                   </button>
                 </div>
                 {experience.length === 0 ? (
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-fg-subtle">
                     No roles yet. Add your most recent positions.
                   </p>
                 ) : (
@@ -420,7 +420,7 @@ export default function ProfilePage() {
                     {experience.map((row, index) => (
                       <div
                         key={row._id ?? `exp-${index}`}
-                        className="border border-gray-200 rounded-md p-4 space-y-3"
+                        className="border border-border rounded-md p-4 space-y-3"
                       >
                         <div className="flex justify-end">
                           <button
@@ -435,7 +435,7 @@ export default function ProfilePage() {
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                            <label className="block text-xs font-medium text-fg-muted mb-1">
                               Title
                             </label>
                             <input
@@ -447,11 +447,11 @@ export default function ProfilePage() {
                                   ),
                                 )
                               }
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                              className="w-full border border-border-strong rounded-md px-3 py-2 text-sm"
                             />
                           </div>
                           <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                            <label className="block text-xs font-medium text-fg-muted mb-1">
                               Company
                             </label>
                             <input
@@ -463,12 +463,12 @@ export default function ProfilePage() {
                                   ),
                                 )
                               }
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                              className="w-full border border-border-strong rounded-md px-3 py-2 text-sm"
                             />
                           </div>
                         </div>
                         <div>
-                          <label className="block text-xs font-medium text-gray-600 mb-1">
+                          <label className="block text-xs font-medium text-fg-muted mb-1">
                             Location
                           </label>
                           <input
@@ -480,12 +480,12 @@ export default function ProfilePage() {
                                 ),
                               )
                             }
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                            className="w-full border border-border-strong rounded-md px-3 py-2 text-sm"
                           />
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                            <label className="block text-xs font-medium text-fg-muted mb-1">
                               Start
                             </label>
                             <input
@@ -498,11 +498,11 @@ export default function ProfilePage() {
                                 )
                               }
                               placeholder="e.g. Jan 2022"
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                              className="w-full border border-border-strong rounded-md px-3 py-2 text-sm"
                             />
                           </div>
                           <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                            <label className="block text-xs font-medium text-fg-muted mb-1">
                               End
                             </label>
                             <input
@@ -516,11 +516,11 @@ export default function ProfilePage() {
                               }
                               disabled={row.current}
                               placeholder="e.g. Present"
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm disabled:bg-gray-100"
+                              className="w-full border border-border-strong rounded-md px-3 py-2 text-sm disabled:bg-card-muted"
                             />
                           </div>
                         </div>
-                        <label className="inline-flex items-center gap-2 text-sm text-gray-700">
+                        <label className="inline-flex items-center gap-2 text-sm text-fg-muted">
                           <input
                             type="checkbox"
                             checked={row.current ?? false}
@@ -537,7 +537,7 @@ export default function ProfilePage() {
                           I currently work here
                         </label>
                         <div>
-                          <label className="block text-xs font-medium text-gray-600 mb-1">
+                          <label className="block text-xs font-medium text-fg-muted mb-1">
                             Description
                           </label>
                           <textarea
@@ -552,7 +552,7 @@ export default function ProfilePage() {
                               )
                             }
                             rows={3}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                            className="w-full border border-border-strong rounded-md px-3 py-2 text-sm"
                           />
                         </div>
                       </div>
@@ -561,22 +561,22 @@ export default function ProfilePage() {
                 )}
               </section>
 
-              <section className="bg-white shadow rounded-lg p-6 space-y-4">
+              <section className="bg-card shadow rounded-lg p-6 space-y-4">
                 <div className="flex items-center justify-between border-b pb-2">
-                  <div className="flex items-center gap-2 text-gray-900 font-semibold">
-                    <GraduationCap className="h-5 w-5 text-indigo-600" />
+                  <div className="flex items-center gap-2 text-foreground font-semibold">
+                    <GraduationCap className="h-5 w-5 text-accent" />
                     Education
                   </div>
                   <button
                     type="button"
                     onClick={() => setEducation((prev) => [...prev, emptyEducation()])}
-                    className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
+                    className="text-sm font-medium text-accent hover:text-link"
                   >
                     + Add school
                   </button>
                 </div>
                 {education.length === 0 ? (
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-fg-subtle">
                     Add degrees or certifications you want recruiters to see.
                   </p>
                 ) : (
@@ -584,7 +584,7 @@ export default function ProfilePage() {
                     {education.map((row, index) => (
                       <div
                         key={row._id ?? `edu-${index}`}
-                        className="border border-gray-200 rounded-md p-4 space-y-3"
+                        className="border border-border rounded-md p-4 space-y-3"
                       >
                         <div className="flex justify-end">
                           <button
@@ -599,7 +599,7 @@ export default function ProfilePage() {
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                            <label className="block text-xs font-medium text-fg-muted mb-1">
                               School
                             </label>
                             <input
@@ -611,11 +611,11 @@ export default function ProfilePage() {
                                   ),
                                 )
                               }
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                              className="w-full border border-border-strong rounded-md px-3 py-2 text-sm"
                             />
                           </div>
                           <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                            <label className="block text-xs font-medium text-fg-muted mb-1">
                               Degree
                             </label>
                             <input
@@ -627,12 +627,12 @@ export default function ProfilePage() {
                                   ),
                                 )
                               }
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                              className="w-full border border-border-strong rounded-md px-3 py-2 text-sm"
                             />
                           </div>
                         </div>
                         <div>
-                          <label className="block text-xs font-medium text-gray-600 mb-1">
+                          <label className="block text-xs font-medium text-fg-muted mb-1">
                             Field of study
                           </label>
                           <input
@@ -644,12 +644,12 @@ export default function ProfilePage() {
                                 ),
                               )
                             }
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                            className="w-full border border-border-strong rounded-md px-3 py-2 text-sm"
                           />
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                            <label className="block text-xs font-medium text-fg-muted mb-1">
                               Start year
                             </label>
                             <input
@@ -661,11 +661,11 @@ export default function ProfilePage() {
                                   ),
                                 )
                               }
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                              className="w-full border border-border-strong rounded-md px-3 py-2 text-sm"
                             />
                           </div>
                           <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                            <label className="block text-xs font-medium text-fg-muted mb-1">
                               End year
                             </label>
                             <input
@@ -678,11 +678,11 @@ export default function ProfilePage() {
                                 )
                               }
                               disabled={row.current}
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm disabled:bg-gray-100"
+                              className="w-full border border-border-strong rounded-md px-3 py-2 text-sm disabled:bg-card-muted"
                             />
                           </div>
                         </div>
-                        <label className="inline-flex items-center gap-2 text-sm text-gray-700">
+                        <label className="inline-flex items-center gap-2 text-sm text-fg-muted">
                           <input
                             type="checkbox"
                             checked={row.current ?? false}
@@ -699,7 +699,7 @@ export default function ProfilePage() {
                           Currently enrolled
                         </label>
                         <div>
-                          <label className="block text-xs font-medium text-gray-600 mb-1">
+                          <label className="block text-xs font-medium text-fg-muted mb-1">
                             Notes
                           </label>
                           <textarea
@@ -714,7 +714,7 @@ export default function ProfilePage() {
                               )
                             }
                             rows={2}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                            className="w-full border border-border-strong rounded-md px-3 py-2 text-sm"
                           />
                         </div>
                       </div>
@@ -725,28 +725,28 @@ export default function ProfilePage() {
             </>
           )}
 
-          <section className="bg-white shadow rounded-lg p-6 space-y-3">
-            <p className="text-gray-900 font-semibold border-b pb-2">Links</p>
+          <section className="bg-card shadow rounded-lg p-6 space-y-3">
+            <p className="text-foreground font-semibold border-b pb-2">Links</p>
             <input
               type="url"
               value={linkedIn}
               onChange={(e) => setLinkedIn(e.target.value)}
               placeholder="LinkedIn URL"
-              className="w-full border border-gray-300 rounded-md px-3 py-2"
+              className="w-full border border-border-strong rounded-md px-3 py-2"
             />
             <input
               type="url"
               value={github}
               onChange={(e) => setGithub(e.target.value)}
               placeholder="GitHub URL"
-              className="w-full border border-gray-300 rounded-md px-3 py-2"
+              className="w-full border border-border-strong rounded-md px-3 py-2"
             />
             <input
               type="url"
               value={portfolio}
               onChange={(e) => setPortfolio(e.target.value)}
               placeholder="Portfolio URL"
-              className="w-full border border-gray-300 rounded-md px-3 py-2"
+              className="w-full border border-border-strong rounded-md px-3 py-2"
             />
           </section>
 

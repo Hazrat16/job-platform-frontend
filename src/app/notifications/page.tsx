@@ -76,14 +76,14 @@ export default function NotificationsPage() {
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-slate-900">
+            <h1 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-foreground">
               <Bell className="h-7 w-7 text-blue-600" aria-hidden />
               Notifications
             </h1>
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="mt-1 text-sm text-fg-muted">
               {unreadCount > 0 ? (
                 <>
-                  You have <span className="font-semibold text-slate-900">{unreadCount}</span>{" "}
+                  You have <span className="font-semibold text-foreground">{unreadCount}</span>{" "}
                   unread.
                 </>
               ) : (
@@ -95,7 +95,7 @@ export default function NotificationsPage() {
             <button
               type="button"
               onClick={() => void markAllRead()}
-              className="inline-flex items-center justify-center gap-2 self-start rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition-colors hover:bg-slate-50"
+              className="inline-flex items-center justify-center gap-2 self-start rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-colors hover:bg-card-muted"
             >
               <CheckCheck className="h-4 w-4" />
               Mark all read
@@ -108,9 +108,9 @@ export default function NotificationsPage() {
             <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
           </div>
         ) : items.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-12 text-center text-slate-600">
+          <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-12 text-center text-fg-muted">
             <p className="mb-4">No notifications yet.</p>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-fg-subtle">
               When someone applies to your job or your application status changes, you will
               see it here.
             </p>
@@ -130,15 +130,15 @@ export default function NotificationsPage() {
                   onClick={() => void openNotification(n)}
                   className={`w-full rounded-2xl border px-4 py-4 text-left shadow-sm transition-colors ${
                     n.read
-                      ? "border-slate-200/80 bg-white hover:border-slate-300"
+                      ? "border-border bg-card hover:border-border-strong"
                       : "border-blue-200/80 bg-blue-50/60 hover:border-blue-300"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="font-semibold text-slate-900">{n.title}</p>
-                      <p className="mt-1 text-sm text-slate-600">{n.body}</p>
-                      <p className="mt-2 text-xs text-slate-500">
+                      <p className="font-semibold text-foreground">{n.title}</p>
+                      <p className="mt-1 text-sm text-fg-muted">{n.body}</p>
+                      <p className="mt-2 text-xs text-fg-subtle">
                         {new Date(n.createdAt).toLocaleString()}
                         {n.href ? (
                           <span className="text-blue-600"> · Open</span>

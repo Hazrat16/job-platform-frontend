@@ -42,30 +42,30 @@ export default function ApplyForJobPage() {
   return (
     <div className="min-h-screen py-8">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <form onSubmit={onSubmit} className="bg-white shadow rounded-lg p-6 space-y-5">
-          <h1 className="text-2xl font-bold text-gray-900">Apply for this Job</h1>
+        <form onSubmit={onSubmit} className="bg-card shadow rounded-lg p-6 space-y-5">
+          <h1 className="text-2xl font-bold text-foreground">Apply for this Job</h1>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-fg-muted mb-2">
               Resume *
             </label>
             <input
               type="file"
               accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
               onChange={(e) => setResume(e.target.files?.[0] || null)}
-              className="block w-full border border-gray-300 rounded-md p-2"
+              className="block w-full border border-border-strong rounded-md p-2"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-fg-muted mb-2">
               Cover Letter (optional)
             </label>
             <textarea
               value={coverLetter}
               onChange={(e) => setCoverLetter(e.target.value)}
               rows={6}
-              className="w-full border border-gray-300 rounded-md p-3"
+              className="w-full border border-border-strong rounded-md p-3"
               placeholder="Write a short note to the employer..."
             />
           </div>
@@ -73,7 +73,7 @@ export default function ApplyForJobPage() {
           <div className="flex gap-3">
             <Link
               href={`/jobs/${params.id}`}
-              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100"
+              className="px-4 py-2 border border-border-strong rounded-md text-fg-muted hover:bg-card-muted"
             >
               Cancel
             </Link>

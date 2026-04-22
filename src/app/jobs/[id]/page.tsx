@@ -32,7 +32,7 @@ export default function JobDetailsPage() {
   }, [params.id]);
 
   if (loading) {
-    return <div className="p-8 text-center text-gray-500">Loading job...</div>;
+    return <div className="p-8 text-center text-fg-subtle">Loading job...</div>;
   }
 
   if (!job) {
@@ -42,10 +42,10 @@ export default function JobDetailsPage() {
   return (
     <div className="min-h-screen py-8">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white shadow rounded-lg p-8 space-y-6">
+        <div className="bg-card shadow rounded-lg p-8 space-y-6">
           <div className="space-y-3">
-            <h1 className="text-3xl font-bold text-gray-900">{job.title}</h1>
-            <div className="flex flex-wrap gap-4 text-gray-600">
+            <h1 className="text-3xl font-bold text-foreground">{job.title}</h1>
+            <div className="flex flex-wrap gap-4 text-fg-muted">
               <span className="inline-flex items-center gap-1">
                 <Building2 className="h-4 w-4" />
                 {job.company}
@@ -64,17 +64,17 @@ export default function JobDetailsPage() {
           </div>
 
           <div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            <h2 className="text-xl font-semibold text-foreground mb-2">
               Description
             </h2>
-            <p className="text-gray-700 whitespace-pre-line">{job.description}</p>
+            <p className="text-fg-muted whitespace-pre-line">{job.description}</p>
           </div>
 
           <div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            <h2 className="text-xl font-semibold text-foreground mb-2">
               Requirements
             </h2>
-            <ul className="list-disc pl-5 space-y-1 text-gray-700">
+            <ul className="list-disc pl-5 space-y-1 text-fg-muted">
               {job.requirements.map((item, idx) => (
                 <li key={`${item}-${idx}`}>{item}</li>
               ))}
@@ -82,8 +82,8 @@ export default function JobDetailsPage() {
           </div>
 
           <div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">Benefits</h2>
-            <ul className="list-disc pl-5 space-y-1 text-gray-700">
+            <h2 className="text-xl font-semibold text-foreground mb-2">Benefits</h2>
+            <ul className="list-disc pl-5 space-y-1 text-fg-muted">
               {job.benefits.map((item, idx) => (
                 <li key={`${item}-${idx}`}>{item}</li>
               ))}
@@ -93,7 +93,7 @@ export default function JobDetailsPage() {
           <div className="flex gap-3 pt-2">
             <Link
               href="/jobs"
-              className="px-5 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100"
+              className="px-5 py-2 border border-border-strong rounded-md text-fg-muted hover:bg-card-muted"
             >
               Back to Jobs
             </Link>

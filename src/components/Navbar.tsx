@@ -1,7 +1,8 @@
 "use client";
 
-import { User as UserType } from "@/types";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/cn";
+import { User as UserType } from "@/types";
 import { apiClient, getUser, removeAuthToken, removeUser } from "@/utils/api";
 import {
   Bell,
@@ -20,7 +21,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 const navLinkClass =
-  "rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-white/80 hover:text-slate-900 hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/40 focus-visible:ring-offset-2";
+  "rounded-xl px-3 py-2 text-sm font-medium text-fg-muted transition-all hover:bg-card-muted hover:text-foreground hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
 export default function Navbar() {
   const [user, setUser] = useState<UserType | null>(null);
@@ -93,27 +94,25 @@ export default function Navbar() {
   };
 
   const searchInputClass =
-    "w-full rounded-xl border border-slate-200/90 bg-white/95 py-2.5 pl-10 pr-4 text-sm text-slate-900 shadow-inner shadow-slate-900/6 ring-1 ring-white/70 transition-all placeholder:text-slate-400 focus:border-indigo-300/90 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/28";
+    "w-full rounded-xl border border-input-border bg-input py-2.5 pl-10 pr-4 text-sm text-foreground shadow-inner shadow-foreground/5 ring-1 ring-border/40 transition-all placeholder:text-fg-subtle focus:border-accent focus:bg-card focus:outline-none focus:ring-2 focus:ring-accent/25";
 
   return (
     <nav
-      className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 shadow-sm backdrop-blur-md backdrop-saturate-150"
+      className="sticky top-0 z-50 border-b border-border bg-card/95 shadow-sm backdrop-blur-md backdrop-saturate-150"
       aria-label="Main"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-3">
           <Link
             href="/"
-            className="group flex shrink-0 items-center gap-2.5 rounded-xl py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50 focus-visible:ring-offset-2"
+            className="group flex shrink-0 items-center gap-2.5 rounded-xl py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-500 text-white shadow-lg shadow-indigo-500/30 ring-2 ring-white/50 transition-transform duration-300 group-hover:scale-[1.03]">
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-500 text-white shadow-lg shadow-indigo-500/30 ring-2 ring-card transition-transform duration-300 group-hover:scale-[1.03] dark:shadow-indigo-900/40">
               <Briefcase className="h-5 w-5" aria-hidden />
             </span>
             <span className="text-lg font-extrabold tracking-tight sm:text-xl">
-              <span className="bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-800 bg-clip-text text-transparent">
-                Job
-              </span>
-              <span className="bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 bg-clip-text text-transparent">
+              <span className="text-foreground">Job</span>
+              <span className="bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-500 bg-clip-text text-transparent dark:from-indigo-400 dark:via-blue-400 dark:to-cyan-400">
                 Platform
               </span>
             </span>
@@ -123,7 +122,7 @@ export default function Navbar() {
             <form onSubmit={handleSearch} className="w-full">
               <div className="relative">
                 <Search
-                  className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+                  className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-subtle"
                   aria-hidden
                 />
                 <input
@@ -143,13 +142,14 @@ export default function Navbar() {
             <Link href="/jobs" className={navLinkClass}>
               Browse Jobs
             </Link>
+            <ThemeToggle className="mx-0.5" />
 
             {user && (
               <Link
                 href="/resume-fit"
-                className={`${navLinkClass} inline-flex items-center gap-1.5 text-indigo-700`}
+                className={`${navLinkClass} inline-flex items-center gap-1.5 text-link`}
               >
-                <Sparkles className="h-4 w-4 shrink-0 text-indigo-500" aria-hidden />
+                <Sparkles className="h-4 w-4 shrink-0 text-link-soft" aria-hidden />
                 Resume fit
               </Link>
             )}
@@ -159,7 +159,7 @@ export default function Navbar() {
                 {user.role === "employer" && (
                   <Link
                     href="/post-job"
-                    className="ml-1 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:from-indigo-500 hover:to-blue-500 hover:shadow-indigo-500/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2"
+                    className="ml-1 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:from-indigo-500 hover:to-blue-500 hover:shadow-indigo-500/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:shadow-foreground/50"
                   >
                     <Plus className="h-4 w-4" aria-hidden />
                     Post Job
@@ -168,11 +168,11 @@ export default function Navbar() {
 
                 <Link
                   href="/notifications"
-                  className="relative ml-1 rounded-xl p-2 text-slate-600 transition-all hover:bg-white/90 hover:text-slate-900 hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/40 focus-visible:ring-offset-2"
+                  className="relative ml-1 rounded-xl p-2 text-fg-muted transition-all hover:bg-card hover:text-foreground hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   aria-label={`Notifications${unreadNotifications > 0 ? `, ${unreadNotifications} unread` : ""}`}
                 >
                   <Bell className="h-5 w-5" aria-hidden />
-                    {unreadNotifications > 0 && (
+                  {unreadNotifications > 0 && (
                     <span className="absolute right-0.5 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gradient-to-r from-indigo-600 to-blue-600 px-1 text-[10px] font-bold text-white shadow-sm">
                       {unreadNotifications > 99 ? "99+" : unreadNotifications}
                     </span>
@@ -185,13 +185,13 @@ export default function Navbar() {
                     onClick={() => setUserMenuOpen((o) => !o)}
                     aria-expanded={userMenuOpen}
                     aria-haspopup="menu"
-                    className="flex items-center gap-1.5 rounded-xl border border-transparent px-3 py-2 text-sm font-medium text-slate-700 transition-all hover:border-slate-200/80 hover:bg-white/90 hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/40 focus-visible:ring-offset-2"
+                    className="flex items-center gap-1.5 rounded-xl border border-transparent px-3 py-2 text-sm font-medium text-fg-muted transition-all hover:border-border hover:bg-card hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
-                    <User className="h-5 w-5 text-slate-500" aria-hidden />
+                    <User className="h-5 w-5 text-fg-subtle" aria-hidden />
                     <span className="max-w-[10rem] truncate">{user.name}</span>
                     <ChevronDown
                       className={cn(
-                        "h-4 w-4 text-slate-400 transition-transform",
+                        "h-4 w-4 text-fg-subtle transition-transform",
                         userMenuOpen && "rotate-180",
                       )}
                       aria-hidden
@@ -201,12 +201,12 @@ export default function Navbar() {
                   {userMenuOpen && (
                     <div
                       role="menu"
-                      className="absolute right-0 mt-2 w-56 overflow-hidden rounded-2xl border border-white/60 bg-white/90 py-1 shadow-2xl shadow-indigo-950/10 ring-1 ring-slate-900/5 backdrop-blur-xl"
+                      className="absolute right-0 mt-2 w-56 overflow-hidden rounded-2xl border border-border bg-popover/95 py-1 shadow-2xl shadow-foreground/10 ring-1 ring-border backdrop-blur-xl dark:shadow-black/50"
                     >
                       <Link
                         role="menuitem"
                         href="/profile"
-                        className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
+                        className="block px-4 py-2.5 text-sm text-fg-muted hover:bg-card-muted"
                         onClick={() => setUserMenuOpen(false)}
                       >
                         Profile
@@ -214,21 +214,21 @@ export default function Navbar() {
                       <Link
                         role="menuitem"
                         href="/resume-fit"
-                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-indigo-700 hover:bg-indigo-50"
+                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-link hover:bg-accent-muted"
                         onClick={() => setUserMenuOpen(false)}
                       >
-                        <Sparkles className="h-4 w-4 text-indigo-500" aria-hidden />
+                        <Sparkles className="h-4 w-4 text-link-soft" aria-hidden />
                         Resume fit (AI)
                       </Link>
                       <Link
                         role="menuitem"
                         href="/notifications"
-                        className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
+                        className="block px-4 py-2.5 text-sm text-fg-muted hover:bg-card-muted"
                         onClick={() => setUserMenuOpen(false)}
                       >
                         Notifications
                         {unreadNotifications > 0 && (
-                          <span className="ml-2 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-800">
+                          <span className="ml-2 rounded-full bg-accent-muted px-2 py-0.5 text-xs font-semibold text-link">
                             {unreadNotifications > 99 ? "99+" : unreadNotifications}
                           </span>
                         )}
@@ -236,7 +236,7 @@ export default function Navbar() {
                       <Link
                         role="menuitem"
                         href="/applications"
-                        className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
+                        className="block px-4 py-2.5 text-sm text-fg-muted hover:bg-card-muted"
                         onClick={() => setUserMenuOpen(false)}
                       >
                         My Applications
@@ -245,7 +245,7 @@ export default function Navbar() {
                         <Link
                           role="menuitem"
                           href="/saved-jobs"
-                          className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
+                          className="block px-4 py-2.5 text-sm text-fg-muted hover:bg-card-muted"
                           onClick={() => setUserMenuOpen(false)}
                         >
                           Saved Jobs
@@ -255,7 +255,7 @@ export default function Navbar() {
                         <Link
                           role="menuitem"
                           href="/my-jobs"
-                          className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
+                          className="block px-4 py-2.5 text-sm text-fg-muted hover:bg-card-muted"
                           onClick={() => setUserMenuOpen(false)}
                         >
                           My Jobs
@@ -265,10 +265,10 @@ export default function Navbar() {
                         <Link
                           role="menuitem"
                           href="/payments"
-                          className="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
+                          className="flex items-center gap-2 px-4 py-2.5 text-sm text-fg-muted hover:bg-card-muted"
                           onClick={() => setUserMenuOpen(false)}
                         >
-                          <Wallet className="h-4 w-4 text-slate-500" aria-hidden />
+                          <Wallet className="h-4 w-4 text-fg-subtle" aria-hidden />
                           Payments (BDT)
                         </Link>
                       )}
@@ -276,7 +276,7 @@ export default function Navbar() {
                         type="button"
                         role="menuitem"
                         onClick={handleLogout}
-                        className="block w-full px-4 py-2.5 text-left text-sm text-red-700 hover:bg-red-50"
+                        className="block w-full px-4 py-2.5 text-left text-sm text-destructive hover:bg-destructive-muted"
                       >
                         Sign Out
                       </button>
@@ -291,7 +291,7 @@ export default function Navbar() {
                 </Link>
                 <Link
                   href="/register"
-                  className="rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:from-indigo-500 hover:to-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2"
+                  className="rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:from-indigo-500 hover:to-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:shadow-foreground/50"
                 >
                   Sign Up
                 </Link>
@@ -299,11 +299,12 @@ export default function Navbar() {
             )}
           </div>
 
-          <div className="flex md:hidden">
+          <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggle />
             <button
               type="button"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="rounded-lg p-2.5 text-slate-600 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="rounded-lg p-2.5 text-fg-muted hover:bg-card-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
               aria-expanded={isMenuOpen}
               aria-controls="mobile-nav"
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -316,11 +317,11 @@ export default function Navbar() {
         {isMenuOpen && (
           <div
             id="mobile-nav"
-            className="border-t border-slate-100 pb-4 pt-2 md:hidden"
+            className="border-t border-border pb-4 pt-2 md:hidden"
           >
             <form onSubmit={handleSearch} className="mb-3 px-1">
               <div className="relative">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-subtle" />
                 <input
                   type="search"
                   placeholder="Search jobs…"
@@ -335,7 +336,7 @@ export default function Navbar() {
             <div className="flex flex-col gap-0.5 px-1">
               <Link
                 href="/jobs"
-                className="rounded-lg px-3 py-3 text-base font-medium text-slate-800 hover:bg-slate-50"
+                className="rounded-lg px-3 py-3 text-base font-medium text-foreground hover:bg-card-muted"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Browse Jobs
@@ -344,7 +345,7 @@ export default function Navbar() {
               {user && (
                 <Link
                   href="/resume-fit"
-                  className="flex items-center gap-2 rounded-lg px-3 py-3 text-base font-medium text-indigo-700 hover:bg-indigo-50"
+                  className="flex items-center gap-2 rounded-lg px-3 py-3 text-base font-medium text-link hover:bg-accent-muted"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <Sparkles className="h-5 w-5 shrink-0" aria-hidden />
@@ -365,26 +366,26 @@ export default function Navbar() {
                   )}
                   <Link
                     href="/profile"
-                    className="rounded-lg px-3 py-3 text-base font-medium text-slate-800 hover:bg-slate-50"
+                    className="rounded-lg px-3 py-3 text-base font-medium text-foreground hover:bg-card-muted"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Profile
                   </Link>
                   <Link
                     href="/notifications"
-                    className="rounded-lg px-3 py-3 text-base font-medium text-slate-800 hover:bg-slate-50"
+                    className="rounded-lg px-3 py-3 text-base font-medium text-foreground hover:bg-card-muted"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Notifications
                     {unreadNotifications > 0 && (
-                      <span className="ml-2 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-800">
+                      <span className="ml-2 rounded-full bg-accent-muted px-2 py-0.5 text-xs font-semibold text-link">
                         {unreadNotifications > 99 ? "99+" : unreadNotifications}
                       </span>
                     )}
                   </Link>
                   <Link
                     href="/applications"
-                    className="rounded-lg px-3 py-3 text-base font-medium text-slate-800 hover:bg-slate-50"
+                    className="rounded-lg px-3 py-3 text-base font-medium text-foreground hover:bg-card-muted"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     My Applications
@@ -392,7 +393,7 @@ export default function Navbar() {
                   {user.role === "jobseeker" && (
                     <Link
                       href="/saved-jobs"
-                      className="rounded-lg px-3 py-3 text-base font-medium text-slate-800 hover:bg-slate-50"
+                      className="rounded-lg px-3 py-3 text-base font-medium text-foreground hover:bg-card-muted"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Saved Jobs
@@ -401,7 +402,7 @@ export default function Navbar() {
                   {user.role === "employer" && (
                     <Link
                       href="/my-jobs"
-                      className="rounded-lg px-3 py-3 text-base font-medium text-slate-800 hover:bg-slate-50"
+                      className="rounded-lg px-3 py-3 text-base font-medium text-foreground hover:bg-card-muted"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       My Jobs
@@ -410,7 +411,7 @@ export default function Navbar() {
                   {user.role === "employer" && (
                     <Link
                       href="/payments"
-                      className="rounded-lg px-3 py-3 text-base font-medium text-slate-800 hover:bg-slate-50"
+                      className="rounded-lg px-3 py-3 text-base font-medium text-foreground hover:bg-card-muted"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Payments (BDT)
@@ -419,7 +420,7 @@ export default function Navbar() {
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="w-full rounded-lg px-3 py-3 text-left text-base font-medium text-red-700 hover:bg-red-50"
+                    className="w-full rounded-lg px-3 py-3 text-left text-base font-medium text-destructive hover:bg-destructive-muted"
                   >
                     Sign Out
                   </button>
@@ -428,7 +429,7 @@ export default function Navbar() {
                 <>
                   <Link
                     href="/login"
-                    className="rounded-lg px-3 py-3 text-base font-medium text-slate-800 hover:bg-slate-50"
+                    className="rounded-lg px-3 py-3 text-base font-medium text-foreground hover:bg-card-muted"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Sign In

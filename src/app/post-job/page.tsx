@@ -106,10 +106,10 @@ export default function PostJobPage() {
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="mb-2 bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-800 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent">
+          <h1 className="mb-2 bg-gradient-to-r from-foreground via-indigo-600 to-foreground dark:via-indigo-400 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent">
             Post a New Job
           </h1>
-          <p className="text-slate-600">
+          <p className="text-fg-muted">
             Fill out the form below to post your job opportunity. Be as detailed
             as possible to attract the right candidates.
           </p>
@@ -117,9 +117,9 @@ export default function PostJobPage() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
           {/* Basic Information */}
-          <div className="rounded-2xl border border-white/70 bg-white/80 p-6 shadow-lg shadow-indigo-950/5 ring-1 ring-slate-900/5 backdrop-blur-md">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-              <Briefcase className="mr-2 h-5 w-5 text-indigo-600" />
+          <div className="rounded-2xl border border-border/70 bg-card/80 p-6 shadow-lg shadow-foreground/5 ring-1 ring-foreground/5 backdrop-blur-md">
+            <h2 className="text-xl font-semibold text-foreground mb-6 flex items-center">
+              <Briefcase className="mr-2 h-5 w-5 text-accent" />
               Basic Information
             </h2>
 
@@ -128,7 +128,7 @@ export default function PostJobPage() {
               <div className="md:col-span-2">
                 <label
                   htmlFor="title"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-fg-muted mb-2"
                 >
                   Job Title *
                 </label>
@@ -137,8 +137,8 @@ export default function PostJobPage() {
                   type="text"
                   id="title"
                   placeholder="e.g., Senior Frontend Developer"
-                  className={`w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 ${
-                    errors.title ? "border-red-300" : "border-gray-300"
+                  className={`w-full px-3 py-2 border rounded-md focus:ring-accent focus:border-accent ${
+                    errors.title ? "border-red-300" : "border-border-strong"
                   }`}
                 />
                 {errors.title && (
@@ -153,7 +153,7 @@ export default function PostJobPage() {
               <div>
                 <label
                   htmlFor="company"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-fg-muted mb-2"
                 >
                   Company Name *
                 </label>
@@ -164,8 +164,8 @@ export default function PostJobPage() {
                   type="text"
                   id="company"
                   placeholder="Your company name"
-                  className={`w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 ${
-                    errors.company ? "border-red-300" : "border-gray-300"
+                  className={`w-full px-3 py-2 border rounded-md focus:ring-accent focus:border-accent ${
+                    errors.company ? "border-red-300" : "border-border-strong"
                   }`}
                 />
                 {errors.company && (
@@ -180,12 +180,12 @@ export default function PostJobPage() {
               <div>
                 <label
                   htmlFor="location"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-fg-muted mb-2"
                 >
                   Location *
                 </label>
                 <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-fg-subtle" />
                   <input
                     {...register("location", {
                       required: "Location is required",
@@ -193,8 +193,8 @@ export default function PostJobPage() {
                     type="text"
                     id="location"
                     placeholder="e.g., San Francisco, CA or Remote"
-                    className={`w-full pl-10 pr-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 ${
-                      errors.location ? "border-red-300" : "border-gray-300"
+                    className={`w-full pl-10 pr-3 py-2 border rounded-md focus:ring-accent focus:border-accent ${
+                      errors.location ? "border-red-300" : "border-border-strong"
                     }`}
                   />
                 </div>
@@ -210,15 +210,15 @@ export default function PostJobPage() {
               <div>
                 <label
                   htmlFor="type"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-fg-muted mb-2"
                 >
                   Job Type *
                 </label>
                 <select
                   {...register("type", { required: "Job type is required" })}
                   id="type"
-                  className={`w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 ${
-                    errors.type ? "border-red-300" : "border-gray-300"
+                  className={`w-full px-3 py-2 border rounded-md focus:ring-accent focus:border-accent ${
+                    errors.type ? "border-red-300" : "border-border-strong"
                   }`}
                 >
                   <option value="full-time">Full Time</option>
@@ -237,8 +237,8 @@ export default function PostJobPage() {
           </div>
 
           {/* Salary Information */}
-          <div className="rounded-2xl border border-white/70 bg-white/80 p-6 shadow-lg shadow-indigo-950/5 ring-1 ring-slate-900/5 backdrop-blur-md">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+          <div className="rounded-2xl border border-border/70 bg-card/80 p-6 shadow-lg shadow-foreground/5 ring-1 ring-foreground/5 backdrop-blur-md">
+            <h2 className="text-xl font-semibold text-foreground mb-6 flex items-center">
               <DollarSign className="h-5 w-5 mr-2 text-green-600" />
               Salary Information
             </h2>
@@ -247,7 +247,7 @@ export default function PostJobPage() {
               <div>
                 <label
                   htmlFor="salaryMin"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-fg-muted mb-2"
                 >
                   Minimum Salary *
                 </label>
@@ -259,8 +259,8 @@ export default function PostJobPage() {
                   type="number"
                   id="salaryMin"
                   placeholder="50000"
-                  className={`w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 ${
-                    errors.salary?.min ? "border-red-300" : "border-gray-300"
+                  className={`w-full px-3 py-2 border rounded-md focus:ring-accent focus:border-accent ${
+                    errors.salary?.min ? "border-red-300" : "border-border-strong"
                   }`}
                 />
                 {errors.salary?.min && (
@@ -274,7 +274,7 @@ export default function PostJobPage() {
               <div>
                 <label
                   htmlFor="salaryMax"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-fg-muted mb-2"
                 >
                   Maximum Salary *
                 </label>
@@ -286,8 +286,8 @@ export default function PostJobPage() {
                   type="number"
                   id="salaryMax"
                   placeholder="80000"
-                  className={`w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 ${
-                    errors.salary?.max ? "border-red-300" : "border-gray-300"
+                  className={`w-full px-3 py-2 border rounded-md focus:ring-accent focus:border-accent ${
+                    errors.salary?.max ? "border-red-300" : "border-border-strong"
                   }`}
                 />
                 {errors.salary?.max && (
@@ -301,7 +301,7 @@ export default function PostJobPage() {
               <div>
                 <label
                   htmlFor="currency"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-fg-muted mb-2"
                 >
                   Currency *
                 </label>
@@ -310,10 +310,10 @@ export default function PostJobPage() {
                     required: "Currency is required",
                   })}
                   id="currency"
-                  className={`w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 ${
+                  className={`w-full px-3 py-2 border rounded-md focus:ring-accent focus:border-accent ${
                     errors.salary?.currency
                       ? "border-red-300"
-                      : "border-gray-300"
+                      : "border-border-strong"
                   }`}
                 >
                   <option value="USD">USD ($)</option>
@@ -333,8 +333,8 @@ export default function PostJobPage() {
           </div>
 
           {/* Job Description */}
-          <div className="rounded-2xl border border-white/70 bg-white/80 p-6 shadow-lg shadow-indigo-950/5 ring-1 ring-slate-900/5 backdrop-blur-md">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+          <div className="rounded-2xl border border-border/70 bg-card/80 p-6 shadow-lg shadow-foreground/5 ring-1 ring-foreground/5 backdrop-blur-md">
+            <h2 className="text-xl font-semibold text-foreground mb-6 flex items-center">
               <FileText className="h-5 w-5 mr-2 text-purple-600" />
               Job Description
             </h2>
@@ -342,7 +342,7 @@ export default function PostJobPage() {
             <div>
               <label
                 htmlFor="description"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-fg-muted mb-2"
               >
                 Detailed Description *
               </label>
@@ -357,8 +357,8 @@ export default function PostJobPage() {
                 id="description"
                 rows={6}
                 placeholder="Provide a detailed description of the role, responsibilities, and what makes this position exciting..."
-                className={`w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 ${
-                  errors.description ? "border-red-300" : "border-gray-300"
+                className={`w-full px-3 py-2 border rounded-md focus:ring-accent focus:border-accent ${
+                  errors.description ? "border-red-300" : "border-border-strong"
                 }`}
               />
               {errors.description && (
@@ -367,7 +367,7 @@ export default function PostJobPage() {
                   {errors.description.message}
                 </div>
               )}
-              <p className="mt-1 text-sm text-gray-500">
+              <p className="mt-1 text-sm text-fg-subtle">
                 Minimum 100 characters. Be specific about responsibilities and
                 expectations.
               </p>
@@ -375,8 +375,8 @@ export default function PostJobPage() {
           </div>
 
           {/* Requirements */}
-          <div className="rounded-2xl border border-white/70 bg-white/80 p-6 shadow-lg shadow-indigo-950/5 ring-1 ring-slate-900/5 backdrop-blur-md">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+          <div className="rounded-2xl border border-border/70 bg-card/80 p-6 shadow-lg shadow-foreground/5 ring-1 ring-foreground/5 backdrop-blur-md">
+            <h2 className="text-xl font-semibold text-foreground mb-6 flex items-center">
               <AlertCircle className="h-5 w-5 mr-2 text-orange-600" />
               Requirements & Skills
             </h2>
@@ -390,10 +390,10 @@ export default function PostJobPage() {
                     })}
                     type="text"
                     placeholder="e.g., 3+ years of React experience"
-                    className={`flex-1 px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 ${
+                    className={`flex-1 px-3 py-2 border rounded-md focus:ring-accent focus:border-accent ${
                       errors.requirements?.[index]?.value
                         ? "border-red-300"
-                        : "border-gray-300"
+                        : "border-border-strong"
                     }`}
                   />
                   {requirementFields.length > 1 && (
@@ -411,7 +411,7 @@ export default function PostJobPage() {
               <button
                 type="button"
                 onClick={() => appendRequirement({ value: "" })}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="inline-flex items-center px-4 py-2 border border-border-strong rounded-md shadow-sm text-sm font-medium text-fg-muted bg-card hover:bg-card-muted focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent focus:ring-offset-background"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Add Requirement
@@ -420,8 +420,8 @@ export default function PostJobPage() {
           </div>
 
           {/* Benefits */}
-          <div className="rounded-2xl border border-white/70 bg-white/80 p-6 shadow-lg shadow-indigo-950/5 ring-1 ring-slate-900/5 backdrop-blur-md">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+          <div className="rounded-2xl border border-border/70 bg-card/80 p-6 shadow-lg shadow-foreground/5 ring-1 ring-foreground/5 backdrop-blur-md">
+            <h2 className="text-xl font-semibold text-foreground mb-6 flex items-center">
               <Calendar className="h-5 w-5 mr-2 text-green-600" />
               Benefits & Perks
             </h2>
@@ -435,10 +435,10 @@ export default function PostJobPage() {
                     })}
                     type="text"
                     placeholder="e.g., Health insurance, Remote work, Stock options"
-                    className={`flex-1 px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 ${
+                    className={`flex-1 px-3 py-2 border rounded-md focus:ring-accent focus:border-accent ${
                       errors.benefits?.[index]?.value
                         ? "border-red-300"
-                        : "border-gray-300"
+                        : "border-border-strong"
                     }`}
                   />
                   {benefitFields.length > 1 && (
@@ -456,7 +456,7 @@ export default function PostJobPage() {
               <button
                 type="button"
                 onClick={() => appendBenefit({ value: "" })}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="inline-flex items-center px-4 py-2 border border-border-strong rounded-md shadow-sm text-sm font-medium text-fg-muted bg-card hover:bg-card-muted focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent focus:ring-offset-background"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Add Benefit
@@ -469,7 +469,7 @@ export default function PostJobPage() {
             <button
               type="button"
               onClick={() => router.back()}
-              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+              className="px-6 py-3 border border-border-strong text-fg-muted rounded-md hover:bg-card-muted transition-colors"
             >
               Cancel
             </button>

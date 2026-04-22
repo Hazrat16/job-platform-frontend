@@ -106,13 +106,13 @@ export default function JobApplicationsPage() {
         </Link>
 
         <div className="mb-8">
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Applicants</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Applicants</h1>
           {jobTitle && (
-            <p className="mt-1 text-slate-600">
-              <span className="font-medium text-slate-800">{jobTitle}</span>
+            <p className="mt-1 text-fg-muted">
+              <span className="font-medium text-foreground">{jobTitle}</span>
             </p>
           )}
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="mt-2 text-sm text-fg-subtle">
             {applications.length}{" "}
             {applications.length === 1 ? "person has" : "people have"} applied. Each row
             includes the résumé submitted with that application and basic contact details.
@@ -120,7 +120,7 @@ export default function JobApplicationsPage() {
         </div>
 
         {applications.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-12 text-center text-slate-600">
+          <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-12 text-center text-fg-muted">
             No applications yet. When job seekers apply, they will appear here with their CV
             link.
           </div>
@@ -131,13 +131,13 @@ export default function JobApplicationsPage() {
               return (
                 <li
                   key={app._id}
-                  className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm"
+                  className="rounded-2xl border border-border bg-card p-5 shadow-sm"
                 >
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
-                        <User className="h-5 w-5 shrink-0 text-slate-400" aria-hidden />
-                        <span className="text-lg font-semibold text-slate-900">
+                        <User className="h-5 w-5 shrink-0 text-fg-subtle" aria-hidden />
+                        <span className="text-lg font-semibold text-foreground">
                           {app.applicant?.name ?? "Applicant"}
                         </span>
                       </div>
@@ -148,12 +148,12 @@ export default function JobApplicationsPage() {
                         <Mail className="h-4 w-4" />
                         {app.applicant?.email}
                       </a>
-                      <p className="mt-2 text-xs text-slate-500">
+                      <p className="mt-2 text-xs text-fg-subtle">
                         Applied {new Date(app.createdAt).toLocaleString()}
                       </p>
                       {app.coverLetter?.trim() && (
-                        <div className="mt-3 rounded-lg bg-slate-50 p-3 text-sm text-slate-700">
-                          <span className="font-medium text-slate-600">Cover note: </span>
+                        <div className="mt-3 rounded-lg bg-card-muted p-3 text-sm text-fg-muted">
+                          <span className="font-medium text-fg-muted">Cover note: </span>
                           {app.coverLetter}
                         </div>
                       )}
@@ -161,11 +161,11 @@ export default function JobApplicationsPage() {
 
                     <div className="flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center lg:flex-col lg:items-stretch">
                       <div>
-                        <label className="mb-1 block text-xs font-medium text-slate-500">
+                        <label className="mb-1 block text-xs font-medium text-fg-subtle">
                           Status
                         </label>
                         <select
-                          className="w-full min-w-[10rem] rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50"
+                          className="w-full min-w-[10rem] rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 disabled:opacity-50"
                           value={app.status}
                           disabled={updatingId === app._id}
                           onChange={(e) =>
@@ -187,7 +187,7 @@ export default function JobApplicationsPage() {
                           href={app.resume}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-slate-800"
+                          className="inline-flex items-center justify-center gap-2 rounded-xl bg-foreground px-4 py-2.5 text-sm font-semibold text-background transition-colors hover:opacity-90"
                         >
                           <FileText className="h-4 w-4" />
                           Application CV
@@ -198,7 +198,7 @@ export default function JobApplicationsPage() {
                             href={profileResume}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-800 hover:bg-slate-50"
+                            className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 py-2 text-sm font-medium text-foreground hover:bg-card-muted"
                           >
                             Profile résumé
                             <ExternalLink className="h-3.5 w-3.5" aria-hidden />

@@ -72,32 +72,32 @@ export default function ProfileResumePage() {
     <div className="min-h-screen py-10">
       <div className="max-w-xl mx-auto px-4">
         <div className="mb-6 flex items-center justify-between gap-4">
-          <h1 className="text-2xl font-bold text-gray-900">Résumé</h1>
+          <h1 className="text-2xl font-bold text-foreground">Résumé</h1>
           <Link href="/profile" className="text-sm text-blue-600 hover:text-blue-800">
             ← Back to profile
           </Link>
         </div>
 
-        <div className="bg-white shadow rounded-lg p-6 space-y-6">
-          <p className="text-gray-600 text-sm">
+        <div className="bg-card shadow rounded-lg p-6 space-y-6">
+          <p className="text-fg-muted text-sm">
             Upload a PDF or Word document. Employers see this when you apply or when you
             share your profile. Replacing a file keeps your profile sections unchanged.
           </p>
 
           {resumeUrl ? (
-            <div className="rounded-md border border-gray-200 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="rounded-md border border-border p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div className="flex items-start gap-3">
                 <FileText className="h-10 w-10 text-blue-600 shrink-0" />
                 <div>
-                  <p className="font-medium text-gray-900">Current résumé</p>
-                  <p className="text-xs text-gray-500 break-all mt-1">{resumeUrl}</p>
+                  <p className="font-medium text-foreground">Current résumé</p>
+                  <p className="text-xs text-fg-subtle break-all mt-1">{resumeUrl}</p>
                 </div>
               </div>
               <a
                 href={resumeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-md hover:bg-gray-800"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-foreground text-white text-sm font-medium rounded-md hover:opacity-90"
               >
                 <Download className="h-4 w-4" />
                 Open / download
@@ -110,12 +110,12 @@ export default function ProfileResumePage() {
           )}
 
           <div>
-            <p className="text-sm font-medium text-gray-700 mb-2">
+            <p className="text-sm font-medium text-fg-muted mb-2">
               {resumeUrl ? "Replace file" : "Upload file"}
             </p>
             <label
-              className={`inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md ${
-                uploading ? "opacity-50 pointer-events-none" : "cursor-pointer hover:bg-gray-50"
+              className={`inline-flex items-center gap-2 px-4 py-2 border border-border-strong rounded-md ${
+                uploading ? "opacity-50 pointer-events-none" : "cursor-pointer hover:bg-card-muted"
               }`}
             >
               <Upload className="h-4 w-4" />

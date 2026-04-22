@@ -49,19 +49,19 @@ export default function SavedJobsPage() {
   return (
     <div className="min-h-screen py-8">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="mb-2 bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-800 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent">
+        <h1 className="mb-2 bg-gradient-to-r from-foreground via-indigo-600 to-foreground dark:via-indigo-400 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent">
           Saved Jobs
         </h1>
-        <p className="mb-6 text-slate-600">
+        <p className="mb-6 text-fg-muted">
           Jobs you bookmarked from the browse list. Sign in as a job seeker to use this list.
         </p>
 
         {loading ? (
-          <div className="text-slate-500">Loading saved jobs...</div>
+          <div className="text-fg-subtle">Loading saved jobs...</div>
         ) : jobs.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-indigo-200/60 bg-white/70 p-6 text-slate-600 shadow-inner backdrop-blur-sm">
+          <div className="rounded-3xl border border-dashed border-accent/40 bg-card/70 p-6 text-fg-muted shadow-inner backdrop-blur-sm">
             No saved jobs yet.{" "}
-            <Link href="/jobs" className="font-medium text-indigo-600 hover:underline">
+            <Link href="/jobs" className="font-medium text-accent hover:underline">
               Browse jobs
             </Link>{" "}
             and tap the bookmark icon on a listing.
@@ -71,15 +71,15 @@ export default function SavedJobsPage() {
             {jobs.map((job) => (
               <div
                 key={job._id}
-                className="flex flex-col gap-4 rounded-3xl border border-white/70 bg-white/80 p-5 shadow-lg ring-1 ring-slate-900/5 backdrop-blur-md sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-4 rounded-3xl border border-border/70 bg-card/80 p-5 shadow-lg ring-1 ring-foreground/5 backdrop-blur-md sm:flex-row sm:items-center sm:justify-between"
               >
                 <div>
-                  <h2 className="text-lg font-semibold text-slate-900">
-                    <Link href={`/jobs/${job._id}`} className="transition-colors hover:text-indigo-600">
+                  <h2 className="text-lg font-semibold text-foreground">
+                    <Link href={`/jobs/${job._id}`} className="transition-colors hover:text-accent">
                       {job.title}
                     </Link>
                   </h2>
-                  <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-600">
+                  <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-fg-muted">
                     <span className="flex items-center gap-1">
                       <Briefcase className="h-4 w-4" />
                       {job.company}
@@ -93,7 +93,7 @@ export default function SavedJobsPage() {
                 <div className="flex items-center gap-2 shrink-0">
                   <Link
                     href={`/jobs/${job._id}`}
-                    className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700"
+                    className="rounded-md bg-gradient-to-r from-indigo-600 to-blue-600 px-4 py-2 text-sm font-medium text-white transition-all hover:from-indigo-500 hover:to-blue-500"
                   >
                     View
                   </Link>
@@ -101,7 +101,7 @@ export default function SavedJobsPage() {
                     type="button"
                     onClick={() => void handleUnsave(job._id)}
                     disabled={removingId === job._id}
-                    className="inline-flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50"
+                    className="inline-flex items-center gap-1 px-3 py-2 text-sm font-medium text-fg-muted border border-border-strong rounded-md hover:bg-card-muted disabled:opacity-50"
                     title="Remove from saved"
                   >
                     <BookmarkX className="h-4 w-4" />

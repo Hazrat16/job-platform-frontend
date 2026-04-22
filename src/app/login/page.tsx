@@ -62,7 +62,7 @@ export default function LoginPage() {
       />
       <div className="relative sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-500 text-white shadow-xl shadow-indigo-500/30 ring-2 ring-white/50">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-500 text-white shadow-xl shadow-indigo-500/30 ring-2 ring-border/50">
             <svg
               className="h-8 w-8 text-white"
               fill="none"
@@ -78,14 +78,14 @@ export default function LoginPage() {
             </svg>
           </div>
         </div>
-        <h2 className="mt-6 text-center text-3xl font-extrabold tracking-tight text-slate-900">
+        <h2 className="mt-6 text-center text-3xl font-extrabold tracking-tight text-foreground">
           Sign in to your account
         </h2>
-        <p className="mt-2 text-center text-sm text-slate-600">
+        <p className="mt-2 text-center text-sm text-fg-muted">
           Or{" "}
           <Link
             href="/register"
-            className="font-semibold text-indigo-600 underline-offset-4 hover:text-indigo-700 hover:underline"
+            className="font-semibold text-accent underline-offset-4 hover:text-link hover:underline"
           >
             create a new account
           </Link>
@@ -93,18 +93,18 @@ export default function LoginPage() {
       </div>
 
       <div className="relative mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="rounded-3xl border border-white/70 bg-white/80 px-4 py-8 shadow-2xl shadow-indigo-950/10 ring-1 ring-slate-900/5 backdrop-blur-xl sm:px-10">
+        <div className="rounded-3xl border border-border/70 bg-card/80 px-4 py-8 shadow-2xl shadow-foreground/10 ring-1 ring-foreground/5 backdrop-blur-xl sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-slate-700"
+                className="block text-sm font-medium text-fg-muted"
               >
                 Email address
               </label>
               <div className="mt-1 relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
+                  <Mail className="h-5 w-5 text-fg-subtle" />
                 </div>
                 <input
                   {...register("email", {
@@ -117,8 +117,8 @@ export default function LoginPage() {
                   id="email"
                   type="email"
                   autoComplete="email"
-                  className={`block w-full appearance-none rounded-xl border bg-white/90 py-2.5 pl-10 pr-3 text-sm text-slate-900 shadow-inner shadow-slate-900/5 transition-all placeholder:text-slate-400 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 sm:text-sm ${
-                    errors.email ? "border-red-400" : "border-slate-200/90"
+                  className={`block w-full appearance-none rounded-xl border bg-card/90 py-2.5 pl-10 pr-3 text-sm text-foreground shadow-inner shadow-foreground/5 transition-all placeholder:text-fg-subtle focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 sm:text-sm ${
+                    errors.email ? "border-red-400" : "border-border"
                   }`}
                   placeholder="Enter your email"
                 />
@@ -134,13 +134,13 @@ export default function LoginPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-slate-700"
+                className="block text-sm font-medium text-fg-muted"
               >
                 Password
               </label>
               <div className="mt-1 relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
+                  <Lock className="h-5 w-5 text-fg-subtle" />
                 </div>
                 <input
                   {...register("password", {
@@ -153,21 +153,21 @@ export default function LoginPage() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   autoComplete="current-password"
-                  className={`block w-full appearance-none rounded-xl border bg-white/90 py-2.5 pl-10 pr-10 text-sm text-slate-900 shadow-inner shadow-slate-900/5 transition-all placeholder:text-slate-400 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 sm:text-sm ${
-                    errors.password ? "border-red-400" : "border-slate-200/90"
+                  className={`block w-full appearance-none rounded-xl border bg-card/90 py-2.5 pl-10 pr-10 text-sm text-foreground shadow-inner shadow-foreground/5 transition-all placeholder:text-fg-subtle focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 sm:text-sm ${
+                    errors.password ? "border-red-400" : "border-border"
                   }`}
                   placeholder="Enter your password"
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 flex items-center rounded-r-xl pr-3 text-slate-400 hover:text-slate-600 focus:outline-none focus-visible:text-slate-800"
+                  className="absolute inset-y-0 right-0 flex items-center rounded-r-xl pr-3 text-fg-subtle hover:text-fg-muted focus:outline-none focus-visible:text-foreground"
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-500" />
+                    <EyeOff className="h-5 w-5 text-fg-subtle hover:text-fg-subtle" />
                   ) : (
-                    <Eye className="h-5 w-5 text-gray-400 hover:text-gray-500" />
+                    <Eye className="h-5 w-5 text-fg-subtle hover:text-fg-subtle" />
                   )}
                 </button>
               </div>
@@ -185,11 +185,11 @@ export default function LoginPage() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                  className="h-4 w-4 rounded border-border-strong text-accent focus:ring-accent"
                 />
                 <label
                   htmlFor="remember-me"
-                  className="ml-2 block text-sm text-slate-800"
+                  className="ml-2 block text-sm text-foreground"
                 >
                   Remember me
                 </label>
@@ -198,7 +198,7 @@ export default function LoginPage() {
               <div className="text-sm">
                 <Link
                   href="/forgot-password"
-                  className="font-semibold text-indigo-600 hover:text-indigo-700 hover:underline underline-offset-4"
+                  className="font-semibold text-accent hover:text-link hover:underline underline-offset-4"
                 >
                   Forgot your password?
                 </Link>
@@ -209,7 +209,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="flex w-full justify-center rounded-xl border border-transparent bg-gradient-to-r from-indigo-600 to-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:from-indigo-500 hover:to-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex w-full justify-center rounded-xl border border-transparent bg-gradient-to-r from-indigo-600 to-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:from-indigo-500 hover:to-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isLoading ? (
                   <div className="flex items-center">
@@ -226,10 +226,10 @@ export default function LoginPage() {
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-200" />
+                <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="bg-white/90 px-2 text-slate-500 backdrop-blur-sm">
+                <span className="bg-card/90 px-2 text-fg-subtle backdrop-blur-sm">
                   New to JobPlatform?
                 </span>
               </div>
@@ -238,7 +238,7 @@ export default function LoginPage() {
             <div className="mt-6">
               <Link
                 href="/register"
-                className="flex w-full justify-center rounded-xl border border-slate-200/90 bg-white/90 px-4 py-3 text-sm font-semibold text-slate-800 shadow-md transition-all hover:border-indigo-200 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/30 focus-visible:ring-offset-2"
+                className="flex w-full justify-center rounded-xl border border-border bg-card/90 px-4 py-3 text-sm font-semibold text-foreground shadow-md transition-all hover:border-accent/30 hover:bg-card focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 focus-visible:ring-offset-2"
               >
                 Create an account
               </Link>

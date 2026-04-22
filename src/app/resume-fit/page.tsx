@@ -29,17 +29,17 @@ function ListBlock({
   const showEn = lang !== "bn";
   const showBn = lang !== "en";
   return (
-    <div className="rounded-2xl border border-white/70 bg-white/75 p-5 shadow-md ring-1 ring-slate-900/5 backdrop-blur-md">
-      <h3 className="mb-3 text-sm font-bold uppercase tracking-wide text-slate-500">{title}</h3>
+    <div className="rounded-2xl border border-border/70 bg-card/75 p-5 shadow-md ring-1 ring-foreground/5 backdrop-blur-md">
+      <h3 className="mb-3 text-sm font-bold uppercase tracking-wide text-fg-subtle">{title}</h3>
       {showEn && items.en.length > 0 && (
-        <ul className="mb-3 list-inside list-disc space-y-1.5 text-sm text-slate-800">
+        <ul className="mb-3 list-inside list-disc space-y-1.5 text-sm text-foreground">
           {items.en.map((s, i) => (
             <li key={`en-${i}`}>{s}</li>
           ))}
         </ul>
       )}
       {showBn && items.bn.length > 0 && (
-        <ul className="list-inside list-disc space-y-1.5 text-sm text-slate-800">
+        <ul className="list-inside list-disc space-y-1.5 text-sm text-foreground">
           {items.bn.map((s, i) => (
             <li key={`bn-${i}`} lang="bn">
               {s}
@@ -48,7 +48,7 @@ function ListBlock({
         </ul>
       )}
       {items.en.length === 0 && items.bn.length === 0 && (
-        <p className="text-sm text-slate-500">No items listed.</p>
+        <p className="text-sm text-fg-subtle">No items listed.</p>
       )}
     </div>
   );
@@ -64,14 +64,14 @@ function TextBlock({
   lang: LangTab;
 }) {
   return (
-    <div className="rounded-2xl border border-white/70 bg-white/75 p-5 shadow-md ring-1 ring-slate-900/5 backdrop-blur-md">
-      <h3 className="mb-2 text-sm font-bold uppercase tracking-wide text-slate-500">{title}</h3>
+    <div className="rounded-2xl border border-border/70 bg-card/75 p-5 shadow-md ring-1 ring-foreground/5 backdrop-blur-md">
+      <h3 className="mb-2 text-sm font-bold uppercase tracking-wide text-fg-subtle">{title}</h3>
       {(lang === "en" || lang === "both") && text.en && (
-        <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-800">{text.en}</p>
+        <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground">{text.en}</p>
       )}
-      {lang === "both" && text.en && text.bn && <hr className="my-4 border-slate-200" />}
+      {lang === "both" && text.en && text.bn && <hr className="my-4 border-border" />}
       {(lang === "bn" || lang === "both") && text.bn && (
-        <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-800" lang="bn">
+        <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground" lang="bn">
           {text.bn}
         </p>
       )}
@@ -200,14 +200,14 @@ export default function ResumeFitPage() {
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-indigo-200/60 bg-white/70 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-indigo-700 shadow-sm backdrop-blur-md">
+            <p className="mb-2 inline-flex items-center gap-2 rounded-full border border-accent/40 bg-card/70 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-link shadow-sm backdrop-blur-md">
               <Sparkles className="h-3.5 w-3.5" aria-hidden />
               Local market AI
             </p>
-            <h1 className="bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-800 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
+            <h1 className="bg-gradient-to-r from-foreground via-indigo-600 to-foreground dark:via-indigo-400 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
               Resume + job fit analyzer
             </h1>
-            <p className="mt-2 max-w-2xl text-slate-600">
+            <p className="mt-2 max-w-2xl text-fg-muted">
               Upload or paste your CV, attach a real job post, and get match scoring, missing
               skills, and plain-language reasons hiring teams might pass—plus optional bilingual
               CV rewrite for Bangladesh roles.
@@ -215,7 +215,7 @@ export default function ResumeFitPage() {
           </div>
           <Link
             href="/jobs"
-            className="shrink-0 self-start rounded-xl border border-slate-200/90 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm backdrop-blur-md transition-colors hover:border-indigo-200"
+            className="shrink-0 self-start rounded-xl border border-border bg-card/80 px-4 py-2 text-sm font-semibold text-fg-muted shadow-sm backdrop-blur-md transition-colors hover:border-accent/30"
           >
             Browse jobs
           </Link>
@@ -231,32 +231,32 @@ export default function ResumeFitPage() {
           </div>
         </div>
 
-        <div className="mb-6 rounded-2xl border border-indigo-200/60 bg-indigo-50/70 px-4 py-3 text-sm text-indigo-950 backdrop-blur-sm">
+        <div className="mb-6 rounded-2xl border border-accent/40 bg-accent-muted/70 px-4 py-3 text-sm text-foreground backdrop-blur-sm">
           <p className="font-semibold text-indigo-900">No OpenAI key?</p>
           <p className="mt-1 text-indigo-900/90">
             Use a{" "}
             <a
               href="https://console.groq.com/keys"
-              className="font-medium underline decoration-indigo-400 underline-offset-2 hover:text-indigo-800"
+              className="font-medium underline decoration-indigo-400 underline-offset-2 hover:text-link"
               target="_blank"
               rel="noreferrer"
             >
               free Groq API key
             </a>{" "}
             on the backend: set{" "}
-            <code className="rounded bg-white/80 px-1 py-0.5 text-xs">GROQ_API_KEY</code> and{" "}
-            <code className="rounded bg-white/80 px-1 py-0.5 text-xs">
+            <code className="rounded bg-card/80 px-1 py-0.5 text-xs">GROQ_API_KEY</code> and{" "}
+            <code className="rounded bg-card/80 px-1 py-0.5 text-xs">
               OPENAI_BASE_URL=https://api.groq.com/openai/v1
             </code>{" "}
-            in <code className="rounded bg-white/80 px-1 text-xs">job-platform/.env</code>, then
+            in <code className="rounded bg-card/80 px-1 text-xs">job-platform/.env</code>, then
             restart the API. OpenRouter and other OpenAI-compatible hosts also work—see{" "}
-            <code className="rounded bg-white/80 px-1 text-xs">.env.example</code>.
+            <code className="rounded bg-card/80 px-1 text-xs">.env.example</code>.
           </p>
         </div>
 
-        <div className="space-y-6 rounded-3xl border border-white/70 bg-white/80 p-6 shadow-xl shadow-indigo-950/5 ring-1 ring-slate-900/5 backdrop-blur-xl sm:p-8">
+        <div className="space-y-6 rounded-3xl border border-border/70 bg-card/80 p-6 shadow-xl shadow-foreground/5 ring-1 ring-foreground/5 backdrop-blur-xl sm:p-8">
           <div>
-            <label className="mb-2 block text-sm font-semibold text-slate-800">
+            <label className="mb-2 block text-sm font-semibold text-foreground">
               Your CV (paste text)
             </label>
             <textarea
@@ -264,36 +264,36 @@ export default function ResumeFitPage() {
               onChange={(e) => setResumeText(e.target.value)}
               rows={10}
               placeholder="Paste full CV text here (recommended for best results). Minimum ~80 characters."
-              className="w-full rounded-2xl border border-slate-200/90 bg-white/90 px-4 py-3 text-sm text-slate-900 shadow-inner shadow-slate-900/5 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+              className="w-full rounded-2xl border border-border bg-card/90 px-4 py-3 text-sm text-foreground shadow-inner shadow-foreground/5 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
             />
           </div>
 
           <div>
-            <label className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-800">
-              <Upload className="h-4 w-4 text-indigo-600" aria-hidden />
+            <label className="mb-2 flex items-center gap-2 text-sm font-semibold text-foreground">
+              <Upload className="h-4 w-4 text-accent" aria-hidden />
               Or upload PDF / TXT (optional)
             </label>
             <input
               type="file"
               accept=".pdf,.txt,application/pdf,text/plain"
               onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
-              className="block w-full text-sm text-slate-600 file:mr-4 file:rounded-xl file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-indigo-700 hover:file:bg-indigo-100"
+              className="block w-full text-sm text-fg-muted file:mr-4 file:rounded-xl file:border-0 file:bg-accent-muted file:px-4 file:py-2 file:text-sm file:font-semibold file:text-link hover:file:bg-indigo-100"
             />
             {resumeFile && (
-              <p className="mt-1 text-xs text-slate-500">Selected: {resumeFile.name}</p>
+              <p className="mt-1 text-xs text-fg-subtle">Selected: {resumeFile.name}</p>
             )}
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2">
             <div>
-              <label className="mb-2 block text-sm font-semibold text-slate-800">
+              <label className="mb-2 block text-sm font-semibold text-foreground">
                 Job from platform
               </label>
               <select
                 value={jobId}
                 onChange={(e) => setJobId(e.target.value)}
                 disabled={jobsLoading}
-                className="w-full rounded-xl border border-slate-200/90 bg-white/90 px-3 py-2.5 text-sm text-slate-900 shadow-inner focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                className="w-full rounded-xl border border-border bg-card/90 px-3 py-2.5 text-sm text-foreground shadow-inner focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
               >
                 <option value="">— Optional: pick a live job —</option>
                 {jobs.map((j) => (
@@ -304,7 +304,7 @@ export default function ResumeFitPage() {
               </select>
             </div>
             <div>
-              <label className="mb-2 block text-sm font-semibold text-slate-800">
+              <label className="mb-2 block text-sm font-semibold text-foreground">
                 Or paste job description
               </label>
               <textarea
@@ -312,7 +312,7 @@ export default function ResumeFitPage() {
                 onChange={(e) => setJobDescription(e.target.value)}
                 rows={4}
                 placeholder="Paste the job post (title, requirements, responsibilities). ~60+ characters if not using a job from the list."
-                className="w-full rounded-xl border border-slate-200/90 bg-white/90 px-3 py-2 text-sm text-slate-900 shadow-inner focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                className="w-full rounded-xl border border-border bg-card/90 px-3 py-2 text-sm text-foreground shadow-inner focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
               />
             </div>
           </div>
@@ -342,8 +342,8 @@ export default function ResumeFitPage() {
         {analysis && (
           <div className="mt-10 space-y-6">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <h2 className="text-xl font-bold text-slate-900">Results</h2>
-              <div className="inline-flex rounded-xl border border-slate-200/80 bg-white/80 p-1 shadow-sm backdrop-blur-md">
+              <h2 className="text-xl font-bold text-foreground">Results</h2>
+              <div className="inline-flex rounded-xl border border-border bg-card/80 p-1 shadow-sm backdrop-blur-md">
                 {(["both", "en", "bn"] as const).map((tab) => (
                   <button
                     key={tab}
@@ -352,7 +352,7 @@ export default function ResumeFitPage() {
                     className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-colors ${
                       langTab === tab
                         ? "bg-indigo-600 text-white shadow-sm"
-                        : "text-slate-600 hover:bg-slate-100"
+                        : "text-fg-muted hover:bg-card-muted"
                     }`}
                   >
                     <Languages className="h-3.5 w-3.5" aria-hidden />
@@ -363,32 +363,32 @@ export default function ResumeFitPage() {
             </div>
 
             <div className="grid gap-4 sm:grid-cols-3">
-              <div className="rounded-2xl border border-indigo-200/50 bg-gradient-to-br from-indigo-600 to-blue-600 p-5 text-white shadow-lg">
+              <div className="rounded-2xl border border-accent/45 bg-gradient-to-br from-indigo-600 to-blue-600 p-5 text-white shadow-lg">
                 <p className="text-xs font-semibold uppercase tracking-wider text-indigo-100">
                   Match score
                 </p>
                 <p className="mt-1 text-4xl font-extrabold">{analysis.matchPercent}%</p>
               </div>
-              <div className="rounded-2xl border border-white/70 bg-white/80 p-5 shadow-md backdrop-blur-md sm:col-span-2">
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <div className="rounded-2xl border border-border/70 bg-card/80 p-5 shadow-md backdrop-blur-md sm:col-span-2">
+                <p className="text-xs font-semibold uppercase tracking-wide text-fg-subtle">
                   ATS-style breakdown
                 </p>
                 <div className="mt-3 grid grid-cols-3 gap-3 text-center">
                   <div>
-                    <p className="text-2xl font-bold text-slate-900">{analysis.atsScore.overall}</p>
-                    <p className="text-xs text-slate-500">Overall</p>
+                    <p className="text-2xl font-bold text-foreground">{analysis.atsScore.overall}</p>
+                    <p className="text-xs text-fg-subtle">Overall</p>
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-slate-900">
+                    <p className="text-2xl font-bold text-foreground">
                       {analysis.atsScore.keywordAlignment}
                     </p>
-                    <p className="text-xs text-slate-500">Keywords</p>
+                    <p className="text-xs text-fg-subtle">Keywords</p>
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-slate-900">
+                    <p className="text-2xl font-bold text-foreground">
                       {analysis.atsScore.structureClarity}
                     </p>
-                    <p className="text-xs text-slate-500">Structure</p>
+                    <p className="text-xs text-fg-subtle">Structure</p>
                   </div>
                 </div>
               </div>
@@ -437,7 +437,7 @@ export default function ResumeFitPage() {
 
         {rewrite && (
           <div className="mt-10 space-y-6">
-            <h2 className="text-xl font-bold text-slate-900">CV rewrite</h2>
+            <h2 className="text-xl font-bold text-foreground">CV rewrite</h2>
             <ListBlock title="What we changed" items={rewrite.changeHighlights} lang={langTab} />
             <TextBlock title="Improved CV (edit before sending)" text={rewrite.improvedCv} lang={langTab} />
           </div>

@@ -141,7 +141,7 @@ export default function RegisterPage() {
       />
       <div className="relative sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-500 text-white shadow-xl shadow-indigo-500/30 ring-2 ring-white/50">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-500 text-white shadow-xl shadow-indigo-500/30 ring-2 ring-border/50">
             <svg
               className="h-8 w-8 text-white"
               fill="none"
@@ -157,14 +157,14 @@ export default function RegisterPage() {
             </svg>
           </div>
         </div>
-        <h2 className="mt-6 text-center text-3xl font-extrabold tracking-tight text-slate-900">
+        <h2 className="mt-6 text-center text-3xl font-extrabold tracking-tight text-foreground">
           Create your account
         </h2>
-        <p className="mt-2 text-center text-sm text-slate-600">
+        <p className="mt-2 text-center text-sm text-fg-muted">
           Or{" "}
           <Link
             href="/login"
-            className="font-semibold text-indigo-600 underline-offset-4 hover:text-indigo-700 hover:underline"
+            className="font-semibold text-accent underline-offset-4 hover:text-link hover:underline"
           >
             sign in to your existing account
           </Link>
@@ -172,19 +172,19 @@ export default function RegisterPage() {
       </div>
 
       <div className="relative mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="rounded-3xl border border-white/70 bg-white/80 px-4 py-8 shadow-2xl shadow-indigo-950/10 ring-1 ring-slate-900/5 backdrop-blur-xl sm:px-10">
+        <div className="rounded-3xl border border-border/70 bg-card/80 px-4 py-8 shadow-2xl shadow-foreground/10 ring-1 ring-foreground/5 backdrop-blur-xl sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             {/* Full Name */}
             <div>
               <label
                 htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-fg-muted"
               >
                 Full Name
               </label>
               <div className="mt-1 relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-gray-400" />
+                  <User className="h-5 w-5 text-fg-subtle" />
                 </div>
                 <input
                   {...register("name", {
@@ -197,8 +197,8 @@ export default function RegisterPage() {
                   id="name"
                   type="text"
                   autoComplete="name"
-                  className={`appearance-none block w-full pl-10 pr-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${
-                    errors.name ? "border-red-300" : "border-gray-300"
+                  className={`appearance-none block w-full pl-10 pr-3 py-2 border rounded-md shadow-sm placeholder:text-fg-subtle focus:outline-none focus:ring-accent focus:border-accent sm:text-sm ${
+                    errors.name ? "border-red-300" : "border-border-strong"
                   }`}
                   placeholder="Enter your full name"
                 />
@@ -215,13 +215,13 @@ export default function RegisterPage() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-fg-muted"
               >
                 Email address
               </label>
               <div className="mt-1 relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
+                  <Mail className="h-5 w-5 text-fg-subtle" />
                 </div>
                 <input
                   {...register("email", {
@@ -234,8 +234,8 @@ export default function RegisterPage() {
                   id="email"
                   type="email"
                   autoComplete="email"
-                  className={`appearance-none block w-full pl-10 pr-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${
-                    errors.email ? "border-red-300" : "border-gray-300"
+                  className={`appearance-none block w-full pl-10 pr-3 py-2 border rounded-md shadow-sm placeholder:text-fg-subtle focus:outline-none focus:ring-accent focus:border-accent sm:text-sm ${
+                    errors.email ? "border-red-300" : "border-border-strong"
                   }`}
                   placeholder="Enter your email"
                 />
@@ -252,11 +252,11 @@ export default function RegisterPage() {
             <div>
               <span
                 id="account-type-label"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-fg-muted"
               >
                 Account type
               </span>
-              <p className="text-xs text-gray-500 mt-0.5 mb-2">
+              <p className="text-xs text-fg-subtle mt-0.5 mb-2">
                 Choose one — this controls whether you apply to jobs or post them.
               </p>
               <div
@@ -267,21 +267,21 @@ export default function RegisterPage() {
                 <button
                   type="button"
                   onClick={() => setAccountRole("jobseeker")}
-                  className={`relative flex rounded-lg border p-4 text-left shadow-sm transition ring-offset-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  className={`relative flex rounded-lg border p-4 text-left shadow-sm transition ring-offset-2 focus:outline-none focus:ring-2 focus:ring-accent ${
                     accountRole === "jobseeker"
                       ? "border-blue-600 ring-2 ring-blue-500 bg-blue-50"
-                      : "border-gray-300 bg-white hover:border-gray-400"
+                      : "border-border-strong bg-card hover:border-border-strong"
                   }`}
                 >
                   <div className="flex flex-1">
                     <div className="flex flex-col">
                       <div className="flex items-center">
                         <Briefcase className="h-5 w-5 text-blue-600" />
-                        <span className="ml-3 block text-sm font-medium text-gray-900">
+                        <span className="ml-3 block text-sm font-medium text-foreground">
                           Job seeker
                         </span>
                       </div>
-                      <p className="mt-1 text-xs text-gray-500">
+                      <p className="mt-1 text-xs text-fg-subtle">
                         I want to find and apply for jobs
                       </p>
                     </div>
@@ -299,7 +299,7 @@ export default function RegisterPage() {
                   className={`relative flex rounded-lg border p-4 text-left shadow-sm transition ring-offset-2 focus:outline-none focus:ring-2 focus:ring-green-500 ${
                     accountRole === "employer"
                       ? "border-green-600 ring-2 ring-green-500 bg-green-50"
-                      : "border-gray-300 bg-white hover:border-gray-400"
+                      : "border-border-strong bg-card hover:border-border-strong"
                   }`}
                 >
                   <div className="flex flex-1">
@@ -319,11 +319,11 @@ export default function RegisterPage() {
                             d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
                           />
                         </svg>
-                        <span className="ml-3 block text-sm font-medium text-gray-900">
+                        <span className="ml-3 block text-sm font-medium text-foreground">
                           Employer (hiring)
                         </span>
                       </div>
-                      <p className="mt-1 text-xs text-gray-500">
+                      <p className="mt-1 text-xs text-fg-subtle">
                         I want to post jobs and review applicants
                       </p>
                     </div>
@@ -338,7 +338,7 @@ export default function RegisterPage() {
               <div className="mt-3">
                 <label
                   htmlFor="role-select"
-                  className="block text-xs font-medium text-gray-600 mb-1"
+                  className="block text-xs font-medium text-fg-muted mb-1"
                 >
                   Or choose from list
                 </label>
@@ -355,7 +355,7 @@ export default function RegisterPage() {
                       setAccountRole(null);
                     }
                   }}
-                  className="block w-full max-w-md text-sm border border-gray-300 rounded-md px-3 py-2 bg-white"
+                  className="block w-full max-w-md text-sm border border-border-strong rounded-md px-3 py-2 bg-card"
                 >
                   <option value="">Select account type…</option>
                   <option value="jobseeker">Job seeker</option>
@@ -368,13 +368,13 @@ export default function RegisterPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-fg-muted"
               >
                 Password
               </label>
               <div className="mt-1 relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
+                  <Lock className="h-5 w-5 text-fg-subtle" />
                 </div>
                 <input
                   {...register("password", {
@@ -387,8 +387,8 @@ export default function RegisterPage() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   autoComplete="new-password"
-                  className={`appearance-none block w-full pl-10 pr-10 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${
-                    errors.password ? "border-red-300" : "border-gray-300"
+                  className={`appearance-none block w-full pl-10 pr-10 py-2 border rounded-md shadow-sm placeholder:text-fg-subtle focus:outline-none focus:ring-accent focus:border-accent sm:text-sm ${
+                    errors.password ? "border-red-300" : "border-border-strong"
                   }`}
                   placeholder="Create a password"
                 />
@@ -398,9 +398,9 @@ export default function RegisterPage() {
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-500" />
+                    <EyeOff className="h-5 w-5 text-fg-subtle hover:text-fg-subtle" />
                   ) : (
-                    <Eye className="h-5 w-5 text-gray-400 hover:text-gray-500" />
+                    <Eye className="h-5 w-5 text-fg-subtle hover:text-fg-subtle" />
                   )}
                 </button>
               </div>
@@ -416,13 +416,13 @@ export default function RegisterPage() {
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-fg-muted"
               >
                 Confirm Password
               </label>
               <div className="mt-1 relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
+                  <Lock className="h-5 w-5 text-fg-subtle" />
                 </div>
                 <input
                   {...register("confirmPassword", {
@@ -433,10 +433,10 @@ export default function RegisterPage() {
                   id="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
                   autoComplete="new-password"
-                  className={`appearance-none block w-full pl-10 pr-10 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${
+                  className={`appearance-none block w-full pl-10 pr-10 py-2 border rounded-md shadow-sm placeholder:text-fg-subtle focus:outline-none focus:ring-accent focus:border-accent sm:text-sm ${
                     errors.confirmPassword
                       ? "border-red-300"
-                      : "border-gray-300"
+                      : "border-border-strong"
                   }`}
                   placeholder="Confirm your password"
                 />
@@ -446,9 +446,9 @@ export default function RegisterPage() {
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
                   {showConfirmPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-500" />
+                    <EyeOff className="h-5 w-5 text-fg-subtle hover:text-fg-subtle" />
                   ) : (
-                    <Eye className="h-5 w-5 text-gray-400 hover:text-gray-500" />
+                    <Eye className="h-5 w-5 text-fg-subtle hover:text-fg-subtle" />
                   )}
                 </button>
               </div>
@@ -462,7 +462,7 @@ export default function RegisterPage() {
 
             {/* Profile Photo */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-fg-muted">
                 Profile Photo (Optional)
               </label>
               <div className="mt-1">
@@ -473,7 +473,7 @@ export default function RegisterPage() {
                       alt="Profile preview"
                       width={80}
                       height={80}
-                      className="h-20 w-20 rounded-full object-cover border-2 border-gray-300"
+                      className="h-20 w-20 rounded-full object-cover border-2 border-border-strong"
                     />
                     <button
                       type="button"
@@ -484,13 +484,13 @@ export default function RegisterPage() {
                     </button>
                   </div>
                 ) : (
-                  <div className="flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                  <div className="flex justify-center px-6 pt-5 pb-6 border-2 border-border-strong border-dashed rounded-md">
                     <div className="space-y-1 text-center">
-                      <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                      <div className="flex text-sm text-gray-600">
+                      <Upload className="mx-auto h-12 w-12 text-fg-subtle" />
+                      <div className="flex text-sm text-fg-muted">
                         <label
                           htmlFor="photo-upload"
-                          className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500"
+                          className="relative cursor-pointer bg-card rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500"
                         >
                           <span>Upload a file</span>
                           <input
@@ -504,7 +504,7 @@ export default function RegisterPage() {
                         </label>
                         <p className="pl-1">or drag and drop</p>
                       </div>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-fg-subtle">
                         PNG, JPG, GIF up to 5MB
                       </p>
                     </div>
@@ -517,7 +517,7 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex justify-center rounded-md border border-transparent bg-gradient-to-r from-indigo-600 to-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm transition-all hover:from-indigo-500 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isLoading ? (
                   <div className="flex items-center">
@@ -534,10 +534,10 @@ export default function RegisterPage() {
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
+                <div className="w-full border-t border-border-strong" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">
+                <span className="px-2 bg-card text-fg-subtle">
                   Already have an account?
                 </span>
               </div>
@@ -546,7 +546,7 @@ export default function RegisterPage() {
             <div className="mt-6">
               <Link
                 href="/login"
-                className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="w-full flex justify-center py-2 px-4 border border-border-strong rounded-md shadow-sm text-sm font-medium text-fg-muted bg-card hover:bg-card-muted focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent focus:ring-offset-background"
               >
                 Sign in
               </Link>

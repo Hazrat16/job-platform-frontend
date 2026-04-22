@@ -1,17 +1,95 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Semantic palette — use Tailwind utilities (bg-background, text-fg-muted, …) not raw hex in components. */
 :root {
   --background: #ffffff;
   --foreground: #0b1220;
+  --fg-muted: #475569;
+  --fg-subtle: #64748b;
   --card: #ffffff;
-  --card-border: rgba(15, 23, 42, 0.08);
-  --ring: rgba(99, 102, 241, 0.38);
+  --card-muted: #f1f5f9;
+  --border: rgba(15, 23, 42, 0.1);
+  --border-strong: rgba(15, 23, 42, 0.16);
+  --input: #ffffff;
+  --input-border: rgba(15, 23, 42, 0.12);
+  --ring: rgba(79, 70, 229, 0.35);
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-muted: rgba(79, 70, 229, 0.1);
+  --accent-muted-strong: rgba(79, 70, 229, 0.16);
+  --link: #4338ca;
+  --link-soft: #6366f1;
+  --destructive: #b91c1c;
+  --destructive-muted: rgba(239, 68, 68, 0.1);
+  --shadow-nav: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --logo-muted: #0f172a;
+  --popover: #ffffff;
+  --footer: #0a0c12;
+  --footer-muted: rgba(248, 250, 252, 0.55);
+  --footer-border: rgba(248, 250, 252, 0.12);
+  --skeleton: #e2e8f0;
+  --grid-line: rgba(15, 23, 42, 0.04);
+}
+
+.dark {
+  --background: #0b0f14;
+  --foreground: #f1f5f9;
+  --fg-muted: #94a3b8;
+  --fg-subtle: #64748b;
+  --card: #111620;
+  --card-muted: #161d2a;
+  --border: rgba(248, 250, 252, 0.09);
+  --border-strong: rgba(248, 250, 252, 0.14);
+  --input: #111620;
+  --input-border: rgba(248, 250, 252, 0.11);
+  --ring: rgba(129, 140, 248, 0.45);
+  --accent: #818cf8;
+  --accent-hover: #a5b4fc;
+  --accent-muted: rgba(129, 140, 248, 0.14);
+  --accent-muted-strong: rgba(129, 140, 248, 0.22);
+  --link: #a5b4fc;
+  --link-soft: #818cf8;
+  --destructive: #fca5a5;
+  --destructive-muted: rgba(248, 113, 113, 0.12);
+  --shadow-nav: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --logo-muted: #e2e8f0;
+  --popover: #111620;
+  --footer: #050608;
+  --footer-muted: rgba(148, 163, 184, 0.85);
+  --footer-border: rgba(248, 250, 252, 0.08);
+  --skeleton: #1a2234;
+  --grid-line: rgba(248, 250, 252, 0.05);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
   --color-card: var(--card);
+  --color-card-muted: var(--card-muted);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+  --color-input-border: var(--input-border);
+  --color-ring: var(--ring);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-muted: var(--accent-muted);
+  --color-accent-muted-strong: var(--accent-muted-strong);
+  --color-link: var(--link);
+  --color-link-soft: var(--link-soft);
+  --color-destructive: var(--destructive);
+  --color-destructive-muted: var(--destructive-muted);
+  --color-logo-muted: var(--logo-muted);
+  --color-popover: var(--popover);
+  --color-footer: var(--footer);
+  --color-footer-muted: var(--footer-muted);
+  --color-footer-border: var(--footer-border);
+  --color-skeleton: var(--skeleton);
+  --color-grid-line: var(--grid-line);
 }
 
 html {
@@ -39,11 +117,11 @@ body {
 }
 
 ::selection {
-  background-color: rgba(99, 102, 241, 0.22);
+  background-color: var(--accent-muted-strong);
   color: var(--foreground);
 }
 
-/* Form controls: high-contrast typed text */
+/* Form controls */
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not(
     [type="color"]
   ),
@@ -55,7 +133,7 @@ option {
 
 input::placeholder,
 textarea::placeholder {
-  color: #64748b !important;
+  color: var(--fg-subtle) !important;
 }
 
 input:-webkit-autofill,
@@ -70,8 +148,7 @@ select:-webkit-autofill:focus {
   -webkit-text-fill-color: var(--foreground) !important;
 }
 
-/* Thin scrollbars where supported */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(100, 116, 139, 0.45) transparent;
+  scrollbar-color: color-mix(in srgb, var(--fg-subtle) 45%, transparent) transparent;
 }
