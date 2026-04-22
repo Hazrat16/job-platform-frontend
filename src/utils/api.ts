@@ -10,6 +10,7 @@ import {
   ResetPasswordData,
   ResumeFitAnalysis,
   ResumeFitRewrite,
+  SessionInfo,
   SslCommerzInitData,
   User,
 } from "@/types";
@@ -34,9 +35,11 @@ function readStoredToken(): string | null {
 
 class ApiClient {
   private client: AxiosInstance;
+  private refreshPromise: Promise<boolean> | null = null;
 
   constructor() {
     this.client = axios.create({
+      withCredentials: true,
       headers: {
         "Content-Type": "application/json",
       },
@@ -55,20 +58,65 @@ class ApiClient {
     // Handle token expiration
     this.client.interceptors.response.use(
       (response) => response,
-      (error) => {
-        if (
-          axios.isAxiosError(error) &&
-          error.response?.status === 401 &&
-          typeof window !== "undefined"
-        ) {
-          localStorage.removeItem("token");
-          localStorage.removeItem("user");
-          window.dispatchEvent(new CustomEvent("auth:unauthorized"));
-          window.location.href = "/login";
+      async (error) => {
+        if (!axios.isAxiosError(error)) return Promise.reject(error);
+        const original = error.config as
+          | (InternalAxiosRequestConfig & { _retry?: boolean })
+          | undefined;
+        const status = error.response?.status;
+        const url = original?.url || "";
+        const isAuthRoute = /^\/auth\/(login|register|forgot-password|reset-password|refresh|verify-email)/.test(
+          url,
+        );
+
+        if (status === 401 && original && !original._retry && !isAuthRoute) {
+          original._retry = true;
+          const refreshed = await this.refreshAccessToken();
+          if (refreshed) {
+            const latest = readStoredToken();
+            if (latest) {
+              original.headers.Authorization = `Bearer ${latest}`;
+            }
+            return this.client(original);
+          }
+          this.handleAuthExpired();
         }
         return Promise.reject(error);
       },
     );
+  }
+
+  private async refreshAccessToken(): Promise<boolean> {
+    if (this.refreshPromise) return this.refreshPromise;
+    this.refreshPromise = (async () => {
+      try {
+        const response = await this.client.post("/auth/refresh");
+        const normalized =
+          this.normalizeResponse<AuthResponse>(response.data);
+        if (!normalized.success || !normalized.data?.token || !normalized.data?.user) {
+          return false;
+        }
+        setAuthToken(normalized.data.token);
+        setUser(normalized.data.user);
+        return true;
+      } catch {
+        return false;
+      } finally {
+        this.refreshPromise = null;
+      }
+    })();
+    return this.refreshPromise;
+  }
+
+  private handleAuthExpired() {
+    if (typeof window === "undefined") return;
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.dispatchEvent(new CustomEvent("auth:unauthorized"));
+    const current = `${window.location.pathname}${window.location.search}`;
+    const redirect =
+      current && current !== "/login" ? `?redirect=${encodeURIComponent(current)}` : "";
+    window.location.href = `/login${redirect}`;
   }
 
   private normalizeResponse<T>(payload: unknown): ApiResponse<T> {
@@ -159,6 +207,24 @@ class ApiClient {
     }
   }
 
+  async logout(): Promise<ApiResponse> {
+    try {
+      const response = await this.client.post("/auth/logout");
+      return this.normalizeResponse(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async logoutAll(): Promise<ApiResponse> {
+    try {
+      const response = await this.client.post("/auth/logout-all");
+      return this.normalizeResponse(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
   async forgotPassword(data: ForgotPasswordData): Promise<ApiResponse> {
     try {
       const response = await this.client.post("/auth/forgot-password", data);
@@ -208,6 +274,24 @@ class ApiClient {
     try {
       const response = await this.client.get("/profile");
       return this.normalizeResponse<User>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async getSessions(): Promise<ApiResponse<SessionInfo[]>> {
+    try {
+      const response = await this.client.get("/profile/sessions");
+      return this.normalizeResponse<SessionInfo[]>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async revokeSession(sessionId: string): Promise<ApiResponse<{ sessionId: string }>> {
+    try {
+      const response = await this.client.delete(`/profile/sessions/${sessionId}`);
+      return this.normalizeResponse<{ sessionId: string }>(response.data);
     } catch (error) {
       return { success: false, message: this.extractErrorMessage(error) };
     }

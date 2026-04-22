@@ -147,6 +147,16 @@ export interface Notification {
   updatedAt: string;
 }
 
+export interface SessionInfo {
+  id: string;
+  isCurrent: boolean;
+  userAgent: string;
+  ipAddress: string;
+  lastUsedAt: string | null;
+  createdAt: string | null;
+  expiresAt: string;
+}
+
 export interface ApiResponse<T = unknown> {
   success: boolean;
   message: string;

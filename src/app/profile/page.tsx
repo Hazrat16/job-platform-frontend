@@ -4,9 +4,17 @@ import {
   EducationItem,
   ExperienceItem,
   ProfileCompleteness,
+  SessionInfo,
   UserProfile,
 } from "@/types";
-import { apiClient, getAuthToken, getUser, setUser } from "@/utils/api";
+import {
+  apiClient,
+  getAuthToken,
+  getUser,
+  removeAuthToken,
+  removeUser,
+  setUser,
+} from "@/utils/api";
 import {
   AlertCircle,
   BookOpen,
@@ -192,6 +200,10 @@ export default function ProfilePage() {
   const [portfolio, setPortfolio] = useState("");
   const [experience, setExperience] = useState<ExperienceItem[]>([]);
   const [education, setEducation] = useState<EducationItem[]>([]);
+  const [sessions, setSessions] = useState<SessionInfo[]>([]);
+  const [sessionsLoading, setSessionsLoading] = useState(false);
+  const [revokeBusyId, setRevokeBusyId] = useState<string | null>(null);
+  const [logoutAllBusy, setLogoutAllBusy] = useState(false);
 
   useEffect(() => {
     if (!getAuthToken()) {
@@ -200,7 +212,10 @@ export default function ProfilePage() {
     }
 
     const load = async () => {
-      const res = await apiClient.getProfile();
+      const [res, sessionRes] = await Promise.all([
+        apiClient.getProfile(),
+        apiClient.getSessions(),
+      ]);
       if (!res.success || !res.data) {
         toast.error(res.message || "Could not load profile");
         setLoading(false);
@@ -221,6 +236,9 @@ export default function ProfilePage() {
       setExperience(mapExperience(p.experience));
       setEducation(mapEducation(p.education));
       setUser(u);
+      if (sessionRes.success) {
+        setSessions(sessionRes.data ?? []);
+      }
       setLoading(false);
     };
 
@@ -264,6 +282,52 @@ export default function ProfilePage() {
       toast.success("Profile saved");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const refreshSessions = async () => {
+    setSessionsLoading(true);
+    try {
+      const res = await apiClient.getSessions();
+      if (res.success) {
+        setSessions(res.data ?? []);
+      } else {
+        toast.error(res.message || "Could not refresh sessions");
+      }
+    } finally {
+      setSessionsLoading(false);
+    }
+  };
+
+  const onRevokeSession = async (sessionId: string) => {
+    setRevokeBusyId(sessionId);
+    try {
+      const res = await apiClient.revokeSession(sessionId);
+      if (!res.success) {
+        toast.error(res.message || "Could not revoke session");
+        return;
+      }
+      setSessions((prev) => prev.filter((s) => s.id !== sessionId));
+      toast.success("Session revoked");
+    } finally {
+      setRevokeBusyId(null);
+    }
+  };
+
+  const onLogoutAll = async () => {
+    setLogoutAllBusy(true);
+    try {
+      const res = await apiClient.logoutAll();
+      if (!res.success) {
+        toast.error(res.message || "Could not logout all devices");
+        return;
+      }
+      removeAuthToken();
+      removeUser();
+      toast.success("Logged out from all devices");
+      router.push("/login");
+    } finally {
+      setLogoutAllBusy(false);
     }
   };
 
@@ -748,6 +812,69 @@ export default function ProfilePage() {
               placeholder="Portfolio URL"
               className="w-full border border-border-strong rounded-md px-3 py-2"
             />
+          </section>
+
+          <section className="bg-card shadow rounded-lg p-6 space-y-4">
+            <div className="flex items-center justify-between border-b pb-2">
+              <p className="text-foreground font-semibold">Active sessions</p>
+              <button
+                type="button"
+                onClick={() => void refreshSessions()}
+                className="text-sm font-medium text-accent hover:text-link"
+                disabled={sessionsLoading}
+              >
+                {sessionsLoading ? "Refreshing..." : "Refresh"}
+              </button>
+            </div>
+            {sessions.length === 0 ? (
+              <p className="text-sm text-fg-subtle">No active sessions found.</p>
+            ) : (
+              <ul className="space-y-3">
+                {sessions.map((session) => (
+                  <li
+                    key={session.id}
+                    className="rounded-lg border border-border p-3 text-sm"
+                  >
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="min-w-0">
+                        <p className="font-medium text-foreground">
+                          {session.isCurrent ? "Current device" : "Signed-in device"}
+                        </p>
+                        <p className="truncate text-fg-muted">
+                          {session.userAgent || "Unknown device"}
+                        </p>
+                        <p className="text-fg-subtle">
+                          IP: {session.ipAddress || "Unknown"} · Last used:{" "}
+                          {session.lastUsedAt
+                            ? new Date(session.lastUsedAt).toLocaleString()
+                            : "Unknown"}
+                        </p>
+                      </div>
+                      {!session.isCurrent && (
+                        <button
+                          type="button"
+                          onClick={() => void onRevokeSession(session.id)}
+                          disabled={revokeBusyId === session.id}
+                          className="rounded-md border border-border-strong px-3 py-1.5 text-fg-muted hover:bg-card-muted disabled:opacity-60"
+                        >
+                          {revokeBusyId === session.id ? "Revoking..." : "Revoke"}
+                        </button>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => void onLogoutAll()}
+                disabled={logoutAllBusy}
+                className="rounded-md border border-red-300 px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50 disabled:opacity-60"
+              >
+                {logoutAllBusy ? "Logging out..." : "Logout all devices"}
+              </button>
+            </div>
           </section>
 
           <div className="flex items-center gap-2 text-amber-700 text-sm px-1">

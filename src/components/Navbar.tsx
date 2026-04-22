@@ -76,7 +76,12 @@ export default function Navbar() {
     };
   }, [userMenuOpen]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await apiClient.logout();
+    } catch {
+      // ignore network errors on logout; local cleanup still applies
+    }
     removeUser();
     removeAuthToken();
     setUser(null);

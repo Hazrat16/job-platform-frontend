@@ -4,7 +4,7 @@ import { LoginCredentials } from "@/types";
 import { apiClient, setAuthToken, setUser } from "@/utils/api";
 import { AlertCircle, Eye, EyeOff, Lock, Mail } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -13,6 +13,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const {
     register,
@@ -29,6 +30,11 @@ export default function LoginPage() {
         setAuthToken(response.data.token);
         setUser(response.data.user);
         toast.success("Login successful!");
+        const redirect = searchParams.get("redirect");
+        if (redirect?.startsWith("/")) {
+          router.push(redirect);
+          return;
+        }
 
         // Redirect based on user role
         if (response.data.user.role === "employer") {

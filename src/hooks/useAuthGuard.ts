@@ -24,7 +24,15 @@ export function useAuthGuard({
     const token = getAuthToken();
     const user = getUser();
     if (requireAuth && !token) {
-      router.replace(redirectTo);
+      const current =
+        typeof window !== "undefined"
+          ? `${window.location.pathname}${window.location.search}`
+          : "";
+      const suffix =
+        current && current !== "/login"
+          ? `?redirect=${encodeURIComponent(current)}`
+          : "";
+      router.replace(`${redirectTo}${suffix}`);
       return;
     }
     if (roles && roles.length > 0) {
