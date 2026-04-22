@@ -1,4 +1,5 @@
 import Navbar from "@/components/Navbar";
+import MonitoringBootstrap from "@/components/MonitoringBootstrap";
 import { THEME_BOOTSTRAP_SCRIPT } from "@/lib/theme";
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
@@ -43,6 +44,7 @@ export default function RootLayout({
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }}
         />
+        <MonitoringBootstrap />
         <Navbar />
         <main className="min-h-[calc(100vh-4rem)]">{children}</main>
         <Toaster

@@ -8,7 +8,7 @@ import {
   useId,
   useRef,
   useState,
-  type KeyboardEvent,
+  type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
 
 export type FilterSelectOption = { value: string; label: string };
@@ -64,7 +64,7 @@ export function FilterSelect({
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
+    const onKey = (e: globalThis.KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
         close();
@@ -81,7 +81,7 @@ export function FilterSelect({
     close();
   };
 
-  const onButtonKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
+  const onButtonKeyDown = (e: ReactKeyboardEvent<HTMLButtonElement>) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
       if (!open) {

@@ -4,6 +4,7 @@ const backend =
   process.env.API_PROXY_TARGET || "http://127.0.0.1:5000";
 
 const nextConfig: NextConfig = {
+  productionBrowserSourceMaps: true,
   async rewrites() {
     return [
       {
