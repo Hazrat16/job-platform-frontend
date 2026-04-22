@@ -1,6 +1,7 @@
 "use client";
 
 import { JobApplication } from "@/types";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { apiClient } from "@/utils/api";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -15,10 +16,12 @@ const statusColors: Record<string, string> = {
 };
 
 export default function ApplicationsPage() {
+  const { ready } = useAuthGuard({ roles: ["jobseeker"] });
   const [applications, setApplications] = useState<JobApplication[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!ready) return;
     const loadApplications = async () => {
       try {
         const response = await apiClient.getMyApplications();
@@ -33,7 +36,15 @@ export default function ApplicationsPage() {
     };
 
     void loadApplications();
-  }, []);
+  }, [ready]);
+
+  if (!ready) {
+    return (
+      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
+        <span className="text-sm text-fg-muted">Checking access…</span>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[calc(100vh-4rem)] py-10">

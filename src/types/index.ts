@@ -150,8 +150,11 @@ export interface Notification {
 export interface ApiResponse<T = unknown> {
   success: boolean;
   message: string;
+  code?: string;
   data?: T;
   error?: string;
+  details?: unknown;
+  requestId?: string;
   meta?: {
     unreadCount?: number;
     [key: string]: unknown;

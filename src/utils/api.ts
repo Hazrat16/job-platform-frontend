@@ -56,9 +56,14 @@ class ApiClient {
     this.client.interceptors.response.use(
       (response) => response,
       (error) => {
-        if (axios.isAxiosError(error) && error.response?.status === 401) {
+        if (
+          axios.isAxiosError(error) &&
+          error.response?.status === 401 &&
+          typeof window !== "undefined"
+        ) {
           localStorage.removeItem("token");
           localStorage.removeItem("user");
+          window.dispatchEvent(new CustomEvent("auth:unauthorized"));
           window.location.href = "/login";
         }
         return Promise.reject(error);
@@ -69,7 +74,15 @@ class ApiClient {
   private normalizeResponse<T>(payload: unknown): ApiResponse<T> {
     const data = payload as
       | ApiResponse<T>
-      | { error?: string; message?: string; token?: string; user?: unknown };
+      | {
+          error?: string;
+          message?: string;
+          code?: string;
+          details?: unknown;
+          requestId?: string;
+          token?: string;
+          user?: unknown;
+        };
 
     if (typeof data === "object" && data !== null && "success" in data) {
       return data as ApiResponse<T>;
@@ -91,7 +104,10 @@ class ApiClient {
     if (typeof data === "object" && data !== null && "error" in data) {
       return {
         success: false,
+        code: data.code,
         message: (data.error as string) || "Request failed",
+        details: data.details,
+        requestId: data.requestId,
       };
     }
 
@@ -105,7 +121,12 @@ class ApiClient {
   private extractErrorMessage(error: unknown): string {
     if (axios.isAxiosError(error)) {
       const payload = error.response?.data as
-        | { error?: string; message?: string }
+        | {
+            error?: string;
+            message?: string;
+            code?: string;
+            requestId?: string;
+          }
         | undefined;
       return (
         payload?.message || payload?.error || error.message || "Request failed"

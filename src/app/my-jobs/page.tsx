@@ -2,6 +2,7 @@
 
 import { Job } from "@/types";
 import { apiClient, getAuthToken, getUser } from "@/utils/api";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { Briefcase, Loader2, MapPin, Plus } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -10,19 +11,15 @@ import toast from "react-hot-toast";
 
 export default function MyJobsPage() {
   const router = useRouter();
+  const { ready } = useAuthGuard({ roles: ["employer"] });
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!getAuthToken()) {
-      router.replace("/login");
+    if (!ready) {
       return;
     }
-    const u = getUser();
-    if (u?.role !== "employer") {
-      router.replace("/jobs");
-      return;
-    }
+    if (!getAuthToken() || getUser()?.role !== "employer") return;
 
     const load = async () => {
       const res = await apiClient.getMyJobs();
@@ -36,9 +33,9 @@ export default function MyJobsPage() {
     };
 
     void load();
-  }, [router]);
+  }, [ready, router]);
 
-  if (loading) {
+  if (!ready || loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-accent" />

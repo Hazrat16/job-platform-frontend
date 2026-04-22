@@ -1,6 +1,7 @@
 "use client";
 
 import { apiClient } from "@/utils/api";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 import {
   AlertCircle,
   Briefcase,
@@ -32,6 +33,7 @@ interface JobFormData {
 }
 
 export default function PostJobPage() {
+  const { ready } = useAuthGuard({ roles: ["employer"] });
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -102,6 +104,11 @@ export default function PostJobPage() {
   };
 
   return (
+    !ready ? (
+      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
+        <span className="text-sm text-fg-muted">Checking access…</span>
+      </div>
+    ) : (
     <div className="min-h-screen py-8">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
@@ -491,5 +498,6 @@ export default function PostJobPage() {
         </form>
       </div>
     </div>
+    )
   );
 }
