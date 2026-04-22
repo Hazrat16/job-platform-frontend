@@ -80,7 +80,7 @@ export default function ApplyForJobPage() {
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60"
+              className="rounded-md bg-gradient-to-r from-accent to-accent-end px-4 py-2 text-white transition-all hover:brightness-110 disabled:opacity-60"
             >
               {loading ? "Submitting..." : "Submit Application"}
             </button>

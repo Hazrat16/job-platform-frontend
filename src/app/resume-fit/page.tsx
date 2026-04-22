@@ -204,7 +204,7 @@ export default function ResumeFitPage() {
               <Sparkles className="h-3.5 w-3.5" aria-hidden />
               Local market AI
             </p>
-            <h1 className="bg-gradient-to-r from-foreground via-indigo-600 to-foreground dark:via-indigo-400 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
+            <h1 className="bg-gradient-to-r from-foreground via-accent to-foreground dark:via-accent-end bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
               Resume + job fit analyzer
             </h1>
             <p className="mt-2 max-w-2xl text-fg-muted">
@@ -232,12 +232,12 @@ export default function ResumeFitPage() {
         </div>
 
         <div className="mb-6 rounded-2xl border border-accent/40 bg-accent-muted/70 px-4 py-3 text-sm text-foreground backdrop-blur-sm">
-          <p className="font-semibold text-indigo-900">No OpenAI key?</p>
-          <p className="mt-1 text-indigo-900/90">
+          <p className="font-semibold text-foreground">No OpenAI key?</p>
+          <p className="mt-1 text-foreground/90">
             Use a{" "}
             <a
               href="https://console.groq.com/keys"
-              className="font-medium underline decoration-indigo-400 underline-offset-2 hover:text-link"
+              className="font-medium underline decoration-accent underline-offset-2 hover:text-link"
               target="_blank"
               rel="noreferrer"
             >
@@ -277,7 +277,7 @@ export default function ResumeFitPage() {
               type="file"
               accept=".pdf,.txt,application/pdf,text/plain"
               onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
-              className="block w-full text-sm text-fg-muted file:mr-4 file:rounded-xl file:border-0 file:bg-accent-muted file:px-4 file:py-2 file:text-sm file:font-semibold file:text-link hover:file:bg-indigo-100"
+              className="block w-full text-sm text-fg-muted file:mr-4 file:rounded-xl file:border-0 file:bg-accent-muted file:px-4 file:py-2 file:text-sm file:font-semibold file:text-link hover:file:bg-accent-muted"
             />
             {resumeFile && (
               <p className="mt-1 text-xs text-fg-subtle">Selected: {resumeFile.name}</p>
@@ -322,7 +322,7 @@ export default function ResumeFitPage() {
               type="button"
               onClick={() => void handleAnalyze()}
               disabled={analyzing}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:from-indigo-500 hover:to-blue-500 disabled:opacity-60"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent to-accent-end px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-accent/25 transition-all hover:brightness-110 disabled:opacity-60"
             >
               {analyzing ? (
                 <>
@@ -351,7 +351,7 @@ export default function ResumeFitPage() {
                     onClick={() => setLangTab(tab)}
                     className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-colors ${
                       langTab === tab
-                        ? "bg-indigo-600 text-white shadow-sm"
+                        ? "bg-accent text-white shadow-sm"
                         : "text-fg-muted hover:bg-card-muted"
                     }`}
                   >
@@ -363,8 +363,8 @@ export default function ResumeFitPage() {
             </div>
 
             <div className="grid gap-4 sm:grid-cols-3">
-              <div className="rounded-2xl border border-accent/45 bg-gradient-to-br from-indigo-600 to-blue-600 p-5 text-white shadow-lg">
-                <p className="text-xs font-semibold uppercase tracking-wider text-indigo-100">
+              <div className="rounded-2xl border border-accent/45 bg-gradient-to-br from-accent to-accent-end p-5 text-white shadow-lg">
+                <p className="text-xs font-semibold uppercase tracking-wider text-white/90">
                   Match score
                 </p>
                 <p className="mt-1 text-4xl font-extrabold">{analysis.matchPercent}%</p>

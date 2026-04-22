@@ -100,7 +100,7 @@ export default function JobDetailsPage() {
             {currentUser?.role === "jobseeker" && (
               <Link
                 href={`/jobs/${job._id}/apply`}
-                className="px-5 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700"
+                className="rounded-md bg-gradient-to-r from-accent to-accent-end px-5 py-2 text-white transition-all hover:brightness-110"
               >
                 Apply Now
               </Link>

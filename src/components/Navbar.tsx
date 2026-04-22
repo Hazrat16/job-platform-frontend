@@ -107,12 +107,12 @@ export default function Navbar() {
             href="/"
             className="group flex shrink-0 items-center gap-2.5 rounded-xl py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-500 text-white shadow-lg shadow-indigo-500/30 ring-2 ring-card transition-transform duration-300 group-hover:scale-[1.03] dark:shadow-indigo-900/40">
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-accent via-accent-end to-hold text-white shadow-lg shadow-accent/30 ring-2 ring-card transition-transform duration-300 group-hover:scale-[1.03] dark:shadow-black/40">
               <Briefcase className="h-5 w-5" aria-hidden />
             </span>
             <span className="text-lg font-extrabold tracking-tight sm:text-xl">
               <span className="text-foreground">Job</span>
-              <span className="bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-500 bg-clip-text text-transparent dark:from-indigo-400 dark:via-blue-400 dark:to-cyan-400">
+              <span className="bg-gradient-to-r from-accent via-accent-end to-hold bg-clip-text text-transparent dark:from-accent-end dark:via-accent dark:to-hold">
                 Platform
               </span>
             </span>
@@ -159,7 +159,7 @@ export default function Navbar() {
                 {user.role === "employer" && (
                   <Link
                     href="/post-job"
-                    className="ml-1 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:from-indigo-500 hover:to-blue-500 hover:shadow-indigo-500/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:shadow-foreground/50"
+                    className="ml-1 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent to-accent-end px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-accent/25 transition-all hover:brightness-110 hover:shadow-accent/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:shadow-foreground/50"
                   >
                     <Plus className="h-4 w-4" aria-hidden />
                     Post Job
@@ -173,7 +173,7 @@ export default function Navbar() {
                 >
                   <Bell className="h-5 w-5" aria-hidden />
                   {unreadNotifications > 0 && (
-                    <span className="absolute right-0.5 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gradient-to-r from-indigo-600 to-blue-600 px-1 text-[10px] font-bold text-white shadow-sm">
+                    <span className="absolute right-0.5 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gradient-to-r from-accent to-accent-end px-1 text-[10px] font-bold text-white shadow-sm">
                       {unreadNotifications > 99 ? "99+" : unreadNotifications}
                     </span>
                   )}
@@ -291,7 +291,7 @@ export default function Navbar() {
                 </Link>
                 <Link
                   href="/register"
-                  className="rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:from-indigo-500 hover:to-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:shadow-foreground/50"
+                  className="rounded-xl bg-gradient-to-r from-accent to-accent-end px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-accent/25 transition-all hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:shadow-foreground/50"
                 >
                   Sign Up
                 </Link>
@@ -358,7 +358,7 @@ export default function Navbar() {
                   {user.role === "employer" && (
                     <Link
                       href="/post-job"
-                      className="mx-1 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-3 py-3 text-center text-base font-semibold text-white shadow-md shadow-indigo-500/20"
+                      className="mx-1 rounded-xl bg-gradient-to-r from-accent to-accent-end px-3 py-3 text-center text-base font-semibold text-white shadow-md shadow-accent/20"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Post Job
@@ -436,7 +436,7 @@ export default function Navbar() {
                   </Link>
                   <Link
                     href="/register"
-                    className="mx-1 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-3 py-3 text-center text-base font-semibold text-white shadow-md shadow-indigo-500/20"
+                    className="mx-1 rounded-xl bg-gradient-to-r from-accent to-accent-end px-3 py-3 text-center text-base font-semibold text-white shadow-md shadow-accent/20"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Sign Up

@@ -2,65 +2,86 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Semantic palette — use Tailwind utilities (bg-background, text-fg-muted, …) not raw hex in components. */
+/*
+ * Semantic tokens — parity with SmartCrowd web palette:
+ * `client/apps/web/src/app/styles/palette/smartcrowd.css`
+ * Light: [data-platform='SmartCrowd']  |  Dark: [data-platform='SmartCrowd'].dark
+ * Use utilities (bg-background, text-fg-muted, border-border, text-accent, …).
+ */
 :root {
+  /* Surfaces — SC container-* */
   --background: #ffffff;
-  --foreground: #0b1220;
-  --fg-muted: #475569;
-  --fg-subtle: #64748b;
+  --foreground: #000000;
+  --fg-muted: #616161;
+  --fg-subtle: #7a7a7a;
   --card: #ffffff;
-  --card-muted: #f1f5f9;
-  --border: rgba(15, 23, 42, 0.1);
-  --border-strong: rgba(15, 23, 42, 0.16);
-  --input: #ffffff;
-  --input-border: rgba(15, 23, 42, 0.12);
-  --ring: rgba(79, 70, 229, 0.35);
-  --accent: #4f46e5;
-  --accent-hover: #4338ca;
-  --accent-muted: rgba(79, 70, 229, 0.1);
-  --accent-muted-strong: rgba(79, 70, 229, 0.16);
-  --link: #4338ca;
-  --link-soft: #6366f1;
-  --destructive: #b91c1c;
-  --destructive-muted: rgba(239, 68, 68, 0.1);
-  --shadow-nav: 0 1px 2px rgba(15, 23, 42, 0.06);
-  --logo-muted: #0f172a;
+  --card-muted: #f8f8f8;
   --popover: #ffffff;
-  --footer: #0a0c12;
-  --footer-muted: rgba(248, 250, 252, 0.55);
-  --footer-border: rgba(248, 250, 252, 0.12);
-  --skeleton: #e2e8f0;
-  --grid-line: rgba(15, 23, 42, 0.04);
+  --border: #d3d3d3;
+  --border-strong: #2d4975;
+  --input: #ffffff;
+  --input-border: #d3d3d3;
+  /* Action / focus — SC #197bfd family */
+  --ring: rgba(25, 123, 253, 0.35);
+  --accent: #197bfd;
+  --accent-hover: #0268f0;
+  --accent-end: #4795fd;
+  --accent-muted: rgba(25, 123, 253, 0.1);
+  --accent-muted-strong: rgba(25, 123, 253, 0.18);
+  --link: #197bfd;
+  --link-soft: #82a0ce;
+  /* SC status-error */
+  --destructive: #f14437;
+  --destructive-muted: rgba(241, 68, 55, 0.1);
+  --success: #12b76a;
+  --warning: #f79008;
+  /* Brand title / deep navy — SC text-title light */
+  --logo-muted: #012a61;
+  /* Footer strip — SC container-secondary */
+  --footer: #012a61;
+  --footer-muted: rgba(248, 250, 252, 0.72);
+  --footer-border: rgba(255, 255, 255, 0.14);
+  --skeleton: #ededed;
+  --grid-line: rgba(0, 0, 0, 0.05);
+  /* SC hold-500 — teal accent for gradients */
+  --hold: #00c9b8;
+  --scrollbar-thumb: #ededed;
+  --scrollbar-track: transparent;
 }
 
 .dark {
-  --background: #0b0f14;
-  --foreground: #f1f5f9;
-  --fg-muted: #94a3b8;
-  --fg-subtle: #64748b;
-  --card: #111620;
-  --card-muted: #161d2a;
-  --border: rgba(248, 250, 252, 0.09);
-  --border-strong: rgba(248, 250, 252, 0.14);
-  --input: #111620;
-  --input-border: rgba(248, 250, 252, 0.11);
-  --ring: rgba(129, 140, 248, 0.45);
-  --accent: #818cf8;
-  --accent-hover: #a5b4fc;
-  --accent-muted: rgba(129, 140, 248, 0.14);
-  --accent-muted-strong: rgba(129, 140, 248, 0.22);
-  --link: #a5b4fc;
-  --link-soft: #818cf8;
-  --destructive: #fca5a5;
-  --destructive-muted: rgba(248, 113, 113, 0.12);
-  --shadow-nav: 0 1px 2px rgba(0, 0, 0, 0.35);
-  --logo-muted: #e2e8f0;
-  --popover: #111620;
-  --footer: #050608;
-  --footer-muted: rgba(148, 163, 184, 0.85);
-  --footer-border: rgba(248, 250, 252, 0.08);
-  --skeleton: #1a2234;
-  --grid-line: rgba(248, 250, 252, 0.05);
+  --background: #0e1724;
+  --foreground: #ffffff;
+  --fg-muted: #82a0ce;
+  --fg-subtle: #d3d3d3;
+  --card: #152236;
+  --card-muted: #1a273c;
+  --popover: #152236;
+  --border: #2d4975;
+  --border-strong: #7a7a7a;
+  --input: #1a273c;
+  --input-border: #2d4975;
+  --ring: rgba(25, 123, 253, 0.45);
+  --accent: #197bfd;
+  --accent-hover: #0268f0;
+  --accent-end: #4795fd;
+  --accent-muted: rgba(25, 123, 253, 0.1);
+  --accent-muted-strong: rgba(25, 123, 253, 0.22);
+  --link: #197bfd;
+  --link-soft: #82a0ce;
+  --destructive: #f14437;
+  --destructive-muted: rgba(241, 68, 55, 0.12);
+  --success: #12b76a;
+  --warning: #f79008;
+  --logo-muted: #ffffff;
+  --footer: #012a61;
+  --footer-muted: #82a0ce;
+  --footer-border: #213655;
+  --skeleton: #213655;
+  --grid-line: rgba(255, 255, 255, 0.06);
+  --hold: #00c9b8;
+  --scrollbar-thumb: #213655;
+  --scrollbar-track: #152236;
 }
 
 @theme inline {
@@ -77,12 +98,15 @@
   --color-ring: var(--ring);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
+  --color-accent-end: var(--accent-end);
   --color-accent-muted: var(--accent-muted);
   --color-accent-muted-strong: var(--accent-muted-strong);
   --color-link: var(--link);
   --color-link-soft: var(--link-soft);
   --color-destructive: var(--destructive);
   --color-destructive-muted: var(--destructive-muted);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
   --color-logo-muted: var(--logo-muted);
   --color-popover: var(--popover);
   --color-footer: var(--footer);
@@ -90,6 +114,7 @@
   --color-footer-border: var(--footer-border);
   --color-skeleton: var(--skeleton);
   --color-grid-line: var(--grid-line);
+  --color-hold: var(--hold);
 }
 
 html {
@@ -121,7 +146,7 @@ body {
   color: var(--foreground);
 }
 
-/* Form controls */
+/* Form controls — SC debit-input */
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not(
     [type="color"]
   ),
@@ -150,5 +175,5 @@ select:-webkit-autofill:focus {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--fg-subtle) 45%, transparent) transparent;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }

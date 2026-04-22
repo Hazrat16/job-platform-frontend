@@ -188,9 +188,9 @@ function JobsPageContent() {
 
   return (
     <div className="min-h-screen">
-      <div className="border-b border-border/40 bg-gradient-to-br from-card/90 via-accent-muted/60 to-cyan-500/15 shadow-sm backdrop-blur-md dark:via-indigo-950/45 dark:to-cyan-950/25">
+      <div className="border-b border-border/40 bg-gradient-to-br from-card/90 via-accent-muted/60 to-hold/15 shadow-sm backdrop-blur-md dark:via-[#1a2e47]/50 dark:to-hold/25">
         <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-          <h1 className="bg-gradient-to-r from-foreground via-indigo-600 to-foreground dark:via-indigo-400 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
+          <h1 className="bg-gradient-to-r from-foreground via-accent to-foreground dark:via-accent-end bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl">
             Find your next role
           </h1>
           <p className="mt-3 max-w-2xl text-fg-muted">
@@ -356,7 +356,7 @@ function JobsPageContent() {
                 filteredJobs.map((job) => (
                   <article
                     key={job._id}
-                    className="group rounded-3xl border border-border/70 bg-card/80 p-6 shadow-lg shadow-foreground/[0.04] ring-1 ring-foreground/[0.03] backdrop-blur-md transition-all duration-300 hover:border-accent/40 hover:bg-card/95 hover:shadow-xl hover:shadow-indigo-500/10"
+                    className="group rounded-3xl border border-border/70 bg-card/80 p-6 shadow-lg shadow-foreground/[0.04] ring-1 ring-foreground/[0.03] backdrop-blur-md transition-all duration-300 hover:border-accent/40 hover:bg-card/95 hover:shadow-xl hover:shadow-accent/10"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="min-w-0 flex-1">
@@ -454,7 +454,7 @@ function JobsPageContent() {
 
                             <Link
                               href={`/jobs/${job._id}`}
-                              className="inline-flex items-center rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:from-indigo-500 hover:to-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                              className="inline-flex items-center rounded-xl bg-gradient-to-r from-accent to-accent-end px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-accent/20 transition-all hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                             >
                               View details
                             </Link>
@@ -474,7 +474,7 @@ function JobsPageContent() {
                   <button
                     type="button"
                     onClick={clearFilters}
-                    className="mt-6 inline-flex rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:from-indigo-500 hover:to-blue-500"
+                    className="mt-6 inline-flex rounded-xl bg-gradient-to-r from-accent to-accent-end px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-accent/20 transition-all hover:brightness-110"
                   >
                     Clear filters
                   </button>

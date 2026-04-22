@@ -106,7 +106,7 @@ export default function PostJobPage() {
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="mb-2 bg-gradient-to-r from-foreground via-indigo-600 to-foreground dark:via-indigo-400 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent">
+          <h1 className="mb-2 bg-gradient-to-r from-foreground via-accent to-foreground dark:via-accent-end bg-clip-text text-3xl font-extrabold tracking-tight text-transparent">
             Post a New Job
           </h1>
           <p className="text-fg-muted">
@@ -476,7 +476,7 @@ export default function PostJobPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-6 py-3 font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:from-indigo-500 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-xl bg-gradient-to-r from-accent to-accent-end px-6 py-3 font-semibold text-white shadow-lg shadow-accent/25 transition-all hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isLoading ? (
                 <div className="flex items-center">

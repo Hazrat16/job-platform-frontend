@@ -59,7 +59,7 @@ export default function ApplicationsPage() {
             <p className="mb-4">You have not applied to any jobs yet.</p>
             <Link
               href="/jobs"
-              className="inline-flex rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700"
+              className="inline-flex rounded-xl bg-gradient-to-r from-accent to-accent-end px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:brightness-110"
             >
               Browse jobs
             </Link>
@@ -90,7 +90,7 @@ export default function ApplicationsPage() {
                   </span>
                   <Link
                     href={`/jobs/${application.job?._id}`}
-                    className="text-sm font-semibold text-blue-600 hover:text-blue-800"
+                    className="text-sm font-semibold text-accent hover:text-link"
                   >
                     View job →
                   </Link>

@@ -41,7 +41,7 @@ export default function MyJobsPage() {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-accent" />
       </div>
     );
   }
@@ -58,7 +58,7 @@ export default function MyJobsPage() {
           </div>
           <Link
             href="/post-job"
-            className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-accent to-accent-end px-4 py-2 text-white transition-all hover:brightness-110"
           >
             <Plus className="h-4 w-4" />
             Post a job
@@ -71,7 +71,7 @@ export default function MyJobsPage() {
             <p className="mb-4">You have not posted any jobs yet.</p>
             <Link
               href="/post-job"
-              className="text-blue-600 font-medium hover:underline"
+              className="text-accent font-medium hover:underline"
             >
               Post your first job
             </Link>
@@ -87,7 +87,7 @@ export default function MyJobsPage() {
                   <h2 className="text-lg font-semibold text-foreground">
                     <Link
                       href={`/jobs/${job._id}`}
-                      className="hover:text-blue-600"
+                      className="hover:text-accent"
                     >
                       {job.title}
                     </Link>
@@ -108,7 +108,7 @@ export default function MyJobsPage() {
                 <div className="flex shrink-0 flex-col items-end gap-2 sm:flex-row sm:items-center">
                   <Link
                     href={`/my-jobs/${job._id}/applications`}
-                    className="text-sm font-medium text-blue-600 hover:underline"
+                    className="text-sm font-medium text-accent hover:underline"
                   >
                     View applicants
                   </Link>

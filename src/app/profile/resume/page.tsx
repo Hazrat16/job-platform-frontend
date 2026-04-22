@@ -63,7 +63,7 @@ export default function ProfileResumePage() {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-accent" />
       </div>
     );
   }
@@ -73,7 +73,7 @@ export default function ProfileResumePage() {
       <div className="max-w-xl mx-auto px-4">
         <div className="mb-6 flex items-center justify-between gap-4">
           <h1 className="text-2xl font-bold text-foreground">Résumé</h1>
-          <Link href="/profile" className="text-sm text-blue-600 hover:text-blue-800">
+          <Link href="/profile" className="text-sm text-accent hover:text-link">
             ← Back to profile
           </Link>
         </div>
@@ -87,7 +87,7 @@ export default function ProfileResumePage() {
           {resumeUrl ? (
             <div className="rounded-md border border-border p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div className="flex items-start gap-3">
-                <FileText className="h-10 w-10 text-blue-600 shrink-0" />
+                <FileText className="h-10 w-10 text-accent shrink-0" />
                 <div>
                   <p className="font-medium text-foreground">Current résumé</p>
                   <p className="text-xs text-fg-subtle break-all mt-1">{resumeUrl}</p>

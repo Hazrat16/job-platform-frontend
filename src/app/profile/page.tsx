@@ -131,7 +131,7 @@ function CompletenessCard({ data }: { data: ProfileCompleteness }) {
   };
 
   return (
-    <div className="mb-6 rounded-2xl border border-accent/40 bg-gradient-to-br from-accent-muted/90 via-card/80 to-cyan-500/15 p-5 shadow-md shadow-foreground/5 ring-1 ring-border/60 backdrop-blur-sm dark:from-indigo-950/40 dark:via-card/80 dark:to-cyan-950/20">
+    <div className="mb-6 rounded-2xl border border-accent/40 bg-gradient-to-br from-accent-muted/90 via-card/80 to-hold/15 p-5 shadow-md shadow-foreground/5 ring-1 ring-border/60 backdrop-blur-sm dark:from-[#1a2e47]/90 dark:via-card/80 dark:to-hold/20">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
         <div>
           <h2 className="text-lg font-semibold text-foreground">Profile strength</h2>
@@ -281,7 +281,7 @@ export default function ProfilePage() {
     <div className="min-h-screen py-10">
       <div className="max-w-3xl mx-auto px-4">
         <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <h1 className="bg-gradient-to-r from-foreground to-indigo-600 dark:to-indigo-400 bg-clip-text text-2xl font-extrabold tracking-tight text-transparent">
+          <h1 className="bg-gradient-to-r from-foreground to-accent dark:to-accent-end bg-clip-text text-2xl font-extrabold tracking-tight text-transparent">
             Your profile
           </h1>
           <div className="flex flex-wrap gap-3 text-sm">
@@ -758,7 +758,7 @@ export default function ProfilePage() {
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-5 py-2.5 font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:from-indigo-500 hover:to-blue-500 disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent to-accent-end px-5 py-2.5 font-semibold text-white shadow-lg shadow-accent/20 transition-all hover:brightness-110 disabled:opacity-50"
           >
             {saving ? (
               <Loader2 className="h-4 w-4 animate-spin" />

@@ -136,12 +136,12 @@ export default function RegisterPage() {
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute -right-20 bottom-1/4 h-80 w-80 rounded-full bg-blue-400/20 blur-3xl"
+        className="pointer-events-none absolute -right-20 bottom-1/4 h-80 w-80 rounded-full bg-accent/20 blur-3xl"
         aria-hidden
       />
       <div className="relative sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-500 text-white shadow-xl shadow-indigo-500/30 ring-2 ring-border/50">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-accent via-accent-end to-hold text-white shadow-xl shadow-accent/30 ring-2 ring-border/50">
             <svg
               className="h-8 w-8 text-white"
               fill="none"
@@ -269,14 +269,14 @@ export default function RegisterPage() {
                   onClick={() => setAccountRole("jobseeker")}
                   className={`relative flex rounded-lg border p-4 text-left shadow-sm transition ring-offset-2 focus:outline-none focus:ring-2 focus:ring-accent ${
                     accountRole === "jobseeker"
-                      ? "border-blue-600 ring-2 ring-blue-500 bg-blue-50"
+                      ? "border-accent ring-2 ring-accent bg-accent-muted"
                       : "border-border-strong bg-card hover:border-border-strong"
                   }`}
                 >
                   <div className="flex flex-1">
                     <div className="flex flex-col">
                       <div className="flex items-center">
-                        <Briefcase className="h-5 w-5 text-blue-600" />
+                        <Briefcase className="h-5 w-5 text-accent" />
                         <span className="ml-3 block text-sm font-medium text-foreground">
                           Job seeker
                         </span>
@@ -287,7 +287,7 @@ export default function RegisterPage() {
                     </div>
                   </div>
                   {accountRole === "jobseeker" ? (
-                    <span className="text-blue-600 text-sm font-semibold" aria-hidden>
+                    <span className="text-accent text-sm font-semibold" aria-hidden>
                       ✓
                     </span>
                   ) : null}
@@ -490,7 +490,7 @@ export default function RegisterPage() {
                       <div className="flex text-sm text-fg-muted">
                         <label
                           htmlFor="photo-upload"
-                          className="relative cursor-pointer bg-card rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500"
+                          className="relative cursor-pointer bg-card rounded-md font-medium text-accent hover:text-accent-hover focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-accent"
                         >
                           <span>Upload a file</span>
                           <input
@@ -517,7 +517,7 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center rounded-md border border-transparent bg-gradient-to-r from-indigo-600 to-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm transition-all hover:from-indigo-500 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full flex justify-center rounded-md border border-transparent bg-gradient-to-r from-accent to-accent-end py-2 px-4 text-sm font-medium text-white shadow-sm transition-all hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isLoading ? (
                   <div className="flex items-center">

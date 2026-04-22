@@ -77,7 +77,7 @@ export default function NotificationsPage() {
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-foreground">
-              <Bell className="h-7 w-7 text-blue-600" aria-hidden />
+              <Bell className="h-7 w-7 text-accent" aria-hidden />
               Notifications
             </h1>
             <p className="mt-1 text-sm text-fg-muted">
@@ -105,7 +105,7 @@ export default function NotificationsPage() {
 
         {loading ? (
           <div className="flex justify-center py-16">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+            <Loader2 className="h-8 w-8 animate-spin text-accent" />
           </div>
         ) : items.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-12 text-center text-fg-muted">
@@ -116,7 +116,7 @@ export default function NotificationsPage() {
             </p>
             <Link
               href="/jobs"
-              className="mt-6 inline-block text-sm font-semibold text-blue-600 hover:underline"
+              className="mt-6 inline-block text-sm font-semibold text-accent hover:underline"
             >
               Browse jobs
             </Link>
@@ -131,7 +131,7 @@ export default function NotificationsPage() {
                   className={`w-full rounded-2xl border px-4 py-4 text-left shadow-sm transition-colors ${
                     n.read
                       ? "border-border bg-card hover:border-border-strong"
-                      : "border-blue-200/80 bg-blue-50/60 hover:border-blue-300"
+                      : "border-accent/25 bg-accent-muted/60 hover:border-accent"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
@@ -141,12 +141,12 @@ export default function NotificationsPage() {
                       <p className="mt-2 text-xs text-fg-subtle">
                         {new Date(n.createdAt).toLocaleString()}
                         {n.href ? (
-                          <span className="text-blue-600"> · Open</span>
+                          <span className="text-accent"> · Open</span>
                         ) : null}
                       </p>
                     </div>
                     {!n.read && (
-                      <span className="mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full bg-blue-600" />
+                      <span className="mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full bg-accent" />
                     )}
                   </div>
                 </button>

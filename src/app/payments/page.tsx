@@ -84,11 +84,11 @@ function PaymentsInner() {
     <div className="min-h-screen py-8">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div className="mb-6 flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-500 text-white shadow-lg shadow-indigo-500/30 ring-2 ring-border/50">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-accent via-accent-end to-hold text-white shadow-lg shadow-accent/30 ring-2 ring-border/50">
             <Wallet className="h-6 w-6" aria-hidden />
           </div>
           <div>
-            <h1 className="bg-gradient-to-r from-foreground via-indigo-600 to-foreground dark:via-indigo-400 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent">
+            <h1 className="bg-gradient-to-r from-foreground via-accent to-foreground dark:via-accent-end bg-clip-text text-3xl font-extrabold tracking-tight text-transparent">
               Payments (BDT)
             </h1>
             <p className="text-sm text-fg-muted">
@@ -132,7 +132,7 @@ function PaymentsInner() {
               type="button"
               onClick={() => void handlePay()}
               disabled={paying}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:from-indigo-500 hover:to-blue-500 disabled:opacity-60"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent to-accent-end px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-accent/25 transition-all hover:brightness-110 disabled:opacity-60"
             >
               {paying ? (
                 <>

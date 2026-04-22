@@ -49,7 +49,7 @@ export default function SavedJobsPage() {
   return (
     <div className="min-h-screen py-8">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="mb-2 bg-gradient-to-r from-foreground via-indigo-600 to-foreground dark:via-indigo-400 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent">
+        <h1 className="mb-2 bg-gradient-to-r from-foreground via-accent to-foreground dark:via-accent-end bg-clip-text text-3xl font-extrabold tracking-tight text-transparent">
           Saved Jobs
         </h1>
         <p className="mb-6 text-fg-muted">
@@ -93,7 +93,7 @@ export default function SavedJobsPage() {
                 <div className="flex items-center gap-2 shrink-0">
                   <Link
                     href={`/jobs/${job._id}`}
-                    className="rounded-md bg-gradient-to-r from-indigo-600 to-blue-600 px-4 py-2 text-sm font-medium text-white transition-all hover:from-indigo-500 hover:to-blue-500"
+                    className="rounded-md bg-gradient-to-r from-accent to-accent-end px-4 py-2 text-sm font-medium text-white transition-all hover:brightness-110"
                   >
                     View
                   </Link>

@@ -53,7 +53,7 @@ export default function LoginPage() {
   return (
     <div className="relative flex min-h-[calc(100vh-4rem)] flex-col justify-center overflow-hidden py-12 sm:px-6 lg:px-8">
       <div
-        className="pointer-events-none absolute -left-24 top-1/4 h-72 w-72 rounded-full bg-indigo-400/25 blur-3xl"
+        className="pointer-events-none absolute -left-24 top-1/4 h-72 w-72 rounded-full bg-accent/25 blur-3xl"
         aria-hidden
       />
       <div
@@ -62,7 +62,7 @@ export default function LoginPage() {
       />
       <div className="relative sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-500 text-white shadow-xl shadow-indigo-500/30 ring-2 ring-border/50">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-accent via-accent-end to-hold text-white shadow-xl shadow-accent/30 ring-2 ring-border/50">
             <svg
               className="h-8 w-8 text-white"
               fill="none"
@@ -209,7 +209,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="flex w-full justify-center rounded-xl border border-transparent bg-gradient-to-r from-indigo-600 to-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:from-indigo-500 hover:to-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex w-full justify-center rounded-xl border border-transparent bg-gradient-to-r from-accent to-accent-end px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-accent/25 transition-all hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isLoading ? (
                   <div className="flex items-center">
@@ -238,7 +238,7 @@ export default function LoginPage() {
             <div className="mt-6">
               <Link
                 href="/register"
-                className="flex w-full justify-center rounded-xl border border-border bg-card/90 px-4 py-3 text-sm font-semibold text-foreground shadow-md transition-all hover:border-accent/30 hover:bg-card focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 focus-visible:ring-offset-2"
+                className="flex w-full justify-center rounded-xl border border-border bg-card/90 px-4 py-3 text-sm font-semibold text-foreground shadow-md transition-all hover:border-accent/30 hover:bg-card focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 Create an account
               </Link>

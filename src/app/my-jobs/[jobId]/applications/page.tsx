@@ -89,7 +89,7 @@ export default function JobApplicationsPage() {
   if (loading) {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-accent" />
       </div>
     );
   }
@@ -99,7 +99,7 @@ export default function JobApplicationsPage() {
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <Link
           href="/my-jobs"
-          className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-800"
+          className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-accent hover:text-link"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to my jobs
@@ -143,7 +143,7 @@ export default function JobApplicationsPage() {
                       </div>
                       <a
                         href={`mailto:${app.applicant?.email}`}
-                        className="mt-1 inline-flex items-center gap-1.5 text-sm text-blue-600 hover:underline"
+                        className="mt-1 inline-flex items-center gap-1.5 text-sm text-accent hover:underline"
                       >
                         <Mail className="h-4 w-4" />
                         {app.applicant?.email}
