@@ -34,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={plusJakarta.variable}>
       <body
-        className={`${plusJakarta.className} min-h-screen antialiased text-slate-900`}
+        className={`${plusJakarta.className} min-h-screen bg-background text-foreground antialiased`}
       >
         <Navbar />
         <main className="min-h-[calc(100vh-4rem)]">{children}</main>

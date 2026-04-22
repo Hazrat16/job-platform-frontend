@@ -1,5 +1,9 @@
 "use client";
 
+import {
+  FilterSelect,
+  type FilterSelectOption,
+} from "@/components/FilterSelect";
 import { Job } from "@/types";
 import { apiClient, getUser } from "@/utils/api";
 import {
@@ -17,6 +21,29 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+
+const JOB_TYPE_FILTER_OPTIONS: FilterSelectOption[] = [
+  { value: "", label: "All Types" },
+  { value: "full-time", label: "Full Time" },
+  { value: "part-time", label: "Part Time" },
+  { value: "contract", label: "Contract" },
+  { value: "internship", label: "Internship" },
+];
+
+const SALARY_FILTER_OPTIONS: FilterSelectOption[] = [
+  { value: "", label: "All Salaries" },
+  { value: "0-50000", label: "$0 - $50,000" },
+  { value: "50000-100000", label: "$50,000 - $100,000" },
+  { value: "100000-150000", label: "$100,000 - $150,000" },
+  { value: "150000-200000", label: "$150,000 - $200,000" },
+  { value: "200000-999999", label: "$200,000+" },
+];
+
+const SORT_OPTIONS: FilterSelectOption[] = [
+  { value: "recent", label: "Most Recent" },
+  { value: "salary_desc", label: "Salary: High to Low" },
+  { value: "salary_asc", label: "Salary: Low to High" },
+];
 
 function JobsPageContent() {
   const searchParams = useSearchParams();
@@ -243,18 +270,12 @@ function JobsPageContent() {
                   >
                     Job type
                   </label>
-                  <select
+                  <FilterSelect
                     id="type"
                     value={selectedType}
-                    onChange={(e) => setSelectedType(e.target.value)}
-                    className={fieldClass}
-                  >
-                    <option value="">All Types</option>
-                    <option value="full-time">Full Time</option>
-                    <option value="part-time">Part Time</option>
-                    <option value="contract">Contract</option>
-                    <option value="internship">Internship</option>
-                  </select>
+                    onChange={setSelectedType}
+                    options={JOB_TYPE_FILTER_OPTIONS}
+                  />
                 </div>
 
                 <div className="mb-6">
@@ -264,19 +285,12 @@ function JobsPageContent() {
                   >
                     Salary range
                   </label>
-                  <select
+                  <FilterSelect
                     id="salary"
                     value={selectedSalary}
-                    onChange={(e) => setSelectedSalary(e.target.value)}
-                    className={fieldClass}
-                  >
-                    <option value="">All Salaries</option>
-                    <option value="0-50000">$0 - $50,000</option>
-                    <option value="50000-100000">$50,000 - $100,000</option>
-                    <option value="100000-150000">$100,000 - $150,000</option>
-                    <option value="150000-200000">$150,000 - $200,000</option>
-                    <option value="200000-999999">$200,000+</option>
-                  </select>
+                    onChange={setSelectedSalary}
+                    options={SALARY_FILTER_OPTIONS}
+                  />
                 </div>
 
                 {/* Clear Filters */}
@@ -306,21 +320,18 @@ function JobsPageContent() {
                   <span className="text-slate-500"> in this list</span>
                 )}
               </p>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <label htmlFor="sort-jobs" className="text-sm text-slate-500">
                   Sort
                 </label>
-                <select
+                <FilterSelect
                   id="sort-jobs"
-                  className="rounded-xl border border-slate-200/90 bg-white/90 px-3 py-2 text-sm text-slate-900 shadow-inner shadow-slate-900/5 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                >
-                    <option value="recent">Most Recent</option>
-                    <option value="salary_desc">Salary: High to Low</option>
-                    <option value="salary_asc">Salary: Low to High</option>
-                  </select>
-                </div>
+                  onChange={setSortBy}
+                  options={SORT_OPTIONS}
+                  fullWidth={false}
+                />
+              </div>
             </div>
 
             <div className="space-y-4">
