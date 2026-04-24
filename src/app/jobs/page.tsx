@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 const JOB_TYPE_FILTER_OPTIONS: FilterSelectOption[] = [
@@ -45,11 +45,14 @@ const SORT_OPTIONS: FilterSelectOption[] = [
   { value: "salary_asc", label: "Salary: Low to High" },
 ];
 
+const PAGE_SIZE = 20;
+
 function JobsPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
-  const [allJobsCount, setAllJobsCount] = useState(0);
+  const [totalJobs, setTotalJobs] = useState(0);
+  const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState(
     searchParams.get("search") || ""
   );
@@ -62,8 +65,33 @@ function JobsPageContent() {
   const [sortBy, setSortBy] = useState("recent");
   const [loading, setLoading] = useState(false);
 
-  const filterJobs = useCallback(() => {
-    const fetchJobs = async () => {
+  const filterKey = useMemo(
+    () =>
+      [searchQuery, selectedLocation, selectedType, selectedSalary, sortBy].join("|"),
+    [searchQuery, selectedLocation, selectedType, selectedSalary, sortBy],
+  );
+  const prevFilterKeyRef = useRef<string | null>(null);
+  const lastFetchIdRef = useRef("");
+
+  useEffect(() => {
+    let cancelled = false;
+    const filtersChanged =
+      prevFilterKeyRef.current !== null && prevFilterKeyRef.current !== filterKey;
+    prevFilterKeyRef.current = filterKey;
+    const pageToFetch = filtersChanged ? 1 : page;
+    if (filtersChanged) {
+      setPage(1);
+    }
+
+    const fetchId = `${filterKey}:${pageToFetch}`;
+    if (lastFetchIdRef.current === fetchId) {
+      return () => {
+        cancelled = true;
+      };
+    }
+    lastFetchIdRef.current = fetchId;
+
+    const run = async () => {
       try {
         setLoading(true);
         const salaryParts = selectedSalary
@@ -79,29 +107,31 @@ function JobsPageContent() {
           minSalary: Number.isFinite(minSalary) ? minSalary : undefined,
           maxSalary: Number.isFinite(maxSalary) ? maxSalary : undefined,
           sort: sortBy,
-          limit: 20,
+          limit: PAGE_SIZE,
+          page: pageToFetch,
         });
 
+        if (cancelled) return;
         if (!response.success) {
           toast.error(response.message || "Failed to load jobs");
           return;
         }
 
         setFilteredJobs(response.data || []);
-        setAllJobsCount((response.data || []).length);
+        const total = Number(response.meta?.total);
+        setTotalJobs(Number.isFinite(total) ? total : (response.data || []).length);
       } catch {
-        toast.error("Failed to load jobs");
+        if (!cancelled) toast.error("Failed to load jobs");
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
 
-    void fetchJobs();
-  }, [searchQuery, selectedLocation, selectedType, selectedSalary, sortBy]);
-
-  useEffect(() => {
-    filterJobs();
-  }, [filterJobs]);
+    void run();
+    return () => {
+      cancelled = true;
+    };
+  }, [filterKey, page, searchQuery, selectedLocation, selectedType, selectedSalary, sortBy]);
 
   useEffect(() => {
     const user = getUser();
@@ -248,14 +278,15 @@ function JobsPageContent() {
 
                 <div className="mb-6">
                   <label
-                    htmlFor="location"
+                    htmlFor="jobs-filter-location"
                     className="mb-2 block text-sm font-medium text-fg-muted"
                   >
                     Location
                   </label>
                   <input
                     type="text"
-                    id="location"
+                    id="jobs-filter-location"
+                    autoComplete="off"
                     placeholder="City, state, or remote"
                     value={selectedLocation}
                     onChange={(e) => setSelectedLocation(e.target.value)}
@@ -314,10 +345,22 @@ function JobsPageContent() {
           <div className="lg:col-span-3">
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-fg-muted">
-                <span className="font-semibold text-foreground">{filteredJobs.length}</span>{" "}
-                {filteredJobs.length === 1 ? "job" : "jobs"}
-                {allJobsCount > 0 && (
-                  <span className="text-fg-subtle"> in this list</span>
+                {totalJobs > 0 ? (
+                  <>
+                    <span className="font-semibold text-foreground">{totalJobs}</span>{" "}
+                    {totalJobs === 1 ? "job" : "jobs"} found
+                    {filteredJobs.length > 0 && (
+                      <span className="text-fg-subtle">
+                        {" "}
+                        · showing {(page - 1) * PAGE_SIZE + 1}–
+                        {(page - 1) * PAGE_SIZE + filteredJobs.length}
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <span className="font-semibold text-foreground">0</span> jobs
+                  </>
                 )}
               </p>
               <div className="flex flex-wrap items-center gap-2">
@@ -403,30 +446,38 @@ function JobsPageContent() {
 
                         <p className="mb-4 line-clamp-2 text-fg-muted">{job.description}</p>
 
-                        <div className="mb-4 flex flex-wrap gap-2">
-                          {job.requirements.slice(0, 3).map((req, index) => (
-                            <span
-                              key={index}
-                              className="rounded-lg bg-card-muted px-2 py-1 text-xs font-medium text-fg-muted"
-                            >
-                              {req}
-                            </span>
-                          ))}
-                          {job.requirements.length > 3 && (
-                            <span className="rounded-lg bg-card-muted px-2 py-1 text-xs font-medium text-fg-muted">
-                              +{job.requirements.length - 3} more
-                            </span>
-                          )}
-                        </div>
+                        {(job.requirements ?? []).length > 0 ? (
+                          <div className="mb-4 flex flex-wrap gap-2">
+                            {(job.requirements ?? []).slice(0, 3).map((req, index) => (
+                              <span
+                                key={index}
+                                className="rounded-lg bg-card-muted px-2 py-1 text-xs font-medium text-fg-muted"
+                              >
+                                {req}
+                              </span>
+                            ))}
+                            {(job.requirements ?? []).length > 3 && (
+                              <span className="rounded-lg bg-card-muted px-2 py-1 text-xs font-medium text-fg-muted">
+                                +{(job.requirements ?? []).length - 3} more
+                              </span>
+                            )}
+                          </div>
+                        ) : (
+                          <p className="mb-4 text-xs text-fg-subtle">No requirement bullets on this listing.</p>
+                        )}
 
                         <div className="flex flex-col gap-4 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
                           <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-sm">
                             <span className="font-medium text-fg-subtle">Benefits</span>
-                            {job.benefits.slice(0, 2).map((benefit, index) => (
-                              <span key={index} className="text-emerald-700">
-                                {benefit}
-                              </span>
-                            ))}
+                            {(job.benefits ?? []).length === 0 ? (
+                              <span className="text-fg-subtle">—</span>
+                            ) : (
+                              (job.benefits ?? []).slice(0, 2).map((benefit, index) => (
+                                <span key={index} className="text-emerald-700 dark:text-emerald-400">
+                                  {benefit}
+                                </span>
+                              ))
+                            )}
                           </div>
 
                           <div className="flex shrink-0 items-center justify-end gap-2">
@@ -479,6 +530,35 @@ function JobsPageContent() {
                     Clear filters
                   </button>
                 </div>
+              )}
+
+              {totalJobs > PAGE_SIZE && (
+                <nav
+                  className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-border pt-6 sm:flex-row"
+                  aria-label="Job results pages"
+                >
+                  <p className="text-sm text-fg-subtle">
+                    Page {page} of {Math.max(1, Math.ceil(totalJobs / PAGE_SIZE))}
+                  </p>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      disabled={page <= 1 || loading}
+                      onClick={() => setPage((p) => Math.max(1, p - 1))}
+                      className="rounded-xl border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-card-muted disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      type="button"
+                      disabled={page >= Math.ceil(totalJobs / PAGE_SIZE) || loading}
+                      onClick={() => setPage((p) => p + 1)}
+                      className="rounded-xl border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-card-muted disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </nav>
               )}
             </div>
           </div>

@@ -77,6 +77,7 @@ export interface Job {
     currency: string;
   };
   description: string;
+  skills?: string[];
   requirements: string[];
   benefits: string[];
   employer: User;

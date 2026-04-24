@@ -1,3 +1,4 @@
+import { sanitizeJob } from "@/lib/sanitizeJob";
 import {
   ActivitySummary,
   ApiResponse,
@@ -347,7 +348,11 @@ class ApiClient {
   async getJobs(params?: Record<string, unknown>): Promise<ApiResponse<Job[]>> {
     try {
       const response = await this.client.get("/jobs", { params });
-      return this.normalizeResponse<Job[]>(response.data);
+      const out = this.normalizeResponse<Job[]>(response.data);
+      if (out.success && out.data) {
+        out.data = out.data.map((j) => sanitizeJob(j));
+      }
+      return out;
     } catch (error) {
       return { success: false, message: this.extractErrorMessage(error) };
     }
@@ -356,7 +361,11 @@ class ApiClient {
   async getMyJobs(): Promise<ApiResponse<Job[]>> {
     try {
       const response = await this.client.get("/jobs/mine");
-      return this.normalizeResponse<Job[]>(response.data);
+      const out = this.normalizeResponse<Job[]>(response.data);
+      if (out.success && out.data) {
+        out.data = out.data.map((j) => sanitizeJob(j));
+      }
+      return out;
     } catch (error) {
       return { success: false, message: this.extractErrorMessage(error) };
     }
@@ -365,7 +374,11 @@ class ApiClient {
   async getJob(id: string): Promise<ApiResponse<Job>> {
     try {
       const response = await this.client.get(`/jobs/${id}`);
-      return this.normalizeResponse<Job>(response.data);
+      const out = this.normalizeResponse<Job>(response.data);
+      if (out.success && out.data) {
+        out.data = sanitizeJob(out.data);
+      }
+      return out;
     } catch (error) {
       return { success: false, message: this.extractErrorMessage(error) };
     }
@@ -374,7 +387,11 @@ class ApiClient {
   async createJob(jobData: Partial<Job>): Promise<ApiResponse<Job>> {
     try {
       const response = await this.client.post("/jobs", jobData);
-      return this.normalizeResponse<Job>(response.data);
+      const out = this.normalizeResponse<Job>(response.data);
+      if (out.success && out.data) {
+        out.data = sanitizeJob(out.data);
+      }
+      return out;
     } catch (error) {
       return { success: false, message: this.extractErrorMessage(error) };
     }
@@ -386,7 +403,11 @@ class ApiClient {
   ): Promise<ApiResponse<Job>> {
     try {
       const response = await this.client.put(`/jobs/${id}`, jobData);
-      return this.normalizeResponse<Job>(response.data);
+      const out = this.normalizeResponse<Job>(response.data);
+      if (out.success && out.data) {
+        out.data = sanitizeJob(out.data);
+      }
+      return out;
     } catch (error) {
       return { success: false, message: this.extractErrorMessage(error) };
     }
@@ -398,7 +419,11 @@ class ApiClient {
   ): Promise<ApiResponse<Job>> {
     try {
       const response = await this.client.patch(`/jobs/${id}/status`, { status });
-      return this.normalizeResponse<Job>(response.data);
+      const out = this.normalizeResponse<Job>(response.data);
+      if (out.success && out.data) {
+        out.data = sanitizeJob(out.data);
+      }
+      return out;
     } catch (error) {
       return { success: false, message: this.extractErrorMessage(error) };
     }
@@ -628,7 +653,11 @@ class ApiClient {
   async adminListJobs(): Promise<ApiResponse<Job[]>> {
     try {
       const response = await this.client.get("/admin/jobs");
-      return this.normalizeResponse<Job[]>(response.data);
+      const out = this.normalizeResponse<Job[]>(response.data);
+      if (out.success && out.data) {
+        out.data = out.data.map((j) => sanitizeJob(j));
+      }
+      return out;
     } catch (error) {
       return { success: false, message: this.extractErrorMessage(error) };
     }
@@ -640,7 +669,11 @@ class ApiClient {
   ): Promise<ApiResponse<Job>> {
     try {
       const response = await this.client.patch(`/admin/jobs/${id}`, { action });
-      return this.normalizeResponse<Job>(response.data);
+      const out = this.normalizeResponse<Job>(response.data);
+      if (out.success && out.data) {
+        out.data = sanitizeJob(out.data);
+      }
+      return out;
     } catch (error) {
       return { success: false, message: this.extractErrorMessage(error) };
     }

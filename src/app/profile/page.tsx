@@ -448,27 +448,32 @@ export default function ProfilePage() {
                 minLength={2}
               />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-fg-muted mb-1">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="min-w-0">
+                <label htmlFor="profile-phone" className="mb-1 block text-sm font-medium text-fg-muted">
                   Phone
                 </label>
                 <input
-                  type="text"
+                  id="profile-phone"
+                  type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full border border-border-strong rounded-md px-3 py-2 disabled:bg-card-muted"
+                  autoComplete="tel"
+                  className="w-full min-w-0 rounded-md border border-border-strong bg-background px-3 py-2 text-foreground outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 disabled:bg-card-muted"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-fg-muted mb-1">
+              <div className="min-w-0">
+                <label htmlFor="profile-location" className="mb-1 block text-sm font-medium text-fg-muted">
                   Location
                 </label>
                 <input
+                  id="profile-location"
                   type="text"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="w-full border border-border-strong rounded-md px-3 py-2 disabled:bg-card-muted"
+                  autoComplete="address-level1"
+                  placeholder="City, country, or Remote"
+                  className="w-full min-w-0 rounded-md border border-border-strong bg-background px-3 py-2 text-foreground outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 disabled:bg-card-muted"
                 />
               </div>
             </div>

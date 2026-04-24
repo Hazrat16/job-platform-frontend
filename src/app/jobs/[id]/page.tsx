@@ -70,24 +70,48 @@ export default function JobDetailsPage() {
             <p className="text-fg-muted whitespace-pre-line">{job.description}</p>
           </div>
 
+          {(job.skills?.length ?? 0) > 0 && (
+            <div>
+              <h2 className="mb-2 text-xl font-semibold text-foreground">Skills</h2>
+              <div className="flex flex-wrap gap-2">
+                {(job.skills ?? []).map((skill) => (
+                  <span
+                    key={skill}
+                    className="rounded-full border border-border bg-accent-muted px-3 py-1 text-sm font-medium text-foreground"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div>
             <h2 className="text-xl font-semibold text-foreground mb-2">
               Requirements
             </h2>
-            <ul className="list-disc pl-5 space-y-1 text-fg-muted">
-              {job.requirements.map((item, idx) => (
-                <li key={`${item}-${idx}`}>{item}</li>
-              ))}
-            </ul>
+            {(job.requirements ?? []).length === 0 ? (
+              <p className="text-sm text-fg-subtle">None listed.</p>
+            ) : (
+              <ul className="list-disc space-y-1 pl-5 text-fg-muted">
+                {(job.requirements ?? []).map((item, idx) => (
+                  <li key={`${item}-${idx}`}>{item}</li>
+                ))}
+              </ul>
+            )}
           </div>
 
           <div>
             <h2 className="text-xl font-semibold text-foreground mb-2">Benefits</h2>
-            <ul className="list-disc pl-5 space-y-1 text-fg-muted">
-              {job.benefits.map((item, idx) => (
-                <li key={`${item}-${idx}`}>{item}</li>
-              ))}
-            </ul>
+            {(job.benefits ?? []).length === 0 ? (
+              <p className="text-sm text-fg-subtle">None listed.</p>
+            ) : (
+              <ul className="list-disc space-y-1 pl-5 text-fg-muted">
+                {(job.benefits ?? []).map((item, idx) => (
+                  <li key={`${item}-${idx}`}>{item}</li>
+                ))}
+              </ul>
+            )}
           </div>
 
           <div className="flex gap-3 pt-2">
