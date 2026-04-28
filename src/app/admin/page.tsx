@@ -1,6 +1,12 @@
 "use client";
 
-import { ActivitySummary, DataDeletionRequest, Job, User } from "@/types";
+import {
+  ActivitySummary,
+  DataDeletionRequest,
+  ExternalJobSource,
+  Job,
+  User,
+} from "@/types";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { apiClient } from "@/utils/api";
 import { Loader2 } from "lucide-react";
@@ -175,6 +181,9 @@ export default function AdminPage() {
   const [deletionRequests, setDeletionRequests] = useState<DataDeletionRequest[]>([]);
   const [activitySummary, setActivitySummary] = useState<ActivitySummary | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [externalSources, setExternalSources] = useState<ExternalJobSource[]>([]);
+  const [syncingExternal, setSyncingExternal] = useState(false);
+  const [selectedSourceKey, setSelectedSourceKey] = useState("");
 
   useEffect(() => {
     if (!ready) return;
@@ -187,10 +196,12 @@ export default function AdminPage() {
           apiClient.adminListDeletionRequests(),
           apiClient.getActivitySummary(),
         ]);
+        const sources = await apiClient.getExternalSources();
         if (u.success) setUsers(u.data || []);
         if (j.success) setJobs(j.data || []);
         if (d.success) setDeletionRequests(d.data || []);
         if (a.success && a.data) setActivitySummary(a.data);
+        if (sources.success) setExternalSources(sources.data || []);
       } finally {
         setLoading(false);
       }
@@ -237,6 +248,31 @@ export default function AdminPage() {
       toast.success("Request updated");
     } finally {
       setBusyId(null);
+    }
+  };
+
+  const syncExternalJobs = async () => {
+    setSyncingExternal(true);
+    try {
+      const res = await apiClient.adminSyncExternalJobs(selectedSourceKey || undefined);
+      if (!res.success || !res.data) {
+        toast.error(res.message || "Failed to sync external jobs");
+        return;
+      }
+      const totalUpserts = res.data.reduce((sum, item) => sum + item.upserted, 0);
+      const totalFetched = res.data.reduce((sum, item) => sum + item.fetched, 0);
+      const failures = res.data.filter((item) => item.error);
+      if (failures.length > 0) {
+        toast.error(
+          `Sync finished with ${failures.length} source error(s). Fetched ${totalFetched}, upserted ${totalUpserts}.`,
+        );
+      } else {
+        toast.success(`Sync complete. Fetched ${totalFetched}, upserted ${totalUpserts}.`);
+      }
+      const refreshed = await apiClient.getExternalSources();
+      if (refreshed.success) setExternalSources(refreshed.data || []);
+    } finally {
+      setSyncingExternal(false);
     }
   };
 
@@ -299,6 +335,34 @@ export default function AdminPage() {
             >
               Deletion Requests
             </button>
+          </div>
+          <div className="mt-4 rounded-lg border border-border p-3">
+            <p className="text-sm font-medium text-foreground">External jobs sync</p>
+            <p className="mb-3 text-xs text-fg-subtle">
+              Pull latest jobs from tracked company sites.
+            </p>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <select
+                value={selectedSourceKey}
+                onChange={(e) => setSelectedSourceKey(e.target.value)}
+                className="rounded-md border border-border bg-background px-2 py-1.5 text-sm text-foreground"
+              >
+                <option value="">All external sources</option>
+                {externalSources.map((source) => (
+                  <option key={source.companyKey} value={source.companyKey}>
+                    {source.companyName}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                onClick={() => void syncExternalJobs()}
+                disabled={syncingExternal}
+                className="rounded-md border border-accent px-3 py-1.5 text-sm text-accent disabled:opacity-60"
+              >
+                {syncingExternal ? "Syncing..." : "Sync External Jobs"}
+              </button>
+            </div>
           </div>
         </section>
 

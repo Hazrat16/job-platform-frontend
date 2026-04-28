@@ -4,6 +4,8 @@ import {
   ApiResponse,
   AuthResponse,
   DataDeletionRequest,
+  ExternalJobPosting,
+  ExternalJobSource,
   ForgotPasswordData,
   Job,
   JobApplication,
@@ -707,6 +709,48 @@ class ApiClient {
     try {
       const response = await this.client.get("/monitoring/activity", { params });
       return this.normalizeResponse<ActivitySummary>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async getExternalJobs(params?: {
+    companyKey?: string;
+    includeInactive?: boolean;
+  }): Promise<ApiResponse<ExternalJobPosting[]>> {
+    try {
+      const response = await this.client.get("/external-jobs/jobs", { params });
+      return this.normalizeResponse<ExternalJobPosting[]>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async getExternalSources(): Promise<ApiResponse<ExternalJobSource[]>> {
+    try {
+      const response = await this.client.get("/external-jobs/sources");
+      return this.normalizeResponse<ExternalJobSource[]>(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async adminSyncExternalJobs(companyKey?: string): Promise<
+    ApiResponse<
+      Array<{
+        source: string;
+        fetched: number;
+        upserted: number;
+        deactivated: number;
+        error?: string;
+      }>
+    >
+  > {
+    try {
+      const response = await this.client.post("/external-jobs/sources/sync", {
+        ...(companyKey ? { companyKey } : {}),
+      });
+      return this.normalizeResponse(response.data);
     } catch (error) {
       return { success: false, message: this.extractErrorMessage(error) };
     }

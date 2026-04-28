@@ -293,3 +293,36 @@ export interface ActivitySummary {
   trend24h: ActivityTrendPoint[];
   recent: ActivityEventRecord[];
 }
+
+export interface ExternalJobPosting {
+  _id: string;
+  sourceCompanyKey: string;
+  companyName: string;
+  title: string;
+  location: string;
+  employmentType?: string;
+  applyUrl: string;
+  sourceUrl: string;
+  descriptionSnippet?: string;
+  datePosted?: string;
+  isActive: boolean;
+  lastSeenAt: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ExternalJobSource {
+  _id: string;
+  companyKey: string;
+  companyName: string;
+  careersUrl: string;
+  phase: number;
+  enabled: boolean;
+  parserType: "json_ld";
+  crawlIntervalMinutes: number;
+  lastCrawledAt?: string;
+  lastSuccessAt?: string;
+  lastError?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
