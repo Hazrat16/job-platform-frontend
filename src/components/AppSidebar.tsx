@@ -9,6 +9,7 @@ import {
   ChevronsUpDown,
   FileSearch,
   FolderHeart,
+  Globe,
   Home,
   LayoutDashboard,
   LineChart,
@@ -79,8 +80,9 @@ export default function AppSidebar() {
     if (role === "jobseeker") {
       base.splice(2, 0, { href: "/applications", label: "My Applications", icon: LayoutDashboard });
       base.splice(3, 0, { href: "/saved-jobs", label: "Saved Jobs", icon: FolderHeart });
-      base.splice(4, 0, { href: "/resume-fit", label: "Resume Fit", icon: FileSearch });
-      base.splice(5, 0, { href: "/analytics", label: "My Analytics", icon: LineChart });
+      base.splice(4, 0, { href: "/remote-jobs", label: "Remote Jobs", icon: Globe });
+      base.splice(5, 0, { href: "/resume-fit", label: "Resume Fit", icon: FileSearch });
+      base.splice(6, 0, { href: "/analytics", label: "My Analytics", icon: LineChart });
     }
     if (role === "employer") {
       base.splice(2, 0, { href: "/my-jobs", label: "My Jobs", icon: LayoutDashboard });

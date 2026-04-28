@@ -13,6 +13,7 @@ import {
   LoginCredentials,
   NotificationPreferences,
   Payment,
+  RemoteJobListing,
   ResetPasswordData,
   ResumeFitAnalysis,
   ResumeFitRewrite,
@@ -751,6 +752,19 @@ class ApiClient {
         ...(companyKey ? { companyKey } : {}),
       });
       return this.normalizeResponse(response.data);
+    } catch (error) {
+      return { success: false, message: this.extractErrorMessage(error) };
+    }
+  }
+
+  async getRemoteJobs(params?: {
+    search?: string;
+    source?: "remotive" | "arbeitnow";
+    limit?: number;
+  }): Promise<ApiResponse<RemoteJobListing[]>> {
+    try {
+      const response = await this.client.get("/remote-jobs", { params });
+      return this.normalizeResponse<RemoteJobListing[]>(response.data);
     } catch (error) {
       return { success: false, message: this.extractErrorMessage(error) };
     }

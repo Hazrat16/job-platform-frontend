@@ -326,3 +326,15 @@ export interface ExternalJobSource {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export interface RemoteJobListing {
+  id: string;
+  title: string;
+  company: string;
+  location: string;
+  url: string;
+  source: "remotive" | "arbeitnow";
+  tags: string[];
+  publishedAt?: string;
+  salary?: string;
+}
