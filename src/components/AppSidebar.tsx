@@ -1,5 +1,6 @@
 "use client";
 
+import { trackActivity } from "@/lib/analytics";
 import { apiClient, getUser, removeAuthToken, removeUser } from "@/utils/api";
 import {
   Bell,
@@ -21,11 +22,9 @@ import {
   Wallet,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ThemeToggle } from "./ThemeToggle";
-import { useRouter } from "next/navigation";
-import { trackActivity } from "@/lib/analytics";
 
 type SidebarItem = {
   href: string;
@@ -39,7 +38,9 @@ export default function AppSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
-  const [role, setRole] = useState<"jobseeker" | "employer" | "admin" | null>(null);
+  const [role, setRole] = useState<"jobseeker" | "employer" | "admin" | null>(
+    null,
+  );
   const [hasUser, setHasUser] = useState(false);
   const [userName, setUserName] = useState("");
   const [accountOpen, setAccountOpen] = useState(false);
@@ -78,16 +79,48 @@ export default function AppSidebar() {
       { href: "/profile", label: "Profile", icon: UserCircle2 },
     ];
     if (role === "jobseeker") {
-      base.splice(2, 0, { href: "/applications", label: "My Applications", icon: LayoutDashboard });
-      base.splice(3, 0, { href: "/saved-jobs", label: "Saved Jobs", icon: FolderHeart });
-      base.splice(4, 0, { href: "/remote-jobs", label: "Remote Jobs", icon: Globe });
-      base.splice(5, 0, { href: "/resume-fit", label: "Resume Fit", icon: FileSearch });
-      base.splice(6, 0, { href: "/analytics", label: "My Analytics", icon: LineChart });
+      base.splice(2, 0, {
+        href: "/applications",
+        label: "My Applications",
+        icon: LayoutDashboard,
+      });
+      base.splice(3, 0, {
+        href: "/saved-jobs",
+        label: "Saved Jobs",
+        icon: FolderHeart,
+      });
+      base.splice(4, 0, {
+        href: "/remote-jobs",
+        label: "External Remote Jobs",
+        icon: Globe,
+      });
+      base.splice(5, 0, {
+        href: "/resume-fit",
+        label: "Resume Fit",
+        icon: FileSearch,
+      });
+      base.splice(6, 0, {
+        href: "/analytics",
+        label: "My Analytics",
+        icon: LineChart,
+      });
     }
     if (role === "employer") {
-      base.splice(2, 0, { href: "/my-jobs", label: "My Jobs", icon: LayoutDashboard });
-      base.splice(3, 0, { href: "/post-job", label: "Post Job", icon: Briefcase });
-      base.splice(4, 0, { href: "/analytics", label: "My Analytics", icon: LineChart });
+      base.splice(2, 0, {
+        href: "/my-jobs",
+        label: "My Jobs",
+        icon: LayoutDashboard,
+      });
+      base.splice(3, 0, {
+        href: "/post-job",
+        label: "Post Job",
+        icon: Briefcase,
+      });
+      base.splice(4, 0, {
+        href: "/analytics",
+        label: "My Analytics",
+        icon: LineChart,
+      });
     }
     if (role === "admin") {
       base.splice(2, 0, { href: "/admin", label: "Admin Panel", icon: Shield });
@@ -106,7 +139,12 @@ export default function AppSidebar() {
     return base;
   }, [role]);
 
-  const hiddenOnRoutes = ["/login", "/register", "/forgot-password", "/reset-password"];
+  const hiddenOnRoutes = [
+    "/login",
+    "/register",
+    "/forgot-password",
+    "/reset-password",
+  ];
   if (hiddenOnRoutes.some((r) => pathname.startsWith(r))) return null;
 
   return (
@@ -134,12 +172,17 @@ export default function AppSidebar() {
             className="rounded-lg border border-border p-1.5 text-fg-muted hover:bg-card-muted"
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+            {collapsed ? (
+              <ChevronRight className="h-4 w-4" />
+            ) : (
+              <ChevronLeft className="h-4 w-4" />
+            )}
           </button>
         </div>
         <nav className="flex-1 space-y-2 overflow-y-auto p-2">
           {primaryItems.map((item) => {
-            const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+            const active =
+              pathname === item.href || pathname.startsWith(`${item.href}/`);
             const Icon = item.icon;
             return (
               <Link
@@ -158,7 +201,8 @@ export default function AppSidebar() {
             );
           })}
           {secondaryItems.map((item) => {
-            const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+            const active =
+              pathname === item.href || pathname.startsWith(`${item.href}/`);
             const Icon = item.icon;
             return (
               <Link
@@ -187,7 +231,9 @@ export default function AppSidebar() {
                 aria-expanded={accountOpen}
                 aria-haspopup="menu"
               >
-                <p className="truncate text-sm font-medium text-foreground">{userName}</p>
+                <p className="truncate text-sm font-medium text-foreground">
+                  {userName}
+                </p>
                 <ChevronsUpDown className="h-4 w-4 text-fg-subtle" />
               </button>
               {accountOpen && (
@@ -201,7 +247,9 @@ export default function AppSidebar() {
                     className="flex w-full items-center gap-2 px-3 py-2 text-sm text-destructive hover:bg-destructive-muted"
                     onClick={async () => {
                       setAccountOpen(false);
-                      trackActivity("sign_out", { source: "sidebar_account_menu" });
+                      trackActivity("sign_out", {
+                        source: "sidebar_account_menu",
+                      });
                       try {
                         await apiClient.logout();
                       } catch {}

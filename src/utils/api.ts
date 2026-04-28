@@ -759,8 +759,9 @@ class ApiClient {
 
   async getRemoteJobs(params?: {
     search?: string;
-    source?: "remotive" | "arbeitnow";
+    source?: "remotive" | "arbeitnow" | "remoteok";
     limit?: number;
+    page?: number;
   }): Promise<ApiResponse<RemoteJobListing[]>> {
     try {
       const response = await this.client.get("/remote-jobs", { params });

@@ -7,6 +7,7 @@ import {
   Job,
   User,
 } from "@/types";
+import { FilterSelect, type FilterSelectOption } from "@/components/FilterSelect";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { apiClient } from "@/utils/api";
 import { Loader2 } from "lucide-react";
@@ -184,6 +185,13 @@ export default function AdminPage() {
   const [externalSources, setExternalSources] = useState<ExternalJobSource[]>([]);
   const [syncingExternal, setSyncingExternal] = useState(false);
   const [selectedSourceKey, setSelectedSourceKey] = useState("");
+  const sourceOptions: FilterSelectOption[] = [
+    { value: "", label: "All external sources" },
+    ...externalSources.map((source) => ({
+      value: source.companyKey,
+      label: source.companyName,
+    })),
+  ];
 
   useEffect(() => {
     if (!ready) return;
@@ -342,18 +350,13 @@ export default function AdminPage() {
               Pull latest jobs from tracked company sites.
             </p>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <select
+              <FilterSelect
+                id="admin-external-source"
                 value={selectedSourceKey}
-                onChange={(e) => setSelectedSourceKey(e.target.value)}
-                className="rounded-md border border-border bg-background px-2 py-1.5 text-sm text-foreground"
-              >
-                <option value="">All external sources</option>
-                {externalSources.map((source) => (
-                  <option key={source.companyKey} value={source.companyKey}>
-                    {source.companyName}
-                  </option>
-                ))}
-              </select>
+                onChange={setSelectedSourceKey}
+                options={sourceOptions}
+                fullWidth={false}
+              />
               <button
                 type="button"
                 onClick={() => void syncExternalJobs()}

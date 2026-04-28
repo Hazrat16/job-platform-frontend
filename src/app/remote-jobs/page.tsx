@@ -2,6 +2,7 @@
 
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import type { RemoteJobListing } from "@/types";
+import { FilterSelect, type FilterSelectOption } from "@/components/FilterSelect";
 import { apiClient } from "@/utils/api";
 import { Briefcase, ExternalLink, Globe, Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -12,7 +13,20 @@ export default function RemoteJobsPage() {
   const [jobs, setJobs] = useState<RemoteJobListing[]>([]);
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
-  const [source, setSource] = useState<"" | "remotive" | "arbeitnow">("");
+  const [source, setSource] = useState<"" | "remotive" | "arbeitnow" | "remoteok">("");
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const PAGE_SIZE = 20;
+  const SOURCE_OPTIONS: FilterSelectOption[] = [
+    { value: "", label: "All sources" },
+    { value: "remotive", label: "Remotive" },
+    { value: "arbeitnow", label: "Arbeitnow" },
+    { value: "remoteok", label: "RemoteOK" },
+  ];
+
+  useEffect(() => {
+    setPage(1);
+  }, [query, source]);
 
   useEffect(() => {
     if (!ready) return;
@@ -23,7 +37,8 @@ export default function RemoteJobsPage() {
         const res = await apiClient.getRemoteJobs({
           search: query || undefined,
           source: source || undefined,
-          limit: 120,
+          limit: PAGE_SIZE,
+          page,
         });
         if (cancelled) return;
         if (!res.success) {
@@ -31,6 +46,7 @@ export default function RemoteJobsPage() {
           return;
         }
         setJobs(res.data || []);
+        setTotal(Number(res.meta?.total) || 0);
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -39,7 +55,7 @@ export default function RemoteJobsPage() {
     return () => {
       cancelled = true;
     };
-  }, [ready, query, source]);
+  }, [ready, query, source, page]);
 
   const sorted = useMemo(
     () =>
@@ -79,15 +95,15 @@ export default function RemoteJobsPage() {
               className="w-full rounded-lg border border-border bg-background py-2 pl-10 pr-3 text-sm outline-none focus:border-accent"
             />
           </div>
-          <select
+          <FilterSelect
+            id="remote-jobs-source"
             value={source}
-            onChange={(e) => setSource(e.target.value as "" | "remotive" | "arbeitnow")}
-            className="rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-accent"
-          >
-            <option value="">All sources</option>
-            <option value="remotive">Remotive</option>
-            <option value="arbeitnow">Arbeitnow</option>
-          </select>
+            onChange={(value) =>
+              setSource(value as "" | "remotive" | "arbeitnow" | "remoteok")
+            }
+            options={SOURCE_OPTIONS}
+            fullWidth={false}
+          />
         </div>
 
         {loading ? (
@@ -140,6 +156,32 @@ export default function RemoteJobsPage() {
             ))}
           </div>
         )}
+
+        {!loading && total > PAGE_SIZE ? (
+          <div className="flex items-center justify-between border-t border-border pt-4">
+            <p className="text-sm text-fg-subtle">
+              Page {page} of {Math.max(1, Math.ceil(total / PAGE_SIZE))}
+            </p>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                disabled={page <= 1}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                className="rounded-lg border border-border px-3 py-1.5 text-sm disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <button
+                type="button"
+                disabled={page >= Math.ceil(total / PAGE_SIZE)}
+                onClick={() => setPage((p) => p + 1)}
+                className="rounded-lg border border-border px-3 py-1.5 text-sm disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );
