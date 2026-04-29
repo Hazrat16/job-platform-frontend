@@ -13,7 +13,9 @@ export default function RemoteJobsPage() {
   const [jobs, setJobs] = useState<RemoteJobListing[]>([]);
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
-  const [source, setSource] = useState<"" | "remotive" | "arbeitnow" | "remoteok">("");
+  const [source, setSource] = useState<
+    "" | "remotive" | "arbeitnow" | "remoteok" | "themuse"
+  >("");
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const PAGE_SIZE = 20;
@@ -22,6 +24,7 @@ export default function RemoteJobsPage() {
     { value: "remotive", label: "Remotive" },
     { value: "arbeitnow", label: "Arbeitnow" },
     { value: "remoteok", label: "RemoteOK" },
+    { value: "themuse", label: "The Muse" },
   ];
 
   useEffect(() => {
@@ -99,7 +102,9 @@ export default function RemoteJobsPage() {
             id="remote-jobs-source"
             value={source}
             onChange={(value) =>
-              setSource(value as "" | "remotive" | "arbeitnow" | "remoteok")
+              setSource(
+                value as "" | "remotive" | "arbeitnow" | "remoteok" | "themuse",
+              )
             }
             options={SOURCE_OPTIONS}
             fullWidth={false}

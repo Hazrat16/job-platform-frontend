@@ -333,7 +333,7 @@ export interface RemoteJobListing {
   company: string;
   location: string;
   url: string;
-  source: "remotive" | "arbeitnow" | "remoteok";
+  source: "remotive" | "arbeitnow" | "remoteok" | "themuse";
   tags: string[];
   publishedAt?: string;
   salary?: string;

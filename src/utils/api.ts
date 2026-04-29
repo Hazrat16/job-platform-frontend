@@ -759,7 +759,7 @@ class ApiClient {
 
   async getRemoteJobs(params?: {
     search?: string;
-    source?: "remotive" | "arbeitnow" | "remoteok";
+    source?: "remotive" | "arbeitnow" | "remoteok" | "themuse";
     limit?: number;
     page?: number;
   }): Promise<ApiResponse<RemoteJobListing[]>> {
