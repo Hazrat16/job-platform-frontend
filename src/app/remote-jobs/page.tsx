@@ -18,6 +18,7 @@ export default function RemoteJobsPage() {
   >("");
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
+  const [sourceCounts, setSourceCounts] = useState<Record<string, number>>({});
   const PAGE_SIZE = 20;
   const SOURCE_OPTIONS: FilterSelectOption[] = [
     { value: "", label: "All sources" },
@@ -50,6 +51,7 @@ export default function RemoteJobsPage() {
         }
         setJobs(res.data || []);
         setTotal(Number(res.meta?.total) || 0);
+        setSourceCounts((res.meta?.sourceCounts as Record<string, number>) || {});
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -86,6 +88,21 @@ export default function RemoteJobsPage() {
           <p className="text-sm text-fg-muted">
             Aggregated from free job APIs (Remotive and Arbeitnow).
           </p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {[
+              { key: "remotive", label: "Remotive" },
+              { key: "arbeitnow", label: "Arbeitnow" },
+              { key: "remoteok", label: "RemoteOK" },
+              { key: "themuse", label: "The Muse" },
+            ].map((item) => (
+              <span
+                key={item.key}
+                className="rounded-full border border-border bg-card-muted px-2.5 py-1 text-xs text-fg-muted"
+              >
+                {item.label}: {sourceCounts[item.key] ?? 0}
+              </span>
+            ))}
+          </div>
         </div>
 
         <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 sm:flex-row">
@@ -112,8 +129,27 @@ export default function RemoteJobsPage() {
         </div>
 
         {loading ? (
-          <div className="rounded-xl border border-border bg-card p-8 text-center text-fg-muted">
-            Loading remote jobs...
+          <div className="space-y-3" aria-busy="true" aria-label="Loading remote jobs">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <div
+                key={i}
+                className="rounded-xl border border-border bg-card p-4"
+              >
+                <div className="animate-pulse">
+                  <div className="mb-3 h-5 w-2/3 rounded bg-skeleton" />
+                  <div className="mb-2 flex flex-wrap gap-2">
+                    <div className="h-4 w-28 rounded bg-card-muted" />
+                    <div className="h-4 w-24 rounded bg-card-muted" />
+                    <div className="h-4 w-20 rounded bg-card-muted" />
+                  </div>
+                  <div className="mt-3 flex gap-1">
+                    <div className="h-5 w-16 rounded bg-card-muted" />
+                    <div className="h-5 w-14 rounded bg-card-muted" />
+                    <div className="h-5 w-20 rounded bg-card-muted" />
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         ) : sorted.length === 0 ? (
           <div className="rounded-xl border border-border bg-card p-8 text-center">

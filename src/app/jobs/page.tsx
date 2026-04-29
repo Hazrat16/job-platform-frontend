@@ -71,7 +71,7 @@ function JobsPageContent() {
     [searchQuery, selectedLocation, selectedType, selectedSalary, sortBy],
   );
   const prevFilterKeyRef = useRef<string | null>(null);
-  const lastFetchIdRef = useRef("");
+  const activeRequestIdRef = useRef(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -83,17 +83,10 @@ function JobsPageContent() {
       setPage(1);
     }
 
-    const fetchId = `${filterKey}:${pageToFetch}`;
-    if (lastFetchIdRef.current === fetchId) {
-      return () => {
-        cancelled = true;
-      };
-    }
-    lastFetchIdRef.current = fetchId;
-
     const run = async () => {
+      const requestId = ++activeRequestIdRef.current;
+      setLoading(true);
       try {
-        setLoading(true);
         const salaryParts = selectedSalary
           ? selectedSalary.split("-").map((val) => parseInt(val, 10))
           : [];
@@ -123,7 +116,9 @@ function JobsPageContent() {
       } catch {
         if (!cancelled) toast.error("Failed to load jobs");
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled && activeRequestIdRef.current === requestId) {
+          setLoading(false);
+        }
       }
     };
 

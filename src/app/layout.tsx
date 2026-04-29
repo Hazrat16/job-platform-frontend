@@ -4,7 +4,6 @@ import MonitoringBootstrap from "@/components/MonitoringBootstrap";
 import { THEME_BOOTSTRAP_SCRIPT } from "@/lib/theme";
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
-import Script from "next/script";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
@@ -37,14 +36,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={plusJakarta.variable} suppressHydrationWarning>
+      <head>
+        <script
+          id="theme-init"
+          dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }}
+        />
+      </head>
       <body
         className={`${plusJakarta.className} min-h-screen bg-background text-foreground antialiased`}
       >
-        <Script
-          id="theme-init"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }}
-        />
         <MonitoringBootstrap />
         <Navbar />
         <div className="flex min-h-[calc(100vh-4rem)]">
